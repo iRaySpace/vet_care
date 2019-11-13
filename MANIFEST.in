@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include vet_care *.css
+recursive-include vet_care *.csv
+recursive-include vet_care *.html
+recursive-include vet_care *.ico
+recursive-include vet_care *.js
+recursive-include vet_care *.json
+recursive-include vet_care *.md
+recursive-include vet_care *.png
+recursive-include vet_care *.py
+recursive-include vet_care *.svg
+recursive-include vet_care *.txt
+recursive-exclude vet_care *.pyc
