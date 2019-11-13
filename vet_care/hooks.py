@@ -49,7 +49,10 @@ fixtures = [
                     "Patient-report_preference-hidden",
                     "Patient-mobile-hidden",
                     "Patient-email-hidden",
-                    "Patient-phone-hidden"
+                    "Patient-phone-hidden",
+                    "Patient-mobile-in_list_view",
+                    "Patient-email-in_list_view",
+                    "Patient-phone-in_list_view"
                 ]
             ]
         ]
