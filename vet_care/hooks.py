@@ -19,7 +19,8 @@ fixtures = [
                 "name",
                 "in",
                 [
-                    "Patient Appointment-vc_owner"
+                    "Patient Appointment-vc_owner",
+                    "Patient-vc_specie"
                 ]
             ]
         ]
