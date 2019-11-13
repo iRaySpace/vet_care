@@ -25,8 +25,6 @@ fixtures = [
                     "Patient-vc_breed",
                     "Patient-vc_chip_id",
                     "Patient-vc_weight",
-                    "Patient-vc_sb_pet_details",
-                    "Patient-vc_cb_pet_details",
                     "Vital Signs-vc_mucous_membrane",
                     "Vital Signs-vc_capillary_refill_time"
                 ]
