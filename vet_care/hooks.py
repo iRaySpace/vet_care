@@ -20,7 +20,8 @@ fixtures = [
                 "in",
                 [
                     "Patient Appointment-vc_owner",
-                    "Patient-vc_specie"
+                    "Patient-vc_specie",
+                    "Patient-vc_deceased"
                 ]
             ]
         ]
@@ -96,6 +97,9 @@ fixtures = [
 # Hook on document methods and events
 
 doc_events = {
+    "Patient": {
+        "validate": "vet_care.doc_events.patient.validate"
+    },
     "Patient Appointment": {
         "validate": "vet_care.doc_events.patient_appointment.validate"
     }
