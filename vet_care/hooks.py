@@ -26,7 +26,9 @@ fixtures = [
                     "Patient-vc_chip_id",
                     "Patient-vc_weight",
                     "Patient-vc_sb_pet_details",
-                    "Patient-vc_cb_pet_details"
+                    "Patient-vc_cb_pet_details",
+                    "Vital Signs-vc_mucous_membrane",
+                    "Vital Signs-vc_capillary_refill_time"
                 ]
             ]
         ]
@@ -40,7 +42,12 @@ fixtures = [
                 [
                     "Vital Signs-temperature-description",
                     "Vital Signs-pulse-description",
-                    "Vital Signs-respiratory_rate-description"
+                    "Vital Signs-respiratory_rate-description",
+                    "Vital Signs-reflexes-hidden",
+                    "Vital Signs-bp_systolic-hidden",
+                    "Vital Signs-bp_diastolic-hidden",
+                    "Vital Signs-tongue-hidden",
+                    "Vital Signs-abdomen-hidden"
                 ]
             ]
         ]
