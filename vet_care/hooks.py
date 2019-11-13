@@ -47,7 +47,11 @@ fixtures = [
                     "Vital Signs-bp_systolic-hidden",
                     "Vital Signs-bp_diastolic-hidden",
                     "Vital Signs-tongue-hidden",
-                    "Vital Signs-abdomen-hidden"
+                    "Vital Signs-abdomen-hidden",
+                    "Patient-report_preference-hidden",
+                    "Patient-mobile-hidden",
+                    "Patient-email-hidden",
+                    "Patient-phone-hidden"
                 ]
             ]
         ]
