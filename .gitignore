@@ -4,3 +4,4 @@
 *.swp
 tags
 vet_care/docs/current
+.idea/
