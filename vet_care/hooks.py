@@ -21,7 +21,26 @@ fixtures = [
                 [
                     "Patient Appointment-vc_owner",
                     "Patient-vc_specie",
-                    "Patient-vc_deceased"
+                    "Patient-vc_deceased",
+                    "Patient-vc_breed",
+                    "Patient-vc_chip_id",
+                    "Patient-vc_weight",
+                    "Patient-vc_sb_pet_details",
+                    "Patient-vc_cb_pet_details"
+                ]
+            ]
+        ]
+    },
+    {
+        "doctype": "Property Setter",
+        "filters": [
+            [
+                "name",
+                "in",
+                [
+                    "Vital Signs-temperature-description",
+                    "Vital Signs-pulse-description",
+                    "Vital Signs-respiratory_rate-description"
                 ]
             ]
         ]
