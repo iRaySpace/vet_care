@@ -1,0 +1,46 @@
+{
+ "creation": "2019-11-14 18:26:05.278207",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "default",
+  "relation",
+  "customer"
+ ],
+ "fields": [
+  {
+   "default": "0",
+   "fieldname": "default",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Default"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Customer",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "relation",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Relation",
+   "options": "\nOwner"
+  }
+ ],
+ "istable": 1,
+ "modified": "2019-11-14 18:32:11.325302",
+ "modified_by": "Administrator",
+ "module": "Vet Care",
+ "name": "Pet Relation",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

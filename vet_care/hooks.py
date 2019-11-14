@@ -26,7 +26,9 @@ fixtures = [
                     "Patient-vc_chip_id",
                     "Patient-vc_weight",
                     "Vital Signs-vc_mucous_membrane",
-                    "Vital Signs-vc_capillary_refill_time"
+                    "Vital Signs-vc_capillary_refill_time",
+                    "Patient-vc_sb_relation",
+                    "Patient-vc_pet_relation"
                 ]
             ]
         ]
@@ -52,7 +54,9 @@ fixtures = [
                     "Patient-phone-hidden",
                     "Patient-mobile-in_list_view",
                     "Patient-email-in_list_view",
-                    "Patient-phone-in_list_view"
+                    "Patient-phone-in_list_view",
+                    "Patient-sb_relation-hidden",
+                    "Patient-patient_relation-hidden"
                 ]
             ]
         ]
