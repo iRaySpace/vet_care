@@ -4,11 +4,7 @@ from frappe import _
 
 
 def validate(doc, method):
-
-    pet = doc.patient
-    customer = doc.customer
-
-    if not _is_pet_related_to(pet, customer):
+    if not _is_pet_related_to(doc.patient, doc.customer):
         frappe.throw(_('Pet is not related to the customer'))
 
 
