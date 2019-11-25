@@ -57,7 +57,11 @@ fixtures = [
                     "Patient-phone-in_list_view",
                     "Patient-sb_relation-hidden",
                     "Patient-patient_relation-hidden",
-                    "Patient-customer-hidden"
+                    "Patient-customer-hidden",
+                    "Patient-personal_and_social_history-hidden",
+                    "Patient-occupation-hidden",
+                    "Patient-column_break_25-hidden",
+                    "Patient-marital_status-hidden"
                 ]
             ]
         ]
