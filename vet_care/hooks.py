@@ -61,7 +61,12 @@ fixtures = [
                     "Patient-personal_and_social_history-hidden",
                     "Patient-occupation-hidden",
                     "Patient-column_break_25-hidden",
-                    "Patient-marital_status-hidden"
+                    "Patient-marital_status-hidden",
+                    "Patient-tobacco_past_use-hidden",
+                    "Patient-tobacco_current_use-hidden",
+                    "Patient-alcohol_past_use-hidden",
+                    "Patient-alcohol_current_use-hidden",
+                    "Patient-column_break_32-hidden"
                 ]
             ]
         ]
