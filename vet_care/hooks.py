@@ -138,6 +138,9 @@ doc_events = {
     },
     "Patient Appointment": {
         "validate": "vet_care.doc_events.patient_appointment.validate"
+    },
+    "Sales Invoice": {
+        "validate": "vet_care.doc_events.sales_invoice.validate"
     }
 }
 
