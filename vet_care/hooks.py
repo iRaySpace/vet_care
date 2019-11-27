@@ -86,7 +86,7 @@ fixtures = [
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/vet_care/css/vet_care.css"
-# app_include_js = "/assets/vet_care/js/vet_care.js"
+app_include_js = "/assets/js/vet_care.min.js"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/vet_care/css/vet_care.css"
