@@ -20,7 +20,7 @@ fixtures = [
                 "in",
                 [
                     "Patient Appointment-vc_owner",
-                    "Patient-vc_specie",
+                    "Patient-vc_species",
                     "Patient-vc_deceased",
                     "Patient-vc_breed",
                     "Patient-vc_chip_id",
