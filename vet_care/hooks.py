@@ -28,7 +28,8 @@ fixtures = [
                     "Vital Signs-vc_mucous_membrane",
                     "Vital Signs-vc_capillary_refill_time",
                     "Patient-vc_sb_relation",
-                    "Patient-vc_pet_relation"
+                    "Patient-vc_pet_relation",
+                    "Patient-vc_neutered"
                 ]
             ]
         ]
