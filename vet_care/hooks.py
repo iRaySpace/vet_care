@@ -74,7 +74,9 @@ fixtures = [
                     "Inpatient Record-mobile-hidden",
                     "Inpatient Record-email-hidden",
                     "Inpatient Record-phone-hidden",
-                    "Inpatient Record-blood_group-hidden"
+                    "Inpatient Record-blood_group-hidden",
+                    "Inpatient Record-expected_discharge-in_list_view",
+                    "Inpatient Record-scheduled_date-in_list_view"
                 ]
             ]
         ]
