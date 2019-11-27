@@ -69,7 +69,11 @@ fixtures = [
                     "Patient-alcohol_current_use-hidden",
                     "Patient-column_break_32-hidden",
                     "Patient-patient_name-unique",
-                    "Patient-blood_group-hidden"
+                    "Patient-blood_group-hidden",
+                    "Inpatient Record-mobile-hidden",
+                    "Inpatient Record-email-hidden",
+                    "Inpatient Record-phone-hidden",
+                    "Inpatient Record-blood_group-hidden"
                 ]
             ]
         ]
