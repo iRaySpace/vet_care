@@ -20,7 +20,7 @@ fixtures = [
                 "in",
                 [
                     "Patient Appointment-vc_owner",
-                    "Patient-vc_specie",
+                    "Patient-vc_species",
                     "Patient-vc_deceased",
                     "Patient-vc_breed",
                     "Patient-vc_chip_id",
@@ -28,7 +28,9 @@ fixtures = [
                     "Vital Signs-vc_mucous_membrane",
                     "Vital Signs-vc_capillary_refill_time",
                     "Patient-vc_sb_relation",
-                    "Patient-vc_pet_relation"
+                    "Patient-vc_pet_relation",
+                    "Patient-vc_neutered",
+                    "Inpatient Record-vc_customer"
                 ]
             ]
         ]
@@ -57,7 +59,24 @@ fixtures = [
                     "Patient-phone-in_list_view",
                     "Patient-sb_relation-hidden",
                     "Patient-patient_relation-hidden",
-                    "Patient-customer-hidden"
+                    "Patient-customer-hidden",
+                    "Patient-personal_and_social_history-hidden",
+                    "Patient-occupation-hidden",
+                    "Patient-column_break_25-hidden",
+                    "Patient-marital_status-hidden",
+                    "Patient-tobacco_past_use-hidden",
+                    "Patient-tobacco_current_use-hidden",
+                    "Patient-alcohol_past_use-hidden",
+                    "Patient-alcohol_current_use-hidden",
+                    "Patient-column_break_32-hidden",
+                    "Patient-patient_name-unique",
+                    "Patient-blood_group-hidden",
+                    "Inpatient Record-mobile-hidden",
+                    "Inpatient Record-email-hidden",
+                    "Inpatient Record-phone-hidden",
+                    "Inpatient Record-blood_group-hidden",
+                    "Inpatient Record-expected_discharge-in_list_view",
+                    "Inpatient Record-scheduled_date-in_list_view"
                 ]
             ]
         ]
@@ -69,7 +88,7 @@ fixtures = [
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/vet_care/css/vet_care.css"
-# app_include_js = "/assets/vet_care/js/vet_care.js"
+app_include_js = "/assets/js/vet_care.min.js"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/vet_care/css/vet_care.css"
@@ -79,7 +98,10 @@ fixtures = [
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {
+    "Sales Invoice": "public/js/sales_invoice.js",
+    "Inpatient Record": "public/js/inpatient_record.js"
+}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -138,6 +160,9 @@ doc_events = {
     },
     "Patient Appointment": {
         "validate": "vet_care.doc_events.patient_appointment.validate"
+    },
+    "Sales Invoice": {
+        "validate": "vet_care.doc_events.sales_invoice.validate"
     }
 }
 
