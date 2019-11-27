@@ -570,7 +570,7 @@
   "doctype": "Property Setter",
   "doctype_or_field": "DocField",
   "field_name": "blood_group",
-  "modified": "2019-11-27 14:21:35.035396",
+  "modified": "2019-11-27 14:31:36.545454",
   "name": "Patient-blood_group-hidden",
   "parent": null,
   "parentfield": null,
