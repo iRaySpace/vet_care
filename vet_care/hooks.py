@@ -67,7 +67,8 @@ fixtures = [
                     "Patient-alcohol_past_use-hidden",
                     "Patient-alcohol_current_use-hidden",
                     "Patient-column_break_32-hidden",
-                    "Patient-patient_name-unique"
+                    "Patient-patient_name-unique",
+                    "Patient-blood_group-hidden"
                 ]
             ]
         ]
