@@ -31,7 +31,9 @@ fixtures = [
                     "Patient-vc_pet_relation",
                     "Patient-vc_neutered",
                     "Inpatient Record-vc_customer",
-                    "Patient-vc_color"
+                    "Patient-vc_color",
+                    "Patient-vc_dtod",
+                    "Patient-vc_rod"
                 ]
             ]
         ]
