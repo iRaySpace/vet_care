@@ -29,7 +29,8 @@ fixtures = [
                     "Vital Signs-vc_capillary_refill_time",
                     "Patient-vc_sb_relation",
                     "Patient-vc_pet_relation",
-                    "Patient-vc_neutered"
+                    "Patient-vc_neutered",
+                    "Inpatient Record-vc_customer"
                 ]
             ]
         ]
@@ -96,7 +97,8 @@ fixtures = [
 
 # include js in doctype views
 doctype_js = {
-    "Sales Invoice": "public/js/sales_invoice.js"
+    "Sales Invoice": "public/js/sales_invoice.js",
+    "Inpatient Record": "public/js/inpatient_record.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
