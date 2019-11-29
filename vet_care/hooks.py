@@ -107,7 +107,8 @@ app_include_js = "/assets/js/vet_care.min.js"
 doctype_js = {
     "Sales Invoice": "public/js/sales_invoice.js",
     "Inpatient Record": "public/js/inpatient_record.js",
-    "Patient": "public/js/patient.js"
+    "Patient": "public/js/patient.js",
+    "Vital Signs": "public/js/vital_signs.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
