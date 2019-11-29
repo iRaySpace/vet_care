@@ -7,8 +7,14 @@ from toolz import first, compose, pluck, partial
 def validate(doc, method):
     doc.disabled = doc.vc_deceased
 
+    _set_owner_as_default_customer(doc)
     _validate_default_customer(doc)
     doc.customer = _get_default_customer(doc)
+
+
+def _set_owner_as_default_customer(doc):
+    for pet_relation in doc.vc_pet_relation:
+        pet_relation.default = (pet_relation.relation == 'Owner')
 
 
 def _validate_default_customer(doc):
