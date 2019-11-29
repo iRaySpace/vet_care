@@ -22,4 +22,4 @@ def _validate_phone_nos(doc):
     )(doc.phone_nos)
 
     if not valid_phone_numbers:
-        frappe.throw(_('Phone numbers are not valid'))
+        frappe.throw(_('Only phone numbers with + (plus sign) accepted'))
