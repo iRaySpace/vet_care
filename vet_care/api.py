@@ -22,11 +22,11 @@ def apply_core_overrides():
         WHERE parent = 'Patient'
         AND fieldname = 'customer'
     """)
+    frappe.db.sql("""
+        UPDATE `tabDocType`
+        SET autoname = 'VS-.#####'
+        WHERE name = 'Vital Signs'
+    """)
     frappe.db.commit()
 
-    return first(frappe.db.sql("""
-        SELECT set_only_once
-        FROM `tabDocField` 
-        WHERE parent = 'Patient' 
-        AND fieldname = 'customer'
-    """, as_dict=1))
+    return True
