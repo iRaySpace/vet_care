@@ -169,6 +169,9 @@ doc_events = {
     },
     "Sales Invoice": {
         "validate": "vet_care.doc_events.sales_invoice.validate"
+    },
+    "Contact": {
+        "validate": "vet_care.doc_events.contact.validate"
     }
 }
 
