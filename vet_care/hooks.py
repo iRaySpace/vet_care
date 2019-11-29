@@ -81,7 +81,8 @@ fixtures = [
                     "Inpatient Record-blood_group-hidden",
                     "Inpatient Record-expected_discharge-in_list_view",
                     "Inpatient Record-scheduled_date-in_list_view",
-                    "Patient-surrounding_factors-label"
+                    "Patient-surrounding_factors-label",
+                    "Item-is_stock_item-default"
                 ]
             ]
         ]

@@ -718,5 +718,25 @@
   "property": "label",
   "property_type": "Data",
   "value": "Environmental Factors"
+ },
+ {
+  "_assign": null,
+  "_comments": null,
+  "_liked_by": null,
+  "_user_tags": null,
+  "default_value": null,
+  "doc_type": "Item",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "is_stock_item",
+  "modified": "2019-11-29 16:09:06.090496",
+  "name": "Item-is_stock_item-default",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "default",
+  "property_type": "Text",
+  "value": "0"
  }
 ]
