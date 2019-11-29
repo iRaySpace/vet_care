@@ -29,11 +29,11 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Relation",
-   "options": "\nOwner"
+   "options": "\nOwner\nMother\nFather\nBrother\nSister\nServant\nOther"
   }
  ],
  "istable": 1,
- "modified": "2019-11-14 18:32:11.325302",
+ "modified": "2019-11-29 15:20:36.467594",
  "modified_by": "Administrator",
  "module": "Vet Care",
  "name": "Pet Relation",
