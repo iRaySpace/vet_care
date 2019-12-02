@@ -206,9 +206,9 @@ doc_events = {
 # Overriding Methods
 # ------------------------------
 #
-# override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "vet_care.event.get_events"
-# }
+override_whitelisted_methods = {
+	"erpnext.healthcare.doctype.patient_appointment.patient_appointment.get_events": "vet_care.whitelist_methods.patient_appointment.get_events"
+}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
