@@ -30,7 +30,11 @@ fixtures = [
                     "Patient-vc_sb_relation",
                     "Patient-vc_pet_relation",
                     "Patient-vc_neutered",
-                    "Inpatient Record-vc_customer"
+                    "Inpatient Record-vc_customer",
+                    "Patient-vc_color",
+                    "Patient-vc_dtod",
+                    "Patient-vc_rod",
+                    "Patient-vc_nutrition"
                 ]
             ]
         ]
@@ -76,7 +80,9 @@ fixtures = [
                     "Inpatient Record-phone-hidden",
                     "Inpatient Record-blood_group-hidden",
                     "Inpatient Record-expected_discharge-in_list_view",
-                    "Inpatient Record-scheduled_date-in_list_view"
+                    "Inpatient Record-scheduled_date-in_list_view",
+                    "Patient-surrounding_factors-label",
+                    "Item-is_stock_item-default"
                 ]
             ]
         ]
@@ -100,7 +106,9 @@ app_include_js = "/assets/js/vet_care.min.js"
 # include js in doctype views
 doctype_js = {
     "Sales Invoice": "public/js/sales_invoice.js",
-    "Inpatient Record": "public/js/inpatient_record.js"
+    "Inpatient Record": "public/js/inpatient_record.js",
+    "Patient": "public/js/patient.js",
+    "Vital Signs": "public/js/vital_signs.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -163,6 +171,9 @@ doc_events = {
     },
     "Sales Invoice": {
         "validate": "vet_care.doc_events.sales_invoice.validate"
+    },
+    "Contact": {
+        "validate": "vet_care.doc_events.contact.validate"
     }
 }
 
@@ -195,9 +206,9 @@ doc_events = {
 # Overriding Methods
 # ------------------------------
 #
-# override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "vet_care.event.get_events"
-# }
+override_whitelisted_methods = {
+	"erpnext.healthcare.doctype.patient_appointment.patient_appointment.get_events": "vet_care.whitelist_methods.patient_appointment.get_events"
+}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,

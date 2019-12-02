@@ -18,20 +18,21 @@ def execute(filters=None):
 
 
 def get_columns(filters):
-	def make_column(label, fieldname, width, fieldtype='Data'):
+	def make_column(label, fieldname, width, fieldtype='Data', options=''):
 		return {
 			'label': _(label),
 			'fieldname': fieldname,
 			'fieldtype': fieldtype,
-			'width': width
+			'width': width,
+			'options': options
 		}
 
 	return [
-		make_column('Species', 'species', 100),
-		make_column('Animal', 'animal', 100),
-		make_column('Owner', 'owner', 100),
-		make_column('Date Admitted', 'date_admitted', 100),
-		make_column('Days', 'days', 100)
+		make_column('Species', 'species', 100, 'Link', 'Species'),
+		make_column('Animal', 'animal', 100, 'Link', 'Patient'),
+		make_column('Owner', 'owner', 150, 'Link', 'Customer'),
+		make_column('Date Admitted', 'date_admitted', 130),
+		make_column('Days', 'days', 80)
 	]
 
 
@@ -43,7 +44,8 @@ def get_data(filters):
 def _get_inpatient_records(filters):
 	return frappe.db.sql("""
 		SELECT
-			vc_specie AS species,
+			vc_species AS species,
+			customer AS owner,
 			patient AS animal,
 			DATE(admitted_datetime) AS date_admitted
 		FROM `tabInpatient Record`
