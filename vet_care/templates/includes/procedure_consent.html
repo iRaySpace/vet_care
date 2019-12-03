@@ -1,35 +1,9 @@
-<style>
-  .block { margin: 3em 0 0; }
-  .under {
-    border-top: 1px solid black;
-    padding-top: 1em;
-  }
-</style>
+{% extends "templates/includes/base_pf_form.html" %}
 
-<div class="main-content">
-  <h1 class="text-center">Procedure Consent</h1>
-  <div class="text-center lead">Form 01</div>
-  <div class="row block">
-    <header class="lead">Animal Details</header>
-    <div class="col-xs-6">
-      <div class="data-field">Name: {{ doc.patient_name }}</div>
-      <div class="data-field">Sex: {{ doc.sex }}</div>
-      <div class="data-field">Weight: {{ doc.vc_weight }} kg(s)</div>
-      <div class="data-field">Age: {{ calculate_age(doc.dob) }} yr(s) (born {{ doc.dob }})</div>
-    </div>
-    <div class="col-xs-6">
-      <div class="data-field">Species: {{ doc.vc_species }}</div>
-      <div class="data-field">Breed: {{ doc.vc_breed }}</div>
-      <div class="data-field">Colour: {{ doc.vc_color }}</div>
-    </div>
-  </div>
-  <div class="row block">
-    <header class="lead">Procedure</header>
-    <p class="text-justify">I hereby give permission for the administration of an anaesthetic to the above animal and to the surgical procedure detailed on this form; along with any other procedures that may prove necessary. I understand that all anaesthetic techniques and surgical procedures involve some risk to my animal. I give permission for the nursing staff to administer medications to my pet under the direction of the veterinary surgeons.</p>
-    <p class="text-justify">I understand that there will be a charge for the treatment which will be paid in full on signing the form or 50% on signing the form and the rest on collection of the pet.</p>
-  </div>
-  <div class="row block">
-    <div class="under col-xs-7">Signed by</div>
-    <div class="under text-center col-xs-4 col-xs-offset-1">Date</div>
-  </div>
-</div>
+{% block title %}Procedure Consent{% endblock %}
+{% block form %}01{% endblock %}
+
+{% block procedure %}
+<p class="text-justify">I hereby give permission for the administration of an anaesthetic to the above animal and to the surgical procedure detailed on this form; along with any other procedures that may prove necessary. I understand that all anaesthetic techniques and surgical procedures involve some risk to my animal. I give permission for the nursing staff to administer medications to my pet under the direction of the veterinary surgeons.</p>
+<p class="text-justify">I understand that there will be a charge for the treatment which will be paid in full on signing the form or 50% on signing the form and the rest on collection of the pet.</p>
+{% endblock %}
