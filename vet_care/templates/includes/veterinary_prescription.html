@@ -1,0 +1,38 @@
+{% extends "templates/includes/base_pf_form.html" %}
+
+{% block title %}Veterinary Prescription{% endblock %}
+{% block form %}02{% endblock %}
+
+{% block procedure %}
+<p>Drug(s) to be dispensed (for animal treatment only):</p>
+
+<div class="row">
+  <div class="col-xs-1">Qty</div>
+  <div class="col-xs-7">Description</div>
+  <div class="col-xs-4">Dosage</div>
+</div>
+
+<div class="block">
+  <p>Under Veterinary Medicines Regulations 2005 substitution of a different medication over a licensed veterinary product is illegal. Drugs are prescribed under Cascade Regulations.</p>
+  <p>I confirm that this animal is under my care.</p>
+</div>
+{% endblock %}
+
+{% block additional %}
+<div class="row block">
+  <div class="under col-xs-7">Expiry</div>
+  <div class="under text-center col-xs-4 col-xs-offset-1">Repeats</div>
+</div>
+<div class="block">
+  <p class="text-justify text-uppercase">This prescription is for single use only. Items are subject to VAT. The pharmacist/authorised dispenser should retain this script for 2 years against future audit.</p>
+</div>
+<div class="block">
+  <p class="text-justify">It is important to note that under the current legislation Schedules 3 and 4 of the Veterinary Medicines Regulations 2005 must be followed. Substitution of a different medication for a named authorised licensed veterinary medication maybe illegal. This practice accepts no responsibility for the safety withdrawal periods or efficacy of any substituted medications nor any liability for any losses howsoever sustained. All such liabilities rest exclusively with the pharmacist/authorised dispenser. Veterinary surgeons will use their knowledge to decide on the best medication for the patient. They will consider the patient's condition any drug interactions and any other existing disease. They will also make detailed notes in the patient's clinical records. Finally, they will write the prescription.</p>
+</div>
+<div class="block">
+  <p class="text-uppercase">Special Instructions</p>
+</div>
+<div class="block">
+  <p class="text-uppercase">This prescription is valid for 6 months from the date signed - or until the date below (whichever is shorter).</p>
+</div>
+{% endblock %}
