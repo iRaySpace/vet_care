@@ -1,5 +1,5 @@
 import frappe
-
+from frappe.utils import today
 from toolz import pluck, partial, compose, first
 
 
@@ -30,3 +30,31 @@ def apply_core_overrides():
     frappe.db.commit()
 
     return True
+
+
+@frappe.whitelist()
+def make_invoice(dt, dn):
+    sales_invoice = frappe.new_doc('Sales Invoice')
+
+    template = frappe.get_value('Lab Test', dn, 'template')
+    rate = frappe.get_value('Lab Test Template', template, 'lab_test_rate')
+
+    sales_invoice.append('items', {
+        'item_code': template,
+        'qty': 1,
+        'rate': rate,
+        'reference_dt': dt,
+        'reference_dn': dn
+    })
+
+    patient = frappe.get_value('Lab Test', dn, 'patient')
+    customer = frappe.get_value('Patient', patient, 'customer')
+    sales_invoice.update({
+        'patient': patient,
+        'customer': customer,
+        'due_date': today()
+    })
+
+    sales_invoice.set_missing_values()
+
+    return sales_invoice
