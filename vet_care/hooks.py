@@ -110,7 +110,8 @@ doctype_js = {
     "Inpatient Record": "public/js/inpatient_record.js",
     "Patient": "public/js/patient.js",
     "Vital Signs": "public/js/vital_signs.js",
-    "Lab Test": "public/js/lab_test.js"
+    "Lab Test": "public/js/lab_test.js",
+    "Patient Encounter": "public/js/patient_encounter.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}

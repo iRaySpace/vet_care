@@ -58,3 +58,33 @@ def make_invoice(dt, dn):
     sales_invoice.set_missing_values()
 
     return sales_invoice
+
+
+@frappe.whitelist()
+def make_invoice_for_encounter(dt, dn):
+    sales_invoice = frappe.new_doc('Sales Invoice')
+
+    practitioner = frappe.get_value('Patient Encounter', dn, 'practitioner')
+    op_consulting_charge_item = frappe.get_value('Healthcare Practitioner', practitioner, 'op_consulting_charge_item')
+    op_consulting_charge = frappe.db.get_value('Healthcare Practitioner', practitioner, 'op_consulting_charge')
+
+    sales_invoice.append('items', {
+        'item_code': op_consulting_charge_item,
+        'qty': 1,
+        'rate': op_consulting_charge,
+        'reference_dt': dt,
+        'reference_dn': dn
+    })
+
+    patient = frappe.get_value('Patient Encounter', dn, 'patient')
+    customer = frappe.get_value('Patient', patient, 'customer')
+
+    sales_invoice.update({
+        'patient': patient,
+        'customer': customer,
+        'due_date': today()
+    })
+
+    sales_invoice.set_missing_values()
+
+    return sales_invoice
