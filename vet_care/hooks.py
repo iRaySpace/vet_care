@@ -55,7 +55,7 @@ fixtures = [
                     "Vital Signs-tongue-hidden",
                     "Vital Signs-abdomen-hidden",
                     "Patient-report_preference-hidden",
-                    "Patient-mobile-hidden",
+                    "Patient-mobile-read_only",
                     "Patient-email-hidden",
                     "Patient-phone-hidden",
                     "Patient-mobile-in_list_view",
