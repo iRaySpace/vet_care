@@ -34,7 +34,8 @@ fixtures = [
                     "Patient-vc_color",
                     "Patient-vc_dtod",
                     "Patient-vc_rod",
-                    "Patient-vc_nutrition"
+                    "Patient-vc_nutrition",
+                    "Sales Invoice-patient_name"
                 ]
             ]
         ]
