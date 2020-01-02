@@ -2,7 +2,7 @@ import frappe
 import re
 
 from frappe import _
-from toolz import compose, partial, first
+from toolz import compose, partial
 
 
 def validate(doc, method):
@@ -18,8 +18,9 @@ def _validate_phone_nos(doc):
         all,
         partial(map, lambda x: x.isdigit()),
         partial(map, phone_number),
-        partial(map, lambda x: x.phone)
-    )(doc.phone_nos)
+        partial(filter, lambda x: x),
+        partial(map, lambda x: doc.get(x)),
+    )(["phone", "mobile_no"])
 
     if not valid_phone_numbers:
         frappe.throw(_('Only phone numbers with + (plus sign) accepted'))
