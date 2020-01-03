@@ -88,3 +88,12 @@ def make_invoice_for_encounter(dt, dn):
     sales_invoice.set_missing_values()
 
     return sales_invoice
+
+
+@frappe.whitelist()
+def get_medical_records(patient):
+    return frappe.get_all(
+        'Patient Medical Record',
+        filters={'patient': patient},
+        fields=['reference_doctype', 'reference_name', 'communication_date']
+    )
