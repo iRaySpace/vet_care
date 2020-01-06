@@ -4,6 +4,7 @@
 frappe.ui.form.on('Animal Overview', {
 	refresh: function(frm) {
 		frm.disable_save();
+		_set_actions(frm);
 	},
 	animal: function(frm) {
 		_set_animal_details(frm);
@@ -40,6 +41,28 @@ async function _set_clinical_history(frm) {
 	`);
 }
 
+function _set_actions(frm) {
+	$(frm.fields_dict['actions_html'].wrapper).html(`
+		<div class="row">
+			<div class="col-sm-6">
+				<button type="reset" class="btn btn-xs btn-primary" id="close">Close</button>
+				<button type="reset" class="btn btn-xs btn-danger" id="discard">Discard</button>
+			</div>
+		</div>
+	`);
+
+	const actions = {
+		close: function() {
+			console.log('closing');
+		},
+		discard: function() {
+			console.log('discarding');
+		}
+	};
+
+	_map_buttons_to_functions(actions);
+}
+
 // table utils
 function _get_table_rows(records, fields) {
 	return records.map((record) => {
@@ -60,4 +83,13 @@ function _get_table_header(fields) {
 	const columns = header_texts.map((column) =>
 		`<th>${column}</th>`);
 	return `<tr>${columns.join('\n')}</tr>`;
+}
+
+// actions utils
+function _map_buttons_to_functions(actions) {
+	Object.keys(actions).forEach((action) =>
+		$(`#${action}`).click(
+			actions[action]
+		)
+	);
 }
