@@ -1,7 +1,8 @@
 // Copyright (c) 2020, 9T9IT and contributors
 // For license information, please see license.txt
-
 // TODO: activity_type should be dynamic
+
+let _filter_length = 20;
 
 frappe.ui.form.on('Animal Overview', {
 	refresh: function(frm) {
@@ -77,19 +78,43 @@ async function _set_animal_details(frm) {
 async function _set_clinical_history(frm) {
 	const { message: clinical_history } = await frappe.call({
 		method: 'vet_care.api.get_clinical_history',
-		args: { patient: frm.doc.animal }
+		args: {
+			patient: frm.doc.animal,
+			filter_length: _filter_length,
+		},
 	});
 
 	const fields = ['posting_date', 'description', 'price'];
 
 	const table_rows = _get_table_rows(clinical_history, fields);
 	const table_header = _get_table_header(fields);
+
+	// TODO: separate to renderer
 	$(frm.fields_dict['clinical_history_html'].wrapper).html(`
 		<table class="table table-bordered">
 			${table_header}
 			${table_rows.join('\n')}
 		</table>
+		<div class="list-paging-area level">
+			<div class="btn-group">
+				<button class="btn btn-default btn-paging" data-value="20">20</button>
+				<button class="btn btn-default btn-paging" data-value="100">100</button>
+				<button class="btn btn-default btn-paging" data-value="500">500</button>
+			</div>
+			<div>
+				<button class="btn btn-default btn-more">More...</button>
+			</div>
+		</div>
 	`);
+
+	_set_clinical_history_buttons(frm);
+}
+
+function _set_clinical_history_buttons(frm) {
+	$('.btn-paging').click(function() {
+		_filter_length = $(this).data('value');
+		_set_clinical_history(frm);
+	});
 }
 
 function _set_actions(frm) {

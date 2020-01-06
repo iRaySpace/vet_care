@@ -126,7 +126,7 @@ def close_invoice(items, patient, customer):
 
 
 @frappe.whitelist()
-def get_clinical_history(patient):
+def get_clinical_history(patient, filter_length):
     """
     Patient's Clinical History is consist of:
     (1) Patient Activity
@@ -158,6 +158,8 @@ def get_clinical_history(patient):
         list,
         partial(map, sales_invoice_item_mapper)
     )
+
+    print(filter_length)
 
     return list(concat([
         get_patient_activities(
