@@ -52,11 +52,11 @@ function _set_actions(frm) {
 	`);
 
 	const actions = {
-		close: function() {
-			console.log('closing');
+		close: () => {
+			console.log('closed');
 		},
-		discard: function() {
-			console.log('discarding');
+		discard: () => {
+			frm.set_value('items', []);
 		}
 	};
 
