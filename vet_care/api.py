@@ -1,4 +1,5 @@
 import frappe
+import json
 from frappe.utils import today
 from toolz import pluck, partial, compose, first
 
@@ -97,3 +98,27 @@ def get_medical_records(patient):
         filters={'patient': patient},
         fields=['reference_doctype', 'reference_name', 'communication_date']
     )
+
+
+@frappe.whitelist()
+def close_invoice(items, patient, customer):
+    items = json.loads(items)
+
+    sales_invoice = frappe.new_doc('Sales Invoice')
+    sales_invoice.update({
+        'patient': patient,
+        'customer': customer,
+        'due_date': today()
+    })
+
+    for item in items:
+        sales_invoice.append('items', {
+            'item_code': item.get('item_code'),
+            'qty': item.get('qty'),
+            'rate': item.get('rate')
+        })
+
+    sales_invoice.set_missing_values()
+    sales_invoice.submit()
+
+    return sales_invoice

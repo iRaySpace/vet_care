@@ -78,7 +78,10 @@ function _set_actions(frm) {
 
 	const actions = {
 		close: function() {
-			console.log('closed');
+			frappe.confirm(
+				'Are you sure you want to close the invoice?',
+				() => _close_invoice(frm),
+			);
 		},
 		discard: function() {
 			frm.set_value('items', []);
@@ -91,6 +94,19 @@ function _set_actions(frm) {
 function _update_child_amount(frm, cdt, cdn) {
 	const child = _get_child(cdt, cdn);
 	frappe.model.set_value(cdt, cdn, 'amount', child.qty * child.rate);
+}
+
+async function _close_invoice(frm) {
+	const { message: invoice } = await frappe.call({
+		method: 'vet_care.api.close_invoice',
+		args: {
+			items: frm.doc.items,
+			patient: frm.doc.animal,
+			customer: frm.doc.default_owner,
+		},
+	});
+	frappe.show_alert(`Sales Invoice ${invoice.name} created`);
+	frm.set_value('items', []);
 }
 
 // table utils
