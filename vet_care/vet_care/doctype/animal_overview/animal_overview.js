@@ -12,6 +12,31 @@ frappe.ui.form.on('Animal Overview', {
 	}
 });
 
+frappe.ui.form.on('Animal Overview Item', {
+	qty: function(frm, cdt, cdn) {
+		_update_child_amount(frm, cdt, cdn);
+	},
+	rate: function(frm, cdt, cdn) {
+		_update_child_amount(frm, cdt, cdn);
+	},
+	item_code: async function(frm, cdt, cdn) {
+		const child = _get_child(cdt, cdn);
+
+		if (!child.qty) {
+			frappe.model.set_value(cdt, cdn, 'qty', 1.0);
+		}
+
+		if (!child.rate) {
+			const { message: item } = await frappe.db.get_value(
+				'Item',
+				{ name: child.item_code },
+				'standard_rate',
+			);
+			frappe.model.set_value(cdt, cdn, 'rate', item.standard_rate);
+		}
+	},
+});
+
 async function _set_animal_details(frm) {
 	const patient = await frappe.db.get_doc('Patient', frm.doc.animal);
 	frm.set_value('animal_name', patient.patient_name);
@@ -45,8 +70,8 @@ function _set_actions(frm) {
 	$(frm.fields_dict['actions_html'].wrapper).html(`
 		<div class="row">
 			<div class="col-sm-6">
-				<button type="reset" class="btn btn-xs btn-primary" id="close">Close</button>
-				<button type="reset" class="btn btn-xs btn-danger" id="discard">Discard</button>
+				<button class="btn btn-xs btn-primary" id="close">Close</button>
+				<button class="btn btn-xs btn-danger" id="discard">Discard</button>
 			</div>
 		</div>
 	`);
@@ -61,6 +86,11 @@ function _set_actions(frm) {
 	};
 
 	_map_buttons_to_functions(actions);
+}
+
+function _update_child_amount(frm, cdt, cdn) {
+	const child = _get_child(cdt, cdn);
+	frappe.model.set_value(cdt, cdn, 'amount', child.qty * child.rate);
 }
 
 // table utils
@@ -92,4 +122,9 @@ function _map_buttons_to_functions(actions) {
 			actions[action]
 		)
 	);
+}
+
+// child table utils
+function _get_child(cdt, cdn) {
+	return locals[cdt][cdn];
 }
