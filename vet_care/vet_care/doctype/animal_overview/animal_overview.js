@@ -77,10 +77,10 @@ function _set_actions(frm) {
 	`);
 
 	const actions = {
-		close: () => {
+		close: function() {
 			console.log('closed');
 		},
-		discard: () => {
+		discard: function() {
 			frm.set_value('items', []);
 		}
 	};
