@@ -135,6 +135,8 @@ def get_clinical_history(patient, filter_length):
     Clinical History returns structurally:
     ('posting_date', 'description', 'price')
     """
+    filter_length = int(filter_length)
+
     def patient_activity_mapper(patient_activity):
         return {
             'posting_date': patient_activity.get('posting_date'),
@@ -159,9 +161,7 @@ def get_clinical_history(patient, filter_length):
         partial(map, sales_invoice_item_mapper)
     )
 
-    print(filter_length)
-
-    return list(concat([
+    clinical_history = list(concat([
         get_patient_activities(
             frappe.get_all(
                 'Patient Activity',
@@ -173,6 +173,8 @@ def get_clinical_history(patient, filter_length):
             _get_sales_invoice_items(frappe.get_value('Patient', patient, 'customer'))
         )
     ]))
+
+    return clinical_history[:filter_length]
 
 
 @frappe.whitelist()
