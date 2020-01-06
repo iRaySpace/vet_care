@@ -88,7 +88,15 @@ function _set_actions(frm) {
 		}
 	};
 
-	_map_buttons_to_functions(actions);
+	_map_buttons_to_functions(actions, {
+		decorator_fn: (fn) => {
+			if (!frm.doc.animal) {
+				frappe.throw(__('Animal is required.'));
+				return;
+			}
+			fn();
+		},
+	});
 }
 
 function _update_child_amount(frm, cdt, cdn) {
@@ -132,12 +140,17 @@ function _get_table_header(fields) {
 }
 
 // actions utils
-function _map_buttons_to_functions(actions) {
-	Object.keys(actions).forEach((action) =>
+function _map_buttons_to_functions(actions, args) {
+	const decorator_fn = args.decorator_fn
+		? args.decorator_fn
+		: null;
+	Object.keys(actions).forEach((action) => {
 		$(`#${action}`).click(
-			actions[action]
-		)
-	);
+			decorator_fn
+				? () => decorator_fn(actions[action])
+				: actions[action]
+		);
+	});
 }
 
 // child table utils
