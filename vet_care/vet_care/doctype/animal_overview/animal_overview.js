@@ -1,6 +1,8 @@
 // Copyright (c) 2020, 9T9IT and contributors
 // For license information, please see license.txt
 
+// TODO: activity_type should be dynamic
+
 frappe.ui.form.on('Animal Overview', {
 	refresh: function(frm) {
 		frm.disable_save();
@@ -8,6 +10,29 @@ frappe.ui.form.on('Animal Overview', {
 	},
 	animal: function(frm) {
 		_set_animal_details(frm);
+		_set_clinical_history(frm);
+	},
+	new_activity: async function(frm) {
+		if (!frm.doc.animal) {
+			frappe.throw(__('Animal is required.'));
+			return;
+		}
+
+		const { message: patient_activity } = await frappe.call({
+			method: 'vet_care.api.make_patient_activity',
+			args: {
+				patient: frm.doc.animal,
+				activity_type: frm.doc.activity_type,
+				description: frm.doc.description
+			}
+		});
+		frappe.show_alert(`Patient Activity created`);
+
+		// clear data
+		frm.set_value('activity_type', '');
+		frm.set_value('description', '');
+
+		// refresh clinical history
 		_set_clinical_history(frm);
 	}
 });
@@ -50,11 +75,6 @@ async function _set_animal_details(frm) {
 }
 
 async function _set_clinical_history(frm) {
-	// const { message: medical_records } = await frappe.call({
-	// 	method: 'vet_care.api.get_medical_records',
-	// 	args: { patient: frm.doc.animal }
-	// });
-
 	const { message: clinical_history } = await frappe.call({
 		method: 'vet_care.api.get_clinical_history',
 		args: { patient: frm.doc.animal }

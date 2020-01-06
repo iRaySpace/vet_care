@@ -173,6 +173,20 @@ def get_clinical_history(patient):
     ]))
 
 
+@frappe.whitelist()
+def make_patient_activity(patient, activity_type, description):
+    patient_activity = frappe.get_doc({
+        'doctype': 'Patient Activity',
+        'patient': patient,
+        'posting_date': today(),
+        'activity_type': activity_type,
+        'description': description
+    })
+    patient_activity.save()
+
+    return patient_activity
+
+
 def _get_sales_invoice_items(customer):
     return frappe.db.sql("""
         SELECT 
