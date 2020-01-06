@@ -50,13 +50,19 @@ async function _set_animal_details(frm) {
 }
 
 async function _set_clinical_history(frm) {
-	const { message: medical_records } = await frappe.call({
-		method: 'vet_care.api.get_medical_records',
+	// const { message: medical_records } = await frappe.call({
+	// 	method: 'vet_care.api.get_medical_records',
+	// 	args: { patient: frm.doc.animal }
+	// });
+
+	const { message: clinical_history } = await frappe.call({
+		method: 'vet_care.api.get_clinical_history',
 		args: { patient: frm.doc.animal }
 	});
 
-	const fields = ['reference_doctype', 'communication_date'];
-	const table_rows = _get_table_rows(medical_records, fields);
+	const fields = ['posting_date', 'description', 'price'];
+
+	const table_rows = _get_table_rows(clinical_history, fields);
 	const table_header = _get_table_header(fields);
 	$(frm.fields_dict['clinical_history_html'].wrapper).html(`
 		<table class="table table-bordered">

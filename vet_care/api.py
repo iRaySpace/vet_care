@@ -1,7 +1,7 @@
 import frappe
 import json
 from frappe.utils import today
-from toolz import pluck, partial, compose, first
+from toolz import pluck, partial, compose, first, concat
 
 
 @frappe.whitelist()
@@ -91,6 +91,7 @@ def make_invoice_for_encounter(dt, dn):
     return sales_invoice
 
 
+# deprecated
 @frappe.whitelist()
 def get_medical_records(patient):
     return frappe.get_all(
@@ -122,3 +123,64 @@ def close_invoice(items, patient, customer):
     sales_invoice.submit()
 
     return sales_invoice
+
+
+@frappe.whitelist()
+def get_clinical_history(patient):
+    """
+    Patient's Clinical History is consist of:
+    (1) Patient Activity
+    (2) Sales Invoice Items
+
+    Clinical History returns structurally:
+    ('posting_date', 'description', 'price')
+    """
+    def patient_activity_mapper(patient_activity):
+        return {
+            'posting_date': patient_activity.get('posting_date'),
+            'description': f"{patient_activity.get('activity_type').upper()}: {patient_activity.get('description')}",
+            'price': ''
+        }
+
+    def sales_invoice_item_mapper(sales_invoice_item):
+        return {
+            'posting_date': sales_invoice_item.get('posting_date'),
+            'description': f"{sales_invoice_item.get('qty')} x {sales_invoice_item.get('item_code')}",
+            'price': sales_invoice_item.get('amount')
+        }
+
+    get_patient_activities = compose(
+        list,
+        partial(map, patient_activity_mapper)
+    )
+
+    get_sales_invoice_items = compose(
+        list,
+        partial(map, sales_invoice_item_mapper)
+    )
+
+    return list(concat([
+        get_patient_activities(
+            frappe.get_all(
+                'Patient Activity',
+                filters={'patient': patient},
+                fields=['posting_date', 'activity_type', 'description']
+            )
+        ),
+        get_sales_invoice_items(
+            _get_sales_invoice_items(frappe.get_value('Patient', patient, 'customer'))
+        )
+    ]))
+
+
+def _get_sales_invoice_items(customer):
+    return frappe.db.sql("""
+        SELECT 
+            si.posting_date,
+            si_item.item_code,
+            si_item.qty,
+            si_item.amount
+        FROM `tabSales Invoice Item` si_item
+        INNER JOIN `tabSales Invoice` si ON si.name = si_item.parent
+        WHERE si.customer = %s
+    """, (customer,), as_dict=1)
