@@ -141,6 +141,9 @@ async function _close_invoice(frm) {
 	});
 	frappe.show_alert(`Sales Invoice ${invoice.name} created`);
 	frm.set_value('items', []);
+
+	// refresh Clinical History
+	_set_clinical_history(frm);
 }
 
 // table utils
