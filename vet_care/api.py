@@ -110,7 +110,6 @@ def close_invoice(items, patient, customer, payments):
         return {
             'mode_of_payment': mop.get('mode_of_payment'),
             'amount': mop.get('amount'),
-            'base_amount': mop.get('amount'),
             'account': data.get('account'),
         }
 
