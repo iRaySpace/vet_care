@@ -110,7 +110,8 @@ def close_invoice(items, patient, customer, payments):
         return {
             'mode_of_payment': mop.get('mode_of_payment'),
             'amount': mop.get('amount'),
-            'account': data.get('account')
+            'base_amount': mop.get('amount'),
+            'account': data.get('account'),
         }
 
     items = json.loads(items)
@@ -145,6 +146,8 @@ def close_invoice(items, patient, customer, payments):
         sales_invoice.append('payments', payment)
 
     sales_invoice.update({'is_pos': 1})
+
+    sales_invoice.save()
     sales_invoice.submit()
 
     return sales_invoice
