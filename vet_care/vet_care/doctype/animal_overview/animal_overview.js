@@ -129,10 +129,21 @@ function _set_actions(frm) {
 
 	const actions = {
 		close: async function() {
-			if (!frm.doc.items) {
+			if (!frm.doc.items.length) {
 				frappe.throw(__('Items are required'));
 			}
 			const values = await _show_payment_dialog(frm);
+			await _close_invoice(
+				frm.doc.items,
+				frm.doc.animal,
+				frm.doc.default_owner,
+				values.payments
+			);
+
+			frm.set_value('items', []);
+
+			// reload clinical history
+			_set_clinical_history(frm);
 		},
 		discard: function() {
 			frm.set_value('items', []);
@@ -155,20 +166,12 @@ function _update_child_amount(frm, cdt, cdn) {
 	frappe.model.set_value(cdt, cdn, 'amount', child.qty * child.rate);
 }
 
-async function _close_invoice(frm) {
+async function _close_invoice(items, patient, customer, payments) {
 	const { message: invoice } = await frappe.call({
 		method: 'vet_care.api.close_invoice',
-		args: {
-			items: frm.doc.items,
-			patient: frm.doc.animal,
-			customer: frm.doc.default_owner,
-		},
+		args: { items, patient, customer, payments },
 	});
 	frappe.show_alert(`Sales Invoice ${invoice.name} created`);
-	frm.set_value('items', []);
-
-	// refresh Clinical History
-	_set_clinical_history(frm);
 }
 
 // table utils

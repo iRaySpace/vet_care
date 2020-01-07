@@ -1,6 +1,8 @@
 import frappe
 import json
+from frappe import _
 from frappe.utils import today
+from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
 from toolz import pluck, partial, compose, first, concat
 
 
@@ -102,14 +104,29 @@ def get_medical_records(patient):
 
 
 @frappe.whitelist()
-def close_invoice(items, patient, customer):
+def close_invoice(items, patient, customer, payments):
+    def get_mode_of_payment(company, mop):
+        data = get_bank_cash_account(mop.get('mode_of_payment'), company)
+        return {
+            'mode_of_payment': mop.get('mode_of_payment'),
+            'amount': mop.get('amount'),
+            'account': data.get('account')
+        }
+
     items = json.loads(items)
+    payments = json.loads(payments)
+
+    pos_profile = frappe.db.get_single_value('Vetcare Settings', 'pos_profile')
+
+    if not pos_profile:
+        frappe.throw(_('Please set POS Profile under Vetcare Settings'))
 
     sales_invoice = frappe.new_doc('Sales Invoice')
     sales_invoice.update({
         'patient': patient,
         'customer': customer,
-        'due_date': today()
+        'due_date': today(),
+        'pos_profile': pos_profile
     })
 
     for item in items:
@@ -120,6 +137,13 @@ def close_invoice(items, patient, customer):
         })
 
     sales_invoice.set_missing_values()
+
+    get_mop_data = partial(get_mode_of_payment, sales_invoice.company)
+    payments = list(map(get_mop_data, payments))
+
+    for payment in payments:
+        sales_invoice.append('payments', payment)
+
     sales_invoice.submit()
 
     return sales_invoice
