@@ -144,6 +144,7 @@ def close_invoice(items, patient, customer, payments):
     for payment in payments:
         sales_invoice.append('payments', payment)
 
+    sales_invoice.update({'is_pos': 1})
     sales_invoice.submit()
 
     return sales_invoice
