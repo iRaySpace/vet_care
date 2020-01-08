@@ -105,13 +105,13 @@ def get_medical_records(patient):
 
 @frappe.whitelist()
 def close_invoice(items, patient, customer, payments, submit):
-    def get_mode_of_payment(company, mop):
-        data = get_bank_cash_account(mop.get('mode_of_payment'), company)
-        return {
-            'mode_of_payment': mop.get('mode_of_payment'),
-            'amount': mop.get('amount'),
-            'account': data.get('account'),
-        }
+    # def get_mode_of_payment(company, mop):
+    #     data = get_bank_cash_account(mop.get('mode_of_payment'), company)
+    #     return {
+    #         'mode_of_payment': mop.get('mode_of_payment'),
+    #         'amount': mop.get('amount'),
+    #         'account': data.get('account'),
+    #     }
 
     items = json.loads(items)
     payments = json.loads(payments)
@@ -139,14 +139,14 @@ def close_invoice(items, patient, customer, payments, submit):
 
     sales_invoice.set_missing_values()
 
-    get_mop_data = partial(get_mode_of_payment, sales_invoice.company)
-    payments = list(map(get_mop_data, payments))
+    # get_mop_data = partial(get_mode_of_payment, sales_invoice.company)
+    # payments = list(map(get_mop_data, payments))
 
-    for payment in payments:
-        sales_invoice.append('payments', payment)
-
-    if payments:
-        sales_invoice.update({'is_pos': 1})
+    # for payment in payments:
+    #     sales_invoice.append('payments', payment)
+    #
+    # if payments:
+    #     sales_invoice.update({'is_pos': 1})
 
     sales_invoice.save()
 
@@ -154,6 +154,33 @@ def close_invoice(items, patient, customer, payments, submit):
         sales_invoice.submit()
 
     return sales_invoice
+
+
+@frappe.whitelist()
+def pay_invoice(invoice, payments):
+    def get_mode_of_payment(company, mop):
+        data = get_bank_cash_account(mop.get('mode_of_payment'), company)
+        return {
+            'mode_of_payment': mop.get('mode_of_payment'),
+            'amount': mop.get('amount'),
+            'account': data.get('account'),
+        }
+
+    payments = json.loads(payments)
+
+    invoice = frappe.get_doc('Sales Invoice', invoice)
+    invoice.update({'is_pos': 1})
+
+    get_mop_data = partial(get_mode_of_payment, invoice.company)
+    payments = list(map(get_mop_data, payments))
+    for payment in payments:
+        invoice.append('payments', payment)
+
+    invoice.save()
+    invoice.submit()
+
+    return invoice
+
 
 # TODO: clinical history include only submitted Sales Invoice
 @frappe.whitelist()

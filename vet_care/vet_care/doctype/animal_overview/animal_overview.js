@@ -164,24 +164,21 @@ function _set_actions(frm) {
 			frm.set_value('items', []);
 		},
 		close: async function() {
-			if (!frm.doc.items.length) {
-				frappe.throw(__('Items are required'));
+			if (!frm.doc.invoice) {
+				frappe.throw(__('Please select invoice above'));
 			}
-			const values = await _show_payment_dialog(frm);
-			await _close_invoice(
-				frm.doc.items,
-				frm.doc.animal,
-				frm.doc.default_owner,
-				values.payments,
-				true
-			);
 
+			const values = await _show_payment_dialog(frm);
+			_pay_invoice(frm.doc.invoice, values.payments);
+
+			frm.set_value('invoice', '');
 			frm.set_value('items', []);
 
 			// reload clinical history
 			_set_clinical_history(frm);
 		},
 		discard: function() {
+			frm.set_value('invoice', '');
 			frm.set_value('items', []);
 		}
 	};
@@ -202,6 +199,7 @@ function _update_child_amount(frm, cdt, cdn) {
 	frappe.model.set_value(cdt, cdn, 'amount', child.qty * child.rate);
 }
 
+// TODO: rewrite with no payments and submit
 async function _close_invoice(items, patient, customer, payments, submit) {
 	const { message: invoice } = await frappe.call({
 		method: 'vet_care.api.close_invoice',
@@ -214,6 +212,14 @@ async function _close_invoice(items, patient, customer, payments, submit) {
 		},
 	});
 	frappe.show_alert(`Sales Invoice ${invoice.name} created`);
+}
+
+async function _pay_invoice(invoice, payments) {
+	const { message: sales_invoice } = await frappe.call({
+		method: 'vet_care.api.pay_invoice',
+		args: { invoice, payments },
+	});
+	frappe.show_alert(`Sales Invoice ${sales_invoice.name} is paid`);
 }
 
 async function _get_invoice_items(invoice) {
