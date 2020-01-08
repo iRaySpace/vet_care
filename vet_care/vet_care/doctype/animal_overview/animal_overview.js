@@ -14,6 +14,13 @@ frappe.ui.form.on('Animal Overview', {
 		_set_clinical_history(frm);
 		_set_invoice_query(frm);
 	},
+	invoice: async function(frm) {
+		if (frm.doc.invoice) {
+			const items = await _get_invoice_items(frm.doc.invoice);
+			frm.set_value('items', items);
+			frm.set_df_property('items', 'read_only', true);
+		}
+	},
 	new_activity: async function(frm) {
 		if (!frm.doc.animal) {
 			frappe.throw(__('Animal is required.'));
@@ -67,7 +74,10 @@ frappe.ui.form.on('Animal Overview Item', {
 function _set_invoice_query(frm) {
 	frm.set_query('invoice', function(doc, cdt, cdn) {
 		return {
-			filters: { 'patient': frm.doc.animal }
+			filters: {
+				'status': 'Draft',
+				'patient': frm.doc.animal,
+			}
 		};
 	});
 }
@@ -138,8 +148,20 @@ function _set_actions(frm) {
 	`);
 
 	const actions = {
-		save: function() {
-			console.log('saving invoice');
+		save: async function() {
+			if (!frm.doc.items.length) {
+				frappe.throw(__('Items are required'));
+			}
+
+			await _close_invoice(
+				frm.doc.items,
+				frm.doc.animal,
+				frm.doc.default_owner,
+				[],
+				false
+			);
+
+			frm.set_value('items', []);
 		},
 		close: async function() {
 			if (!frm.doc.items.length) {
@@ -150,7 +172,8 @@ function _set_actions(frm) {
 				frm.doc.items,
 				frm.doc.animal,
 				frm.doc.default_owner,
-				values.payments
+				values.payments,
+				true
 			);
 
 			frm.set_value('items', []);
@@ -179,12 +202,26 @@ function _update_child_amount(frm, cdt, cdn) {
 	frappe.model.set_value(cdt, cdn, 'amount', child.qty * child.rate);
 }
 
-async function _close_invoice(items, patient, customer, payments) {
+async function _close_invoice(items, patient, customer, payments, submit) {
 	const { message: invoice } = await frappe.call({
 		method: 'vet_care.api.close_invoice',
-		args: { items, patient, customer, payments },
+		args: {
+			items,
+			patient,
+			customer,
+			payments,
+			submit,
+		},
 	});
 	frappe.show_alert(`Sales Invoice ${invoice.name} created`);
+}
+
+async function _get_invoice_items(invoice) {
+	const { message: items } = await frappe.call({
+		method: 'vet_care.api.get_invoice_items',
+		args: { invoice },
+	});
+	return items;
 }
 
 // table utils
@@ -228,7 +265,7 @@ function _get_child(cdt, cdn) {
 	return locals[cdt][cdn];
 }
 
-//
+// TODO: separate file
 function _show_payment_dialog(frm) {
 	return new Promise(function(resolve, reject) {
 		const mode_of_payments = [];

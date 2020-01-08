@@ -104,7 +104,7 @@ def get_medical_records(patient):
 
 
 @frappe.whitelist()
-def close_invoice(items, patient, customer, payments):
+def close_invoice(items, patient, customer, payments, submit):
     def get_mode_of_payment(company, mop):
         data = get_bank_cash_account(mop.get('mode_of_payment'), company)
         return {
@@ -115,6 +115,7 @@ def close_invoice(items, patient, customer, payments):
 
     items = json.loads(items)
     payments = json.loads(payments)
+    submit = json.loads(submit)
 
     pos_profile = frappe.db.get_single_value('Vetcare Settings', 'pos_profile')
 
@@ -144,14 +145,17 @@ def close_invoice(items, patient, customer, payments):
     for payment in payments:
         sales_invoice.append('payments', payment)
 
-    sales_invoice.update({'is_pos': 1})
+    if payments:
+        sales_invoice.update({'is_pos': 1})
 
     sales_invoice.save()
-    sales_invoice.submit()
+
+    if submit:
+        sales_invoice.submit()
 
     return sales_invoice
 
-
+# TODO: clinical history include only submitted Sales Invoice
 @frappe.whitelist()
 def get_clinical_history(patient, filter_length):
     """
@@ -216,6 +220,15 @@ def make_patient_activity(patient, activity_type, description):
     patient_activity.save()
 
     return patient_activity
+
+
+@frappe.whitelist()
+def get_invoice_items(invoice):
+    return frappe.get_all(
+        'Sales Invoice Item',
+        filters={'parent': invoice},
+        fields=['item_code', 'qty', 'rate', 'amount']
+    )
 
 
 def _get_sales_invoice_items(customer):
