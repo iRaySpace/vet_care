@@ -21,6 +21,9 @@ frappe.ui.form.on('Animal Overview', {
 			frm.set_df_property('items', 'read_only', true);
 		}
 	},
+  default_owner: function(frm) {
+	  _set_default_owner_query(frm);
+  },
 	new_activity: async function(frm) {
 		if (!frm.doc.animal) {
 			frappe.throw(__('Animal is required.'));
@@ -80,6 +83,14 @@ function _set_invoice_query(frm) {
 			}
 		};
 	});
+}
+
+function _set_default_owner_query(frm) {
+  frm.set_query('animal', function(doc, cdt, cdn) {
+    return {
+      filters: { 'customer': frm.doc.default_owner }
+    }
+  });
 }
 
 async function _set_animal_details(frm) {
