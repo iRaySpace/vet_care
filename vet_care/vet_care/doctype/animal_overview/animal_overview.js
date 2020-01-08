@@ -12,6 +12,7 @@ frappe.ui.form.on('Animal Overview', {
 	animal: function(frm) {
 		_set_animal_details(frm);
 		_set_clinical_history(frm);
+		_set_invoice_query(frm);
 	},
 	new_activity: async function(frm) {
 		if (!frm.doc.animal) {
@@ -62,6 +63,14 @@ frappe.ui.form.on('Animal Overview Item', {
 		}
 	},
 });
+
+function _set_invoice_query(frm) {
+	frm.set_query('invoice', function(doc, cdt, cdn) {
+		return {
+			filters: { 'patient': frm.doc.animal }
+		};
+	});
+}
 
 async function _set_animal_details(frm) {
 	const patient = await frappe.db.get_doc('Patient', frm.doc.animal);
@@ -121,6 +130,7 @@ function _set_actions(frm) {
 	$(frm.fields_dict['actions_html'].wrapper).html(`
 		<div class="row">
 			<div class="col-sm-6">
+				<button class="btn btn-xs btn-info" id="save">Save</button>
 				<button class="btn btn-xs btn-primary" id="close">Close</button>
 				<button class="btn btn-xs btn-danger" id="discard">Discard</button>
 			</div>
@@ -128,6 +138,9 @@ function _set_actions(frm) {
 	`);
 
 	const actions = {
+		save: function() {
+			console.log('saving invoice');
+		},
 		close: async function() {
 			if (!frm.doc.items.length) {
 				frappe.throw(__('Items are required'));
