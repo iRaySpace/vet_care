@@ -35,7 +35,8 @@ fixtures = [
                     "Patient-vc_dtod",
                     "Patient-vc_rod",
                     "Patient-vc_nutrition",
-                    "Sales Invoice-patient_name"
+                    "Sales Invoice-patient_name",
+                    "Customer-vc_cpr"
                 ]
             ]
         ]
