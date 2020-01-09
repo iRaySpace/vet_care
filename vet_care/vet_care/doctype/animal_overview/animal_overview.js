@@ -41,7 +41,9 @@ frappe.ui.form.on('Animal Overview', {
     }
   },
 	is_new_patient: function(frm) {
-		frm.set_value('animal', '');
+		if (frm.doc.is_new_patient) {
+			frm.set_value('animal', '');
+		}
 		frm.set_df_property('animal', 'read_only', frm.doc.is_new_patient);
 		_set_animal_details(frm);
 	},
