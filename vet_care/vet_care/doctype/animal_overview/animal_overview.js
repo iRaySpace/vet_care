@@ -7,6 +7,7 @@ let _filter_length = 20;
 frappe.ui.form.on('Animal Overview', {
 	refresh: function(frm) {
 		frm.disable_save();
+		_set_custom_buttons(frm);
 		_set_actions(frm);
 	},
 	animal: function(frm) {
@@ -73,6 +74,39 @@ frappe.ui.form.on('Animal Overview Item', {
 		}
 	},
 });
+
+function _set_custom_buttons(frm) {
+	const custom_buttons = [
+		{
+			label: __('Save to Patient'),
+			onclick: async function() {
+				if (!frm.doc.animal) {
+					frappe.throw(__('Animal is required'));
+				}
+
+				const data = {
+					patient_name: frm.doc.animal_name,
+					sex: frm.doc.sex,
+					dob: frm.doc.dob,
+					vc_color: frm.doc.color,
+					vc_weight: frm.doc.weight,
+					vc_species: frm.doc.species,
+					vc_breed: frm.doc.breed
+				};
+
+				await frappe.call({
+					method: 'vet_care.api.save_to_patient',
+					args: { patient: frm.doc.animal, data }
+				});
+
+				frappe.msgprint('Successfully saved to Patient', 'Save Patient');
+			},
+		},
+	];
+	custom_buttons.forEach(function(custom_button) {
+		frm.add_custom_button(custom_button['label'], custom_button['onclick']);
+	});
+}
 
 function _set_invoice_query(frm) {
 	frm.set_query('invoice', function(doc, cdt, cdn) {

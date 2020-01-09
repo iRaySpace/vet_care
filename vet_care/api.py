@@ -258,6 +258,14 @@ def get_invoice_items(invoice):
     )
 
 
+@frappe.whitelist()
+def save_to_patient(patient, data):
+    data = json.loads(data)
+    patient_doc = frappe.get_doc('Patient', patient)
+    patient_doc.update(data)
+    patient_doc.save()
+
+
 def _get_sales_invoice_items(customer):
     return frappe.db.sql("""
         SELECT 
