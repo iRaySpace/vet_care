@@ -9,11 +9,13 @@ frappe.ui.form.on('Animal Overview', {
 		frm.disable_save();
 		_set_custom_buttons(frm);
 		_set_actions(frm);
+		_set_fields_read_only(frm, true);
 	},
 	animal: function(frm) {
 		_set_animal_details(frm);
 		_set_clinical_history(frm);
 		_set_invoice_query(frm);
+		_set_fields_read_only(frm, !frm.doc.animal);
 	},
 	invoice: async function(frm) {
 		if (frm.doc.invoice) {
@@ -74,6 +76,23 @@ frappe.ui.form.on('Animal Overview Item', {
 		}
 	},
 });
+
+function _set_fields_read_only(frm, read_only) {
+	const fields = [
+		'animal_name',
+		'dob',
+		'weight',
+		'sex',
+		'breed',
+		'species',
+		'color',
+		'activity_type',
+		'description',
+		'invoice',
+		'items'
+	];
+	fields.forEach((field) => frm.set_df_property(field, 'read_only', read_only));
+}
 
 function _set_custom_buttons(frm) {
 	const custom_buttons = [
