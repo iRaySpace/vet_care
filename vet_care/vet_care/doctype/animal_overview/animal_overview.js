@@ -35,19 +35,16 @@ frappe.ui.form.on('Animal Overview', {
 	},
   default_owner: async function(frm) {
 		_set_default_owner_query(frm);
-		if (!frm.doc.default_owner) {
-	  	frm.set_value('animal', '');
-			return;
+		if (frm.doc.default_owner) {
+			const animal = await get_first_animal_by_owner(frm.doc.default_owner);
+			if (animal) frm.set_value('animal', animal.name);
 		}
-		const animal = await get_first_animal_by_owner(frm.doc.default_owner);
-	  if (animal) frm.set_value('animal', animal.name);
   },
 	is_new_patient: function(frm) {
 		if (frm.doc.is_new_patient) {
-			frm.set_value('animal', '');
+			_clear_animal_details(frm);
 		}
 		frm.set_df_property('animal', 'read_only', frm.doc.is_new_patient);
-		_set_animal_details(frm);
 	},
 	new_activity: async function(frm) {
 		if (!frm.doc.animal) {
@@ -116,13 +113,27 @@ async function _set_animal_details(frm) {
 		['sex', 'sex'],
 		['breed', 'vc_breed'],
 		['species', 'vc_species'],
-		['color', 'vc_color'],
-		['default_owner', 'customer'],
+		['color', 'vc_color']
 	];
   if (frm.doc.animal) {
     patient = await frappe.db.get_doc('Patient', frm.doc.animal);
+    frm.set_value('default_owner', patient.customer);
   }
   fields.forEach((field) => frm.set_value(field[0], patient ? patient[field[1]] : ''));
+}
+
+function _clear_animal_details(frm) {
+	const fields = [
+		'animal',
+		'animal_name',
+		'dob',
+		'weight',
+		'sex',
+		'breed',
+		'species',
+		'color',
+	];
+	fields.forEach((field) => frm.set_value(field, ''));
 }
 
 async function _set_clinical_history(frm) {
