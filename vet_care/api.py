@@ -244,10 +244,26 @@ def save_to_patient(patient, data):
 
 
 @frappe.whitelist()
+def make_patient(patient_data, owner):
+    patient_data = json.loads(patient_data)
+
+    patient_doc = frappe.new_doc('Patient')
+    patient_doc.update(patient_data)
+    patient_doc.append('vc_pet_relation', {
+        'default': 1,
+        'relation': 'Owner',
+        'customer': owner
+    })
+    patient_doc.save()
+
+    return patient_doc
+
+
+@frappe.whitelist()
 def get_first_animal_by_owner(owner):
     return first(frappe.get_all('Patient', filters={'customer': owner}))
 
-
+# TODO: include also with Patient
 def _get_sales_invoice_items(customer):
     return frappe.db.sql("""
         SELECT 
