@@ -88,23 +88,6 @@ frappe.ui.form.on('Animal Overview Item', {
 	},
 });
 
-function _set_fields_read_only(frm, read_only) {
-	const fields = [
-		'animal_name',
-		'dob',
-		'weight',
-		'sex',
-		'breed',
-		'species',
-		'color',
-		'activity_type',
-		'description',
-		'invoice',
-		'items'
-	];
-	fields.forEach((field) => frm.set_df_property(field, 'read_only', read_only));
-}
-
 function _set_invoice_query(frm) {
 	frm.set_query('invoice', function(doc, cdt, cdn) {
 		return {
