@@ -69,11 +69,7 @@ frappe.ui.form.on('Animal Overview Item', {
 		}
 
 		if (!child.rate) {
-			const { message: item } = await frappe.db.get_value(
-				'Item',
-				{ name: child.item_code },
-				'standard_rate',
-			);
+			const { message: item } = await get_item_rate(child.item_code);
 			frappe.model.set_value(cdt, cdn, 'rate', item.standard_rate);
 		}
 	},

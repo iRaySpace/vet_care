@@ -37,3 +37,7 @@ async function make_patient_activity(patient, activity_type, description) {
   });
   return patient_activity;
 }
+
+function get_item_rate(name) {
+	return frappe.db.get_value('Item', { name }, 'standard_rate');
+}
