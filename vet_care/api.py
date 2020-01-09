@@ -104,15 +104,7 @@ def get_medical_records(patient):
 
 
 @frappe.whitelist()
-def close_invoice(items, patient, customer, payments, submit):
-    # def get_mode_of_payment(company, mop):
-    #     data = get_bank_cash_account(mop.get('mode_of_payment'), company)
-    #     return {
-    #         'mode_of_payment': mop.get('mode_of_payment'),
-    #         'amount': mop.get('amount'),
-    #         'account': data.get('account'),
-    #     }
-
+def save_invoice(items, patient, customer, payments, submit):
     items = json.loads(items)
     payments = json.loads(payments)
     submit = json.loads(submit)
@@ -138,16 +130,6 @@ def close_invoice(items, patient, customer, payments, submit):
         })
 
     sales_invoice.set_missing_values()
-
-    # get_mop_data = partial(get_mode_of_payment, sales_invoice.company)
-    # payments = list(map(get_mop_data, payments))
-
-    # for payment in payments:
-    #     sales_invoice.append('payments', payment)
-    #
-    # if payments:
-    #     sales_invoice.update({'is_pos': 1})
-
     sales_invoice.save()
 
     if submit:

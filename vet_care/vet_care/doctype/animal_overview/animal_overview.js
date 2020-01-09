@@ -1,5 +1,6 @@
 // Copyright (c) 2020, 9T9IT and contributors
 // For license information, please see license.txt
+{% include 'vet_care/vet_care/doctype/animal_overview/data.js' %}
 {% include 'vet_care/vet_care/doctype/animal_overview/payment_dialog.js' %}
 {% include 'vet_care/vet_care/doctype/animal_overview/custom_buttons.js' %}
 
@@ -27,7 +28,7 @@ frappe.ui.form.on('Animal Overview', {
 	},
 	invoice: async function(frm) {
 		if (frm.doc.invoice) {
-			const items = await _get_invoice_items(frm.doc.invoice);
+			const items = await get_invoice_items(frm.doc.invoice);
 			frm.set_value('items', items);
 			frm.set_df_property('items', 'read_only', true);
 		}
@@ -41,15 +42,8 @@ frappe.ui.form.on('Animal Overview', {
 			return;
 		}
 
-		const { message: patient_activity } = await frappe.call({
-			method: 'vet_care.api.make_patient_activity',
-			args: {
-				patient: frm.doc.animal,
-				activity_type: frm.doc.activity_type,
-				description: frm.doc.description
-			}
-		});
-		frappe.show_alert(`Patient Activity created`);
+		const patient_activity = await make_patient_activity(frm.doc.animal, frm.doc.activity_type, frm.doc.description);
+		frappe.show_alert(`${frm.doc.activity_type} Patient Activity created`);
 
 		// clear data
 		frm.set_value('activity_type', '');
@@ -134,14 +128,7 @@ async function _set_animal_details(frm) {
 }
 
 async function _set_clinical_history(frm) {
-	const { message: clinical_history } = await frappe.call({
-		method: 'vet_care.api.get_clinical_history',
-		args: {
-			patient: frm.doc.animal,
-			filter_length: _filter_length,
-		},
-	});
-
+	const clinical_history = await get_clinical_history(frm.doc.animal, _filter_length);
 	const fields = ['posting_date', 'description', 'price'];
 
 	const table_rows = _get_table_rows(clinical_history, fields);
@@ -180,7 +167,7 @@ function _set_actions(frm) {
 		<div class="row">
 			<div class="col-sm-6">
 				<button class="btn btn-xs btn-info" id="save">Save</button>
-				<button class="btn btn-xs btn-primary" id="close">Close</button>
+				<button class="btn btn-xs btn-primary" id="pay">Pay</button>
 				<button class="btn btn-xs btn-danger" id="discard">Discard</button>
 			</div>
 		</div>
@@ -192,23 +179,19 @@ function _set_actions(frm) {
 				frappe.throw(__('Items are required'));
 			}
 
-			await _close_invoice(
-				frm.doc.items,
-				frm.doc.animal,
-				frm.doc.default_owner,
-				[],
-				false
-			);
+			const invoice = await save_invoice(frm.doc.items, frm.doc.animal, frm.doc.default_owner);
+			frappe.show_alert(`Sales Invoice ${invoice.name} saved`);
 
 			frm.set_value('items', []);
 		},
-		close: async function() {
+		pay: async function() {
 			if (!frm.doc.invoice) {
 				frappe.throw(__('Please select invoice above'));
 			}
 
 			const values = await show_payment_dialog(frm);
-			_pay_invoice(frm.doc.invoice, values.payments);
+			const invoice = await pay_invoice(frm.doc.invoice, values.payments);
+			frappe.show_alert(`Sales Invoice ${invoice.name} paid`);
 
 			frm.set_value('invoice', '');
 			frm.set_value('items', []);
@@ -236,37 +219,6 @@ function _set_actions(frm) {
 function _update_child_amount(frm, cdt, cdn) {
 	const child = _get_child(cdt, cdn);
 	frappe.model.set_value(cdt, cdn, 'amount', child.qty * child.rate);
-}
-
-// TODO: rewrite with no payments and submit
-async function _close_invoice(items, patient, customer, payments, submit) {
-	const { message: invoice } = await frappe.call({
-		method: 'vet_care.api.close_invoice',
-		args: {
-			items,
-			patient,
-			customer,
-			payments,
-			submit,
-		},
-	});
-	frappe.show_alert(`Sales Invoice ${invoice.name} created`);
-}
-
-async function _pay_invoice(invoice, payments) {
-	const { message: sales_invoice } = await frappe.call({
-		method: 'vet_care.api.pay_invoice',
-		args: { invoice, payments },
-	});
-	frappe.show_alert(`Sales Invoice ${sales_invoice.name} is paid`);
-}
-
-async function _get_invoice_items(invoice) {
-	const { message: items } = await frappe.call({
-		method: 'vet_care.api.get_invoice_items',
-		args: { invoice },
-	});
-	return items;
 }
 
 // table utils
