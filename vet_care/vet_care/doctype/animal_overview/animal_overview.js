@@ -1,6 +1,7 @@
 // Copyright (c) 2020, 9T9IT and contributors
 // For license information, please see license.txt
 {% include 'vet_care/vet_care/doctype/animal_overview/payment_dialog.js' %}
+{% include 'vet_care/vet_care/doctype/animal_overview/custom_buttons.js' %}
 
 let _filter_length = 20;
 
@@ -14,7 +15,7 @@ frappe.ui.form.on('Animal Overview', {
 	},
 	refresh: function(frm) {
 		frm.disable_save();
-		_set_custom_buttons(frm);
+		set_custom_buttons(frm);
 		_set_actions(frm);
 		_set_fields_read_only(frm, true);
 	},
@@ -99,45 +100,6 @@ function _set_fields_read_only(frm, read_only) {
 		'items'
 	];
 	fields.forEach((field) => frm.set_df_property(field, 'read_only', read_only));
-}
-
-function _set_custom_buttons(frm) {
-	const custom_buttons = [
-		{
-			label: __('Make Appointment'),
-			onclick: function() {
-				frappe.set_route('List', 'Patient Appointment', 'Calendar');
-			},
-		},
-		{
-			label: __('Save to Patient'),
-			onclick: async function() {
-				if (!frm.doc.animal) {
-					frappe.throw(__('Animal is required'));
-				}
-
-				const data = {
-					patient_name: frm.doc.animal_name,
-					sex: frm.doc.sex,
-					dob: frm.doc.dob,
-					vc_color: frm.doc.color,
-					vc_weight: frm.doc.weight,
-					vc_species: frm.doc.species,
-					vc_breed: frm.doc.breed
-				};
-
-				await frappe.call({
-					method: 'vet_care.api.save_to_patient',
-					args: { patient: frm.doc.animal, data }
-				});
-
-				frappe.msgprint('Successfully saved to Patient', 'Save Patient');
-			},
-		},
-	];
-	custom_buttons.forEach(function(custom_button) {
-		frm.add_custom_button(custom_button['label'], custom_button['onclick']);
-	});
 }
 
 function _set_invoice_query(frm) {
