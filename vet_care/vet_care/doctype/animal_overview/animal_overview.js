@@ -33,8 +33,12 @@ frappe.ui.form.on('Animal Overview', {
 			frm.set_df_property('items', 'read_only', true);
 		}
 	},
-  default_owner: function(frm) {
+  default_owner: async function(frm) {
 	  _set_default_owner_query(frm);
+	  const animal = await get_first_animal_by_owner(frm.doc.default_owner);
+	  if (animal) {
+	    frm.set_value('animal', animal.name);
+    }
   },
 	new_activity: async function(frm) {
 		if (!frm.doc.animal) {

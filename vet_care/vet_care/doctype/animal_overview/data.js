@@ -41,3 +41,11 @@ async function make_patient_activity(patient, activity_type, description) {
 function get_item_rate(name) {
 	return frappe.db.get_value('Item', { name }, 'standard_rate');
 }
+
+async function get_first_animal_by_owner(owner) {
+	const { message: animal } = await frappe.call({
+		method: 'vet_care.api.get_first_animal_by_owner',
+		args: { owner },
+	});
+	return animal;
+}

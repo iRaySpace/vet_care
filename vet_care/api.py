@@ -104,10 +104,8 @@ def get_medical_records(patient):
 
 
 @frappe.whitelist()
-def save_invoice(items, patient, customer, payments, submit):
+def save_invoice(items, patient, customer):
     items = json.loads(items)
-    payments = json.loads(payments)
-    submit = json.loads(submit)
 
     pos_profile = frappe.db.get_single_value('Vetcare Settings', 'pos_profile')
 
@@ -131,9 +129,6 @@ def save_invoice(items, patient, customer, payments, submit):
 
     sales_invoice.set_missing_values()
     sales_invoice.save()
-
-    if submit:
-        sales_invoice.submit()
 
     return sales_invoice
 
@@ -246,6 +241,11 @@ def save_to_patient(patient, data):
     patient_doc = frappe.get_doc('Patient', patient)
     patient_doc.update(data)
     patient_doc.save()
+
+
+@frappe.whitelist()
+def get_first_animal_by_owner(owner):
+    return first(frappe.get_all('Patient', filters={'customer': owner}))
 
 
 def _get_sales_invoice_items(customer):
