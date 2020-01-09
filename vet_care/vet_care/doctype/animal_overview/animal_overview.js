@@ -34,11 +34,13 @@ frappe.ui.form.on('Animal Overview', {
 		}
 	},
   default_owner: async function(frm) {
-	  _set_default_owner_query(frm);
-	  const animal = await get_first_animal_by_owner(frm.doc.default_owner);
-	  if (animal) {
-	    frm.set_value('animal', animal.name);
-    }
+		_set_default_owner_query(frm);
+		if (!frm.doc.default_owner) {
+	  	frm.set_value('animal', '');
+			return;
+		}
+		const animal = await get_first_animal_by_owner(frm.doc.default_owner);
+	  if (animal) frm.set_value('animal', animal.name);
   },
 	is_new_patient: function(frm) {
 		if (frm.doc.is_new_patient) {
@@ -117,7 +119,7 @@ function _set_invoice_query(frm) {
 function _set_default_owner_query(frm) {
   frm.set_query('animal', function(doc, cdt, cdn) {
     return {
-      filters: { 'customer': frm.doc.default_owner }
+      filters: { 'customer': frm.doc.default_owner ? frm.doc.default_owner : null }
     }
   });
 }
