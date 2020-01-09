@@ -5,6 +5,13 @@
 let _filter_length = 20;
 
 frappe.ui.form.on('Animal Overview', {
+	onload: function(frm) {
+		frm.set_query('default_owner', function() {
+			return {
+				query: "erpnext.controllers.queries.customer_query",
+			};
+		});
+	},
 	refresh: function(frm) {
 		frm.disable_save();
 		_set_custom_buttons(frm);
