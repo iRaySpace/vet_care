@@ -738,5 +738,25 @@
   "property": "hidden",
   "property_type": "Check",
   "value": "1"
+ },
+ {
+  "_assign": null,
+  "_comments": null,
+  "_liked_by": null,
+  "_user_tags": null,
+  "default_value": null,
+  "doc_type": "Customer",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocType",
+  "field_name": null,
+  "modified": "2020-01-09 15:01:44.739300",
+  "name": "Customer-search_fields",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "search_fields",
+  "property_type": "Data",
+  "value": "customer_name,customer_group,territory, mobile_no,primary_address,vc_cpr"
  }
 ]
