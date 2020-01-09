@@ -18,13 +18,13 @@ frappe.ui.form.on('Animal Overview', {
 		frm.disable_save();
 		set_custom_buttons(frm);
 		_set_actions(frm);
-		_set_fields_read_only(frm, true);
+		// _set_fields_read_only(frm, true);
 	},
 	animal: function(frm) {
 		_set_animal_details(frm);
 		_set_clinical_history(frm);
 		_set_invoice_query(frm);
-		_set_fields_read_only(frm, !frm.doc.animal);
+		// _set_fields_read_only(frm, !frm.doc.animal);
 	},
 	invoice: async function(frm) {
 		if (frm.doc.invoice) {
@@ -116,15 +116,20 @@ function _set_default_owner_query(frm) {
 }
 
 async function _set_animal_details(frm) {
-	const patient = await frappe.db.get_doc('Patient', frm.doc.animal);
-	frm.set_value('animal_name', patient.patient_name);
-	frm.set_value('species', patient.vc_species);
-	frm.set_value('color', patient.vc_color);
-	frm.set_value('sex', patient.sex);
-	frm.set_value('dob', patient.dob);
-	frm.set_value('weight', patient.vc_weight);
-	frm.set_value('default_owner', patient.customer);
-	frm.set_value('breed', patient.vc_breed);
+  let patient;
+  const fields = [
+		['animal_name', 'patient_name'],
+		['dob', 'dob'],
+		['weight', 'vc_weight'],
+		['sex', 'sex'],
+		['breed', 'vc_breed'],
+		['species', 'vc_species'],
+		['color', 'vc_color'],
+	];
+  if (frm.doc.animal) {
+    patient = await frappe.db.get_doc('Patient', frm.doc.animal);
+  }
+  fields.forEach((field) => frm.set_value(field[0], patient ? patient[field[1]] : ''));
 }
 
 async function _set_clinical_history(frm) {

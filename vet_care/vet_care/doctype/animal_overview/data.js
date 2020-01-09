@@ -23,7 +23,8 @@ async function get_invoice_items(invoice) {
 }
 
 async function get_clinical_history(patient, filter_length) {
-  const { message: clinical_history } = await frappe.call({
+  if (!patient) return [];
+	const { message: clinical_history } = await frappe.call({
 		method: 'vet_care.api.get_clinical_history',
 		args: { patient, filter_length },
 	});
