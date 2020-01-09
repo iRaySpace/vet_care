@@ -78,6 +78,12 @@ frappe.ui.form.on('Animal Overview Item', {
 function _set_custom_buttons(frm) {
 	const custom_buttons = [
 		{
+			label: __('Make Appointment'),
+			onclick: function() {
+				frappe.set_route('List', 'Patient Appointment', 'Calendar');
+			},
+		},
+		{
 			label: __('Save to Patient'),
 			onclick: async function() {
 				if (!frm.doc.animal) {
