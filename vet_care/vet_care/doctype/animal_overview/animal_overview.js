@@ -40,6 +40,11 @@ frappe.ui.form.on('Animal Overview', {
 	    frm.set_value('animal', animal.name);
     }
   },
+	is_new_patient: function(frm) {
+		frm.set_value('animal', '');
+		frm.set_df_property('animal', 'read_only', frm.doc.is_new_patient);
+		_set_animal_details(frm);
+	},
 	new_activity: async function(frm) {
 		if (!frm.doc.animal) {
 			frappe.throw(__('Animal is required.'));
