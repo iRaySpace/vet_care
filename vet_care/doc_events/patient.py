@@ -13,7 +13,6 @@ def validate(doc, method):
     _set_mobile_no(doc)
 
 
-
 def _set_owner_as_default_customer(doc):
     for pet_relation in doc.vc_pet_relation:
         pet_relation.default = (pet_relation.relation == 'Owner')
