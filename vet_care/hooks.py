@@ -34,7 +34,9 @@ fixtures = [
                     "Patient-vc_color",
                     "Patient-vc_dtod",
                     "Patient-vc_rod",
-                    "Patient-vc_nutrition"
+                    "Patient-vc_nutrition",
+                    "Sales Invoice-patient_name",
+                    "Customer-vc_cpr"
                 ]
             ]
         ]
@@ -55,7 +57,7 @@ fixtures = [
                     "Vital Signs-tongue-hidden",
                     "Vital Signs-abdomen-hidden",
                     "Patient-report_preference-hidden",
-                    "Patient-mobile-hidden",
+                    "Patient-mobile-read_only",
                     "Patient-email-hidden",
                     "Patient-phone-hidden",
                     "Patient-mobile-in_list_view",
@@ -82,7 +84,8 @@ fixtures = [
                     "Inpatient Record-expected_discharge-in_list_view",
                     "Inpatient Record-scheduled_date-in_list_view",
                     "Patient-surrounding_factors-label",
-                    "Item-is_stock_item-default"
+                    "Item-is_stock_item-default",
+                    "Customer-search_fields"
                 ]
             ]
         ]
@@ -108,7 +111,10 @@ doctype_js = {
     "Sales Invoice": "public/js/sales_invoice.js",
     "Inpatient Record": "public/js/inpatient_record.js",
     "Patient": "public/js/patient.js",
-    "Vital Signs": "public/js/vital_signs.js"
+    "Vital Signs": "public/js/vital_signs.js",
+    "Lab Test": "public/js/lab_test.js",
+    "Patient Encounter": "public/js/patient_encounter.js",
+    "Patient Appointment": "public/js/patient_appointment.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -174,6 +180,9 @@ doc_events = {
     },
     "Contact": {
         "validate": "vet_care.doc_events.contact.validate"
+    },
+    "Customer": {
+        "validate": "vet_care.doc_events.customer.validate"
     }
 }
 
@@ -208,7 +217,7 @@ doc_events = {
 #
 override_whitelisted_methods = {
     "frappe.utils.print_format.download_pdf": "vet_care.whitelist_methods.print_format.download_pdf",
-	"erpnext.healthcare.doctype.patient_appointment.patient_appointment.get_events": "vet_care.whitelist_methods.patient_appointment.get_events"
+    "erpnext.healthcare.doctype.patient_appointment.patient_appointment.get_events": "vet_care.whitelist_methods.patient_appointment.get_events"
 }
 #
 # each overriding function accepts a `data` argument;

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2019, 9T9IT and Contributors
+# Copyright (c) 2020, 9T9IT and Contributors
 # See license.txt
 from __future__ import unicode_literals
 
 import frappe
 import unittest
 
-class TestSpecies(unittest.TestCase):
+class TestPatientActivity(unittest.TestCase):
 	pass
