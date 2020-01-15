@@ -31,10 +31,10 @@ async function get_clinical_history(patient, filter_length) {
   return clinical_history;
 }
 
-async function make_patient_activity(patient, activity_items) {
+async function make_patient_activity(patient, activity_type, description) {
   const { message: patient_activity } = await frappe.call({
     method: 'vet_care.api.make_patient_activity',
-    args: { patient, activity_items },
+    args: { patient, activity_type, description },
   });
   return patient_activity;
 }
