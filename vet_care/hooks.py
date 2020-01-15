@@ -38,7 +38,20 @@ fixtures = [
                     "Sales Invoice-patient_name",
                     "Customer-vc_cpr",
                     "Customer-vc_cirrusvet",
-                    "Patient-vc_cirrusvet"
+                    "Patient-vc_cirrusvet",
+                    "Customer-vc_address_and_contacts_sb",
+                    "Customer-vc_flat_no",
+                    "Customer-vc_building_no",
+                    "Customer-vc_road_no",
+                    "Customer-vc_road_name",
+                    "Customer-vc_block_no",
+                    "Customer-vc_city",
+                    "Customer-vc_country",
+                    "Customer-vc_address_and_contacts_cb",
+                    "Customer-vc_mobile",
+                    "Customer-vc_mobile_2",
+                    "Customer-vc_home_phone",
+                    "Customer-vc_office_phone"
                 ]
             ]
         ]
