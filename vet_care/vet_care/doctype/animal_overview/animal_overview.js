@@ -59,12 +59,13 @@ frappe.ui.form.on('Animal Overview', {
 			return;
 		}
 
-		const patient_activity = await make_patient_activity(frm.doc.animal, frm.doc.activity_type, frm.doc.description);
-		frappe.show_alert(`${frm.doc.activity_type} Patient Activity created`);
+		const patient_activity = await make_patient_activity(frm.doc.animal, frm.doc.activity_items);
+		frappe.show_alert(`Patient Activity ${patient_activity.name} created`);
 
 		// clear data
-		frm.set_value('activity_type', '');
-		frm.set_value('description', '');
+		// frm.set_value('activity_type', '');
+		// frm.set_value('description', '');
+		frm.set_value('activity_items', []);
 
 		// refresh clinical history
 		_set_clinical_history(frm);
