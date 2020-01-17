@@ -3,8 +3,8 @@ import csv
 from toolz import first
 
 
-def execute(filename):
-    with open(f'unprocessed_{filename}', 'w') as unprocessed_csvfile:
+def execute(filename, unprocessed_filename):
+    with open(unprocessed_filename, 'w') as unprocessed_csvfile:
         fieldnames = [
             'cirrus_cm_id',
             'cirrus_animal_id',
