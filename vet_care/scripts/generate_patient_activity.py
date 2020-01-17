@@ -12,7 +12,11 @@ def execute(filename, processed_filename):
             visit_date = row.get('visit_date')
             patient_activity = _generate_patient_activity(cirrus_animal_id, visit_date)
             if patient_activity:
-                patient_activities.append({'cirrus_animal_id': cirrus_animal_id, 'visit_date': visit_date})
+                patient_activities.append({
+                    'cirrus_animal_id': cirrus_animal_id,
+                    'visit_date': visit_date,
+                    'patient_activity': patient_activity.name
+                })
 
     with open(processed_filename, 'w') as processed_csvfile:
         writer = csv.DictWriter(processed_csvfile, fieldnames=['cirrus_animal_id', 'visit_date', 'patient_activity'])
