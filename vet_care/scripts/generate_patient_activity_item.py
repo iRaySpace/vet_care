@@ -39,7 +39,7 @@ def execute(filename, history_filename, unprocessed_filename, limit, start):
             cirrus_animal_id = row.get('cirrus_animal_id')
             visit_date = row.get('visit_date')
             patient_activity = patient_activities.get(f'{cirrus_animal_id}_{visit_date}')
-            if last_line > start:
+            if last_line >= start:
                 if patient_activity:
                     print(f'Generating f{history_item}...')
                     _generate_patient_activity_item(patient_activity, row.get('text'))
