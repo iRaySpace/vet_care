@@ -2,6 +2,8 @@ import frappe
 import csv
 
 
+# bench execute vet_care.scripts.generate_patient_activity_item.execute
+# --args "['./data/processed_patient_activity.csv', './data/total_master.csv', './data/unprocessed_total_master.csv']"
 def execute(filename, history_filename, unprocessed_filename):
     patient_activities = {}
 
@@ -9,8 +11,8 @@ def execute(filename, history_filename, unprocessed_filename):
         reader = csv.DictReader(csvfile)
         for row in reader:
             cirrus_animal_id = row.get('cirrus_animal_id')
-            visit_date = row.get('visit_date')
-            patient_activities[f'{cirrus_animal_id}_{visit_date}'] = row.get('patient_activity')
+            posting_date = row.get('posting_date')
+            patient_activities[f'{cirrus_animal_id}_{posting_date}'] = row.get('patient_activity')
 
     unprocessed_data = []
     fieldnames = [
