@@ -4,7 +4,7 @@ from toolz import first
 import datetime
 
 
-# bench execute vet_care.scripts.generate_patient_activity.execute --args "['./data/', './data/processed_patient_activity_new.csv']"
+# bench execute vet_care.scripts.generate_patient_activity.execute --args "['./data/history_1.csv', './data/processed_patient_activity_new.csv']"
 def execute(filename, processed_filename):
     patient_activities = []
     with open(filename, 'r') as csvfile:
@@ -28,6 +28,7 @@ def execute(filename, processed_filename):
 
 
 def _generate_patient_activity(cirrusvet_id, posting_date):
+    print(f'Generating for {cirrusvet_id}...')
     patients = _get_patients(cirrusvet_id)
 
     if len(patients) == 1:
