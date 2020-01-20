@@ -4,7 +4,7 @@ from toolz import first
 import datetime
 
 
-# bench execute vet_care.scripts.generate_patient_activity.execute --args "['./data/history_1.csv', './data/processed_patient_activity_new.csv']"
+# bench execute vet_care.scripts.generate_patient_activity.execute --args "['./data/patient_activities.csv', './data/processed_patient_activity_new.csv']"
 def execute(filename, processed_filename):
     patient_activities = []
     with open(filename, 'r') as csvfile:
@@ -21,7 +21,7 @@ def execute(filename, processed_filename):
                 })
 
     with open(processed_filename, 'w') as processed_csvfile:
-        writer = csv.DictWriter(processed_csvfile, fieldnames=['cirrus_animal_id', 'visit_date', 'patient_activity'])
+        writer = csv.DictWriter(processed_csvfile, fieldnames=['cirrus_animal_id', 'posting_date', 'patient_activity'])
         writer.writeheader()
         for patient_activity in patient_activities:
             writer.writerow(patient_activity)
