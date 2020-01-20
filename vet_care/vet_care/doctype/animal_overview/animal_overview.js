@@ -121,7 +121,9 @@ async function _set_animal_details(frm) {
 		['sex', 'sex'],
 		['breed', 'vc_breed'],
 		['species', 'vc_species'],
-		['color', 'vc_color']
+		['color', 'vc_color'],
+		['chip_id', 'vc_chip_id'],
+		['neutered', 'vc_neutered'],
 	];
   if (frm.doc.animal) {
     patient = await frappe.db.get_doc('Patient', frm.doc.animal);
