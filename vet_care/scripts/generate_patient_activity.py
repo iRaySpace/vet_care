@@ -16,7 +16,7 @@ def execute(filename, processed_filename):
             if patient_activity:
                 patient_activities.append({
                     'cirrus_animal_id': cirrus_animal_id,
-                    'visit_date': visit_date,
+                    'posting_date': visit_date,
                     'patient_activity': patient_activity.name
                 })
 
