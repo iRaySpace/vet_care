@@ -1,6 +1,6 @@
 import csv
 
-
+# bench execute vet_care.scripts.aggregate_total_master_for_patient_activity.execute --args "['histories_not_imported.csv']"
 def execute(filename):
     patient_activities = {}
 
