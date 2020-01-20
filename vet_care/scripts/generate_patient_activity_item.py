@@ -40,11 +40,14 @@ def execute(filename, history_filename, unprocessed_filename, limit, start):
             visit_date = row.get('visit_date')
             patient_activity = patient_activities.get(f'{cirrus_animal_id}_{visit_date}')
             if last_line >= start:
-                if patient_activity:
-                    print(f'Generating f{history_item}...')
-                    _generate_patient_activity_item(patient_activity, row.get('text'))
-                    history_item = history_item + 1
-                else:
+                try:
+                    if patient_activity:
+                        print(f'Generating f{history_item}...')
+                        _generate_patient_activity_item(patient_activity, row.get('text'))
+                        history_item = history_item + 1
+                    else:
+                        unprocessed_data.append({field: row.get(field) for field in fieldnames})
+                except Exception as e:
                     unprocessed_data.append({field: row.get(field) for field in fieldnames})
             last_line = last_line + 1
 

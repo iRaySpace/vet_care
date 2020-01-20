@@ -4,7 +4,7 @@ from toolz import first
 import datetime
 
 
-# bench execute vet_care.scripts.generate_patient_activity.execute --args "['./data/patient_activities.csv', './data/processed_patient_activity_new.csv']"
+    # bench execute vet_care.scripts.generate_patient_activity.execute --args "['./data/patient_activities.csv', './data/processed_patient_activity_new.csv']"
 def execute(filename, processed_filename):
     patient_activities = []
     with open(filename, 'r') as csvfile:
