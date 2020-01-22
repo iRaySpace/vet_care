@@ -295,18 +295,14 @@ def get_practitioner_schedules(practitioner, date):
             'Patient Booking',
             filters={
                 'physician': practitioner,
-                'appointment_date': date
+                'appointment_date': date,
+                'docstatus': 1
             },
             fields=['appointment_time']
         )
     )
 
-    available_schedules = compose(
-        list,
-        partial(map, str)
-    )(practitioner_schedules.difference(existing_bookings))
-
-    return sorted(available_schedules)
+    return compose(list, partial(map, str), sorted)(practitioner_schedules.difference(existing_bookings))
 
 
 def _get_schedule_times(name, date):
