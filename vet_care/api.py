@@ -271,20 +271,39 @@ def get_practitioner_schedules(practitioner, date):
         return _get_schedule_times(practitioner_schedule, week_date)
 
     data = compose(
-        list,
-        partial(map, str),
+        set,
         sorted,
         concat,
         partial(map, partial(schedule_times, getdate(date)))
     )
 
-    practitioner_schedules = frappe.get_all(
-        'Practitioner Service Unit Schedule',
-        filters={'parent': practitioner},
-        fields=['schedule']
+    practitioner_schedules = data(
+        frappe.get_all(
+            'Practitioner Service Unit Schedule',
+            filters={'parent': practitioner},
+            fields=['schedule']
+        )
     )
 
-    return data(practitioner_schedules)
+    data_bookings = compose(
+        set,
+        partial(map, lambda x: x.get('appointment_time'))
+    )
+
+    existing_bookings = data_bookings(
+        frappe.get_all(
+            'Patient Booking',
+            filters={
+                'physician': practitioner,
+                'appointment_date': date
+            },
+            fields=['appointment_time']
+        )
+    )
+
+    available_schedules = practitioner_schedules.difference(existing_bookings)
+
+    return sorted(available_schedules)
 
 
 def _get_schedule_times(name, date):
