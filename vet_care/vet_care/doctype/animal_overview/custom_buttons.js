@@ -1,9 +1,9 @@
 function set_custom_buttons(frm) {
 	const custom_buttons = [
 		{
-			label: __('Make Appointment'),
+			label: __('Book Appointment'),
 			onclick: function() {
-				frappe.set_route('List', 'Patient Appointment', 'Calendar');
+				frappe.set_route('List', 'Patient Booking', 'Calendar');
 			},
 		},
 		{
