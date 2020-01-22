@@ -301,7 +301,10 @@ def get_practitioner_schedules(practitioner, date):
         )
     )
 
-    available_schedules = practitioner_schedules.difference(existing_bookings)
+    available_schedules = compose(
+        list,
+        partial(map, str)
+    )(practitioner_schedules.difference(existing_bookings))
 
     return sorted(available_schedules)
 
