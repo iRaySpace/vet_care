@@ -655,7 +655,7 @@
  "issingle": 0,
  "istable": 0,
  "max_attachments": 0,
- "modified": "2020-01-22 17:08:46.298304",
+ "modified": "2020-01-22 17:27:16.734714",
  "modified_by": "Administrator",
  "module": "Vet Care",
  "name": "Patient Booking",
@@ -664,7 +664,7 @@
  "permissions": [
   {
    "amend": 0,
-   "cancel": 0,
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -678,7 +678,7 @@
    "role": "System Manager",
    "set_user_permissions": 0,
    "share": 1,
-   "submit": 0,
+   "submit": 1,
    "write": 1
   }
  ],
