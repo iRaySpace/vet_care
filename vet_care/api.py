@@ -271,9 +271,9 @@ def get_practitioner_schedules(practitioner, date):
         return _get_schedule_times(practitioner_schedule, week_date)
 
     data = compose(
+        list,
         partial(map, str),
         sorted,
-        list,
         concat,
         partial(map, partial(schedule_times, getdate(date)))
     )

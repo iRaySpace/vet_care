@@ -6,8 +6,17 @@ frappe.ui.form.on('Patient Booking', {
 	refresh: function(frm) {
 		_set_new_frm(frm);
 	},
-	customer: function(frm) {
-
+	customer: async function(frm) {
+		const { message: customer } = await frappe.db.get_value('Customer', {'name': frm.doc.customer}, 'customer_name');
+		frm.set_value('customer_name', customer.customer_name);
+	},
+	patient: async function(frm) {
+		const { message: patient } = await frappe.db.get_value('Patient', {'name': frm.doc.patient}, 'patient_name');
+		frm.set_value('patient_name', patient.patient_name);
+	},
+	physician: async function(frm) {
+		const { message: practitioner } = await frappe.db.get_value('Healthcare Practitioner', {'name': frm.doc.physician}, 'last_name');
+		frm.set_value('physician_name', practitioner.last_name);
 	},
 	appointment_date: function(frm) {
 		_get_appointment_dates(frm);
