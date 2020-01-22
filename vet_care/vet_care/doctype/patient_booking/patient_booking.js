@@ -5,6 +5,12 @@
 frappe.ui.form.on('Patient Booking', {
 	refresh: function(frm) {
 		_set_new_frm(frm);
+		$(frm.fields_dict['appointment_time_html'].wrapper).html(`
+      <div class="row">
+        <div class="col-sm-12 schedules">
+        </div>
+      </div>
+    `);
 	},
 	customer: async function(frm) {
 		const { message: customer } = await frappe.db.get_value('Customer', {'name': frm.doc.customer}, 'customer_name');
@@ -19,6 +25,9 @@ frappe.ui.form.on('Patient Booking', {
 		frm.set_value('physician_name', practitioner.last_name);
 	},
 	appointment_date: function(frm) {
+	  if (!frm.doc.physician) {
+	    return;
+    }
 		_get_appointment_dates(frm);
 		frm.set_value('appointment_time', '00:00:00');
 		frm.set_df_property('appointment_time', 'hidden', 1);
@@ -30,18 +39,20 @@ function _set_new_frm(frm) {
 	if (!frm.doc.__islocal) {
 		return;
 	}
+
 	frm.set_value('posting_date', frappe.datetime.now_date());
+	frm.set_value('appointment_date', frappe.datetime.now_date());
 	frm.set_df_property('appointment_time', 'hidden', 1);
 }
 
 
 async function _get_appointment_dates(frm) {
-		$(frm.fields_dict['appointment_time_html'].wrapper).html(`
-		<div class="row">
-			<div class="col-sm-12 schedules">
-			</div>
-		</div>
-	`);
+  $(frm.fields_dict['appointment_time_html'].wrapper).html(`
+    <div class="row">
+      <div class="col-sm-12 schedules">
+      </div>
+    </div>
+  `);
 	_set_schedules_html(
 		await get_practitioner_schedules(
 			frm.doc.physician,
