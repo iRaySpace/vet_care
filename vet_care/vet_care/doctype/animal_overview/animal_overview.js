@@ -104,6 +104,7 @@ function _set_invoice_query(frm) {
 	});
 }
 
+// TODO: put as utils
 function _set_default_owner_query(frm) {
   frm.set_query('animal', function(doc, cdt, cdn) {
     return {

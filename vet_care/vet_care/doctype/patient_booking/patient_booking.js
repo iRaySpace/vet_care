@@ -3,6 +3,13 @@
 {% include 'vet_care/vet_care/doctype/patient_booking/patient_booking_data.js' %}
 
 frappe.ui.form.on('Patient Booking', {
+	onload: function(frm) {
+		frm.set_query('customer', function() {
+			return {
+				query: "erpnext.controllers.queries.customer_query",
+			};
+		});
+	},
 	refresh: function(frm) {
 		_set_new_frm(frm);
 		$(frm.fields_dict['appointment_time_html'].wrapper).html(`
@@ -15,6 +22,11 @@ frappe.ui.form.on('Patient Booking', {
 	customer: async function(frm) {
 		const { message: customer } = await frappe.db.get_value('Customer', {'name': frm.doc.customer}, 'customer_name');
 		frm.set_value('customer_name', customer.customer_name);
+		frm.set_query('patient', function(doc, cdt, cdn) {
+			return {
+				filters: { 'customer': frm.doc.customer ? frm.doc.customer : null }
+			}
+		});
 	},
 	patient: async function(frm) {
 		const { message: patient } = await frappe.db.get_value('Patient', {'name': frm.doc.patient}, 'patient_name');
