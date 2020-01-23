@@ -1,9 +1,9 @@
 function set_custom_buttons(frm) {
 	const custom_buttons = [
 		{
-			label: __('Make Appointment'),
+			label: __('Book Appointment'),
 			onclick: function() {
-				frappe.set_route('List', 'Patient Appointment', 'Calendar');
+				frappe.set_route('List', 'Patient Booking', 'Calendar');
 			},
 		},
 		{
@@ -35,6 +35,8 @@ async function _make_patient(frm) {
 				vc_weight: frm.doc.weight,
 				vc_species: frm.doc.species,
 				vc_breed: frm.doc.breed,
+				vc_chip_id: frm.doc.chip_id,
+				vc_neutered: frm.doc.neutered
 			},
 		},
 	});
@@ -56,6 +58,8 @@ async function _save_patient(frm) {
 				vc_weight: frm.doc.weight,
 				vc_species: frm.doc.species,
 				vc_breed: frm.doc.breed,
+				vc_chip_id: frm.doc.chip_id,
+				vc_neutered: frm.doc.neutered
 			},
 		},
 	});

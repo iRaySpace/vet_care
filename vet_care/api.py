@@ -1,9 +1,10 @@
 import frappe
 import json
 from frappe import _
-from frappe.utils import today
+from frappe.utils import today, getdate
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
 from toolz import pluck, partial, compose, first, concat
+from vet_care.utils import timedelta_to_default_format
 
 
 @frappe.whitelist()
@@ -261,7 +262,67 @@ def make_patient(patient_data, owner):
 
 @frappe.whitelist()
 def get_first_animal_by_owner(owner):
-    return first(frappe.get_all('Patient', filters={'customer': owner}))
+    data = frappe.get_all('Patient', filters={'customer': owner})
+    return first(data) if data else None
+
+
+@frappe.whitelist()
+# TODO: filter availables
+def get_practitioner_schedules(practitioner, date):
+    def schedule_times(week_date, practitioner_schedule):
+        return _get_schedule_times(practitioner_schedule, week_date)
+
+    data = compose(
+        set,
+        sorted,
+        concat,
+        partial(map, partial(schedule_times, getdate(date)))
+    )
+
+    practitioner_schedules = data(
+        frappe.get_all(
+            'Practitioner Service Unit Schedule',
+            filters={'parent': practitioner},
+            fields=['schedule']
+        )
+    )
+
+    data_bookings = compose(
+        set,
+        partial(map, lambda x: x.get('appointment_time'))
+    )
+
+    existing_bookings = data_bookings(
+        frappe.get_all(
+            'Patient Booking',
+            filters={
+                'physician': practitioner,
+                'appointment_date': date,
+                'docstatus': 1
+            },
+            fields=['appointment_time']
+        )
+    )
+
+    return compose(
+        list, partial(map, timedelta_to_default_format), sorted)(practitioner_schedules.difference(existing_bookings))
+
+
+def _get_schedule_times(name, date):
+    """
+    Fetch all `from_time` from [Healthcare Schedule Time Slot]
+    :param name: [Practitioner Schedule]
+    :param date: [datetime.date]
+    :return:
+    """
+    mapped_day = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    time_slots = frappe.get_all(
+        'Healthcare Schedule Time Slot',
+        filters={'parent': name, 'day': mapped_day[date.weekday()]},
+        fields=['from_time']
+    )
+    return list(map(lambda x: x.get('from_time'), time_slots))
+
 
 # TODO: include also with Patient
 def _get_sales_invoice_items(customer):

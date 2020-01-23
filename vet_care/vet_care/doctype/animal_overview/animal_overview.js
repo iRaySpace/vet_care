@@ -36,9 +36,9 @@ frappe.ui.form.on('Animal Overview', {
   default_owner: async function(frm) {
 		_set_default_owner_query(frm);
 		if (frm.doc.default_owner) {
+			_clear_animal_details(frm);
 			const animal = await get_first_animal_by_owner(frm.doc.default_owner);
 			if (animal) frm.set_value('animal', animal.name);
-
 			const { message: customer } = await frappe.db.get_value(
 				'Customer',
 				{ 'name': frm.doc.default_owner },
@@ -103,6 +103,7 @@ function _set_invoice_query(frm) {
 	});
 }
 
+// TODO: put as utils
 function _set_default_owner_query(frm) {
   frm.set_query('animal', function(doc, cdt, cdn) {
     return {
@@ -120,7 +121,9 @@ async function _set_animal_details(frm) {
 		['sex', 'sex'],
 		['breed', 'vc_breed'],
 		['species', 'vc_species'],
-		['color', 'vc_color']
+		['color', 'vc_color'],
+		['chip_id', 'vc_chip_id'],
+		['neutered', 'vc_neutered'],
 	];
   if (frm.doc.animal) {
     patient = await frappe.db.get_doc('Patient', frm.doc.animal);
