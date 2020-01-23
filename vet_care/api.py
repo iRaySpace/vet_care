@@ -4,6 +4,7 @@ from frappe import _
 from frappe.utils import today, getdate
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
 from toolz import pluck, partial, compose, first, concat
+from vet_care.utils import timedelta_to_default_format
 
 
 @frappe.whitelist()
@@ -303,7 +304,8 @@ def get_practitioner_schedules(practitioner, date):
         )
     )
 
-    return compose(list, partial(map, str), sorted)(practitioner_schedules.difference(existing_bookings))
+    return compose(
+        list, partial(map, timedelta_to_default_format), sorted)(practitioner_schedules.difference(existing_bookings))
 
 
 def _get_schedule_times(name, date):
