@@ -261,7 +261,8 @@ def make_patient(patient_data, owner):
 
 @frappe.whitelist()
 def get_first_animal_by_owner(owner):
-    return first(frappe.get_all('Patient', filters={'customer': owner}))
+    data = frappe.get_all('Patient', filters={'customer': owner})
+    return first(data) if data else None
 
 
 @frappe.whitelist()
