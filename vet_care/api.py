@@ -4,6 +4,7 @@ from frappe import _
 from frappe.utils import today, getdate
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
 from toolz import pluck, partial, compose, first, concat
+from vet_care.utils import timedelta_to_default_format
 
 
 @frappe.whitelist()
@@ -261,7 +262,8 @@ def make_patient(patient_data, owner):
 
 @frappe.whitelist()
 def get_first_animal_by_owner(owner):
-    return first(frappe.get_all('Patient', filters={'customer': owner}))
+    data = frappe.get_all('Patient', filters={'customer': owner})
+    return first(data) if data else None
 
 
 @frappe.whitelist()
@@ -295,18 +297,15 @@ def get_practitioner_schedules(practitioner, date):
             'Patient Booking',
             filters={
                 'physician': practitioner,
-                'appointment_date': date
+                'appointment_date': date,
+                'docstatus': 1
             },
             fields=['appointment_time']
         )
     )
 
-    available_schedules = compose(
-        list,
-        partial(map, str)
-    )(practitioner_schedules.difference(existing_bookings))
-
-    return sorted(available_schedules)
+    return compose(
+        list, partial(map, timedelta_to_default_format), sorted)(practitioner_schedules.difference(existing_bookings))
 
 
 def _get_schedule_times(name, date):

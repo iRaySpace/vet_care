@@ -36,9 +36,9 @@ frappe.ui.form.on('Animal Overview', {
   default_owner: async function(frm) {
 		_set_default_owner_query(frm);
 		if (frm.doc.default_owner) {
+			_clear_animal_details(frm);
 			const animal = await get_first_animal_by_owner(frm.doc.default_owner);
 			if (animal) frm.set_value('animal', animal.name);
-
 			const { message: customer } = await frappe.db.get_value(
 				'Customer',
 				{ 'name': frm.doc.default_owner },

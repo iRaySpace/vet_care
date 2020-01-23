@@ -20,8 +20,7 @@ class PatientBooking(Document):
 
 def _validate_appointment_times(doc):
 	practitioner_schedules = get_practitioner_schedules(doc.physician, doc.appointment_date)
-	appointment_time = str(get_datetime(doc.appointment_time).time()).lstrip('0')  # '09:00:00' should be '9:00:00'
-
+	appointment_time = get_datetime(doc.appointment_time).strftime('%H:%M')
 	if appointment_time not in practitioner_schedules:
 		frappe.throw(_('Selected appointment time is not available'))
 
