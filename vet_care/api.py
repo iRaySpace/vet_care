@@ -173,55 +173,55 @@ def get_clinical_history(patient, filter_length):
     """
     filter_length = int(filter_length)
 
-    clinical_history_items = frappe.db.sql("""
-        (SELECT 
-            si.posting_date,
-            CONCAT(
-                ROUND(si_item.qty, 2),
-                ' x ',
-                si_item.item_code
-            ) AS description,
-            ROUND(si_item.amount, 3) AS price,
-            si_item.creation
-        FROM `tabSales Invoice Item` si_item
-        INNER JOIN `tabSales Invoice` si ON si.name = si_item.parent
-        WHERE si.customer = %s AND si.docstatus = 1)
-        UNION ALL
-        (SELECT
-            pa.posting_date,
-            CONCAT(
-                UPPER(pa_item.activity_type),
-                ': ',
-                pa_item.description
-            ) AS description,
-            '' AS price,
-            pa_item.creation
-        FROM `tabPatient Activity Item` pa_item
-        INNER JOIN `tabPatient Activity` pa on pa.name = pa_item.parent
-        WHERE pa.patient = %s)
-        ORDER BY creation DESC
-        LIMIT %s
-    """, (frappe.get_value('Patient', patient, 'customer'), patient, filter_length), as_dict=True)
+    def patient_activity_mapper(patient_activity):
+        return {
+            'posting_date': patient_activity.get('posting_date'),
+            'description': f"{patient_activity.get('activity_type').upper()}: {patient_activity.get('description')}",
+            'price': ''
+        }
 
-    return clinical_history_items
+    def sales_invoice_item_mapper(sales_invoice_item):
+        return {
+            'posting_date': sales_invoice_item.get('posting_date'),
+            'description': f"{sales_invoice_item.get('qty')} x {sales_invoice_item.get('item_code')}",
+            'price': sales_invoice_item.get('amount')
+        }
+
+    get_patient_activities = compose(
+        list,
+        partial(map, patient_activity_mapper)
+    )
+
+    get_sales_invoice_items = compose(
+        list,
+        partial(map, sales_invoice_item_mapper)
+    )
+
+    clinical_history = list(concat([
+        get_patient_activities(
+            frappe.get_all(
+                'Patient Activity',
+                filters={'patient': patient},
+                fields=['posting_date', 'activity_type', 'description']
+            )
+        ),
+        get_sales_invoice_items(
+            _get_sales_invoice_items(frappe.get_value('Patient', patient, 'customer'))
+        )
+    ]))
+
+    return clinical_history[:filter_length]
 
 
 @frappe.whitelist()
-def make_patient_activity(patient, activity_items):
-    activity_items = json.loads(activity_items)
-
+def make_patient_activity(patient, activity_type, description):
     patient_activity = frappe.get_doc({
         'doctype': 'Patient Activity',
         'patient': patient,
-        'posting_date': today()
+        'posting_date': today(),
+        'activity_type': activity_type,
+        'description': description
     })
-
-    for activity_item in activity_items:
-        patient_activity.append('items', {
-            'activity_type': activity_item['activity_type'],
-            'description': activity_item['description']
-        })
-
     patient_activity.save()
 
     return patient_activity
