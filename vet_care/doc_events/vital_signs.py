@@ -13,7 +13,9 @@ def on_submit(vital_signs, method):
     })
     patient_activity.append('items', {
         'activity_type': 'Vital Signs',
-        'description': _get_description(vital_signs)
+        'description': _get_description(vital_signs),
+        'reference_dt': 'Vital Signs',
+        'reference_dn': vital_signs.name
     })
     patient_activity.save()
     patient_activity.submit()
