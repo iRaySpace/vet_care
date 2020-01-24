@@ -78,6 +78,7 @@ frappe.ui.form.on('Animal Overview', {
 		frappe.show_alert(`Vital Signs ${vital_signs.name} created`);
 
 		_clear_vital_signs(frm);
+		_set_clinical_history(frm);
 	},
 	new_activity: async function(frm) {
 		if (!frm.doc.animal) {
