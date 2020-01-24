@@ -100,7 +100,8 @@ fixtures = [
                     "Inpatient Record-scheduled_date-in_list_view",
                     "Patient-surrounding_factors-label",
                     "Item-is_stock_item-default",
-                    "Customer-search_fields"
+                    "Customer-search_fields",
+                    "Vital Signs-nutrition_note-hidden"
                 ]
             ]
         ]
