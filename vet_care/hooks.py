@@ -199,6 +199,9 @@ doc_events = {
     },
     "Customer": {
         "validate": "vet_care.doc_events.customer.validate"
+    },
+    "Vital Signs": {
+        "on_submit": "vet_care.doc_events.vital_signs.on_submit"
     }
 }
 
