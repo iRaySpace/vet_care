@@ -286,8 +286,16 @@ function _get_table_rows(records, fields) {
 	return records.map((record) => {
 		if (!fields)
 			fields = Object.keys(record);
-		const table_data = fields.map((field) =>
-			`<td>${record[field]}</td>`);
+		const table_data = fields.map((field) => {
+			if (field === 'description') {
+				return `
+					<td>
+						<pre style="font-family: 'serif'">${record[field]}</pre>
+					</td>
+				`;
+			}
+			return `<td>${record[field]}</td>`;
+		});
 		return `<tr>${table_data.join('\n')}</tr>`;
 	});
 }
