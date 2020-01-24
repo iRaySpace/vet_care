@@ -70,7 +70,7 @@ frappe.ui.form.on('Animal Overview', {
 
 		const data = fields.reduce(function(dict, x) {
 			const words = x.split(':');
-			dict[words[words.length - 1]] = frm.doc[x];
+			dict[words[words.length - 1]] = frm.doc[words[0]];
 			return dict;
 		}, {});
 
