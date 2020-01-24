@@ -100,7 +100,8 @@ fixtures = [
                     "Inpatient Record-scheduled_date-in_list_view",
                     "Patient-surrounding_factors-label",
                     "Item-is_stock_item-default",
-                    "Customer-search_fields"
+                    "Customer-search_fields",
+                    "Vital Signs-nutrition_note-hidden"
                 ]
             ]
         ]
@@ -198,6 +199,10 @@ doc_events = {
     },
     "Customer": {
         "validate": "vet_care.doc_events.customer.validate"
+    },
+    "Vital Signs": {
+        "validate": "vet_care.doc_events.vital_signs.validate",
+        "on_submit": "vet_care.doc_events.vital_signs.on_submit"
     }
 }
 

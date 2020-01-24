@@ -53,6 +53,33 @@ frappe.ui.form.on('Animal Overview', {
 		}
 		frm.set_df_property('animal', 'read_only', frm.doc.is_new_patient);
 	},
+	vs_save: async function(frm) {
+		if (!frm.doc.animal) {
+			frappe.throw(__('Animal is required'));
+		}
+		const fields = [
+			'temperature',
+			'pulse',
+			'respiratory_rate',
+			'mucous_membrane',
+			'capillary_refill_time',
+			'vs_height:height',
+			'vs_weight:weight',
+			'notes'
+		];
+
+		const data = fields.reduce(function(dict, x) {
+			const words = x.split(':');
+			dict[words[words.length - 1]] = frm.doc[words[0]];
+			return dict;
+		}, {});
+
+		const vital_signs = await make_vital_signs(frm.doc.animal, data);
+		frappe.show_alert(`Vital Signs ${vital_signs.name} created`);
+
+		_clear_vital_signs(frm);
+		_set_clinical_history(frm);
+	},
 	new_activity: async function(frm) {
 		if (!frm.doc.animal) {
 			frappe.throw(__('Animal is required.'));
@@ -143,6 +170,20 @@ function _clear_animal_details(frm) {
 		'breed',
 		'species',
 		'color',
+	];
+	fields.forEach((field) => frm.set_value(field, ''));
+}
+
+function _clear_vital_signs(frm) {
+	const fields = [
+		'temperature',
+		'pulse',
+		'respiratory_rate',
+		'mucous_membrane',
+		'capillary_refill_time',
+		'vs_height',
+		'vs_weight',
+		'notes'
 	];
 	fields.forEach((field) => frm.set_value(field, ''));
 }
@@ -246,8 +287,16 @@ function _get_table_rows(records, fields) {
 	return records.map((record) => {
 		if (!fields)
 			fields = Object.keys(record);
-		const table_data = fields.map((field) =>
-			`<td>${record[field]}</td>`);
+		const table_data = fields.map((field) => {
+			if (field === 'description') {
+				return `
+					<td>
+						<pre style="font-family: 'serif'">${record[field]}</pre>
+					</td>
+				`;
+			}
+			return `<td>${record[field]}</td>`;
+		});
 		return `<tr>${table_data.join('\n')}</tr>`;
 	});
 }

@@ -39,6 +39,14 @@ async function make_patient_activity(patient, activity_items) {
   return patient_activity;
 }
 
+async function make_vital_signs(patient, data) {
+	const { message: vital_signs } = await frappe.call({
+		method: 'vet_care.api.make_vital_signs',
+		args: { patient, vital_signs: data },
+	});
+	return vital_signs;
+}
+
 function get_item_rate(name) {
 	return frappe.db.get_value('Item', { name }, 'standard_rate');
 }
