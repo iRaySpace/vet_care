@@ -242,7 +242,6 @@ def make_vital_signs(patient, vital_signs):
         'vc_capillary_refill_time': vital_signs.get('capillary_refill_time'),
         'height': vital_signs.get('height'),
         'weight': vital_signs.get('weight'),
-        'bmi': vital_signs.get('bmi'),
         'vital_signs_note': vital_signs.get('notes')
     })
     vital_signs_doc.save()

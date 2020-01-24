@@ -65,7 +65,6 @@ frappe.ui.form.on('Animal Overview', {
 			'capillary_refill_time',
 			'vs_height:height',
 			'vs_weight:weight',
-			'bmi',
 			'notes'
 		];
 
@@ -183,7 +182,6 @@ function _clear_vital_signs(frm) {
 		'capillary_refill_time',
 		'vs_height',
 		'vs_weight',
-		'bmi',
 		'notes'
 	];
 	fields.forEach((field) => frm.set_value(field, ''));
