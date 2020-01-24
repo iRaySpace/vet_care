@@ -1,7 +1,7 @@
 import frappe
 import json
 from frappe import _
-from frappe.utils import today, getdate
+from frappe.utils import today, getdate, now
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
 from toolz import pluck, partial, compose, first, concat
 from vet_care.utils import timedelta_to_default_format
@@ -225,6 +225,27 @@ def make_patient_activity(patient, activity_items):
     patient_activity.save()
 
     return patient_activity
+
+
+@frappe.whitelist()
+def make_vital_signs(patient, vital_signs):
+    vital_signs = json.loads(vital_signs)
+    vital_signs_doc = frappe.get_doc({
+        'doctype': 'Vital Signs',
+        'patient': patient,
+        'signs_date': today(),
+        'signs_time': now(),
+        'temperature': vital_signs.get('temperature'),
+        'pulse': vital_signs.get('pulse'),
+        'respiratory_rate': vital_signs.get('respiratory_rate'),
+        'vc_mucous_membrane': vital_signs.get('mucous_membrane'),
+        'vc_capillary_refill_time': vital_signs.get('capillary_refill_time'),
+        'height': vital_signs.get('height'),
+        'weight': vital_signs.get('weight'),
+        'bmi': vital_signs.get('bmi')
+    })
+    vital_signs_doc.save()
+    return vital_signs_doc
 
 
 @frappe.whitelist()
