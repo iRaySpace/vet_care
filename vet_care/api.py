@@ -245,6 +245,7 @@ def make_vital_signs(patient, vital_signs):
         'bmi': vital_signs.get('bmi')
     })
     vital_signs_doc.save()
+    vital_signs_doc.submit()
     return vital_signs_doc
 
 
