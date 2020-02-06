@@ -2,6 +2,7 @@ import frappe
 import json
 from frappe import _
 from frappe.utils import today, getdate, now
+from frappe.custom.doctype.custom_field.custom_field import create_custom_field
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
 from toolz import pluck, partial, compose, first, concat
 from vet_care.utils import timedelta_to_default_format
@@ -328,6 +329,16 @@ def get_practitioner_schedules(practitioner, date):
 
     return compose(
         list, partial(map, timedelta_to_default_format), sorted)(practitioner_schedules.difference(existing_bookings))
+
+
+@frappe.whitelist()
+def apply_custom_fields():
+    create_custom_field('Healthcare Practitioner', {
+        'fieldname': 'vc_color',
+        'label': 'Color',
+        'insert_after': 'office_phone'
+    })
+    return True
 
 
 def _get_schedule_times(name, date):
