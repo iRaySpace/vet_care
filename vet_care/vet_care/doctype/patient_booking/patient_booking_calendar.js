@@ -7,6 +7,7 @@ frappe.views.calendar['Patient Booking'] = {
     'end': 'end',
     'id': 'name',
     'title': 'title',
-    'allDay': 'allDay'
+    'allDay': 'allDay',
+    'eventColor': 'color'
   }
 };
