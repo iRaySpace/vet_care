@@ -2,8 +2,9 @@ function set_custom_buttons(frm) {
     const custom_buttons = [
         {
             label: __('Animal Overview'),
-            onclick: function() {
-                frappe.set_route('Form', 'Animal Overview', {animal: frm.doc.patient});
+            onclick: async function() {
+                await frappe.set_route('Form', 'Animal Overview');
+                frappe.model.set_value('Animal Overview', 'Animal Overview', 'animal', frm.doc.patient);
             },
         }
     ];
