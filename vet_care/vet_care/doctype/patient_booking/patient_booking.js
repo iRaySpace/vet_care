@@ -35,6 +35,7 @@ frappe.ui.form.on('Patient Booking', {
 	physician: async function(frm) {
 		const { message: practitioner } = await frappe.db.get_value('Healthcare Practitioner', {'name': frm.doc.physician}, 'last_name');
 		frm.set_value('physician_name', practitioner.last_name);
+		_get_appointment_dates(frm);
 	},
 	appointment_date: function(frm) {
 	  if (!frm.doc.physician) {
