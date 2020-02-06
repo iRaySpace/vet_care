@@ -19,5 +19,13 @@ def get_data():
 			"type": "list",
 			"label": _("Animal Overview"),
 			"_doctype": "Animal Overview"
+		},
+		{
+			"module_name": "Patient Booking",
+			"color": "#FF888B",
+			"icon": "fa fa-calendar-plus-o",
+			"type": "list",
+			"label": _("Patient Booking"),
+			"_doctype": "Patient Booking"
 		}
 	]
