@@ -1,6 +1,7 @@
 // Copyright (c) 2020, 9T9IT and contributors
 // For license information, please see license.txt
 {% include 'vet_care/vet_care/doctype/patient_booking/patient_booking_data.js' %}
+{% include 'vet_care/vet_care/doctype/patient_booking/patient_booking_buttons.js' %}
 
 frappe.ui.form.on('Patient Booking', {
 	onload: function(frm) {
@@ -11,6 +12,9 @@ frappe.ui.form.on('Patient Booking', {
 		});
 	},
 	refresh: function(frm) {
+		if (!frm.doc.__islocal) {
+			set_custom_buttons(frm);
+		}
 		_set_new_frm(frm);
 		$(frm.fields_dict['appointment_time_html'].wrapper).html(`
       <div class="row">

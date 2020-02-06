@@ -1,0 +1,22 @@
+[1mdiff --git a/vet_care/vet_care/doctype/patient_booking/patient_booking.js b/vet_care/vet_care/doctype/patient_booking/patient_booking.js[m
+[1mindex 857e51f..6b031bc 100644[m
+[1m--- a/vet_care/vet_care/doctype/patient_booking/patient_booking.js[m
+[1m+++ b/vet_care/vet_care/doctype/patient_booking/patient_booking.js[m
+[36m@@ -1,6 +1,7 @@[m
+ // Copyright (c) 2020, 9T9IT and contributors[m
+ // For license information, please see license.txt[m
+ {% include 'vet_care/vet_care/doctype/patient_booking/patient_booking_data.js' %}[m
+[32m+[m[32m{% include 'vet_care/vet_care/doctype/patient_booking/patient_booking_buttons.js' %}[m
+ [m
+ frappe.ui.form.on('Patient Booking', {[m
+ 	onload: function(frm) {[m
+[36m@@ -11,6 +12,9 @@[m [mfrappe.ui.form.on('Patient Booking', {[m
+ 		});[m
+ 	},[m
+ 	refresh: function(frm) {[m
+[32m+[m		[32mif (!frm.doc.__islocal) {[m
+[32m+[m			[32mset_custom_buttons(frm);[m
+[32m+[m		[32m}[m
+ 		_set_new_frm(frm);[m
+ 		$(frm.fields_dict['appointment_time_html'].wrapper).html(`[m
+       <div class="row">[m
