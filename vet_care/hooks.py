@@ -48,10 +48,12 @@ fixtures = [
                     "Customer-vc_city",
                     "Customer-vc_country",
                     "Customer-vc_address_and_contacts_cb",
-                    "Customer-vc_mobile",
-                    "Customer-vc_mobile_2",
                     "Customer-vc_home_phone",
-                    "Customer-vc_office_phone"
+                    "Customer-vc_office_phone",
+                    "Customer-mobile_number",
+                    "Customer-mobile_number_2",
+                    "Customer-vc_area",
+                    "Healthcare Practitioner-vc_color"
                 ]
             ]
         ]
@@ -101,7 +103,21 @@ fixtures = [
                     "Patient-surrounding_factors-label",
                     "Item-is_stock_item-default",
                     "Customer-search_fields",
-                    "Vital Signs-nutrition_note-hidden"
+                    "Vital Signs-nutrition_note-hidden",
+                    "Vital Signs-bmi-hidden",
+                    "Vital Signs-height-hidden",
+                    "Customer-address_contacts-hidden",
+                    "Customer-address_html-hidden",
+                    "Customer-website-hidden",
+                    "Customer-column_break1-hidden",
+                    "Customer-contact_html-hidden",
+                    "Customer-is_internal_customer-hidden",
+                    "Customer-more_info-hidden",
+                    "Customer-customer_details-hidden",
+                    "Customer-column_break_45-hidden",
+                    "Customer-market_segment-hidden",
+                    "Customer-industry-hidden",
+                    "Customer-is_frozen-hidden"
                 ]
             ]
         ]

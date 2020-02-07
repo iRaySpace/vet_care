@@ -18,7 +18,15 @@ frappe.ui.form.on('Animal Overview', {
 		frm.disable_save();
 		set_custom_buttons(frm);
 		_set_actions(frm);
+		_set_form_buttons_color();
 		// _set_fields_read_only(frm, true);
+	},
+	save_patient: async function(frm) {
+	    if (frm.doc.is_new_patient) {
+            await make_patient(frm);
+        } else {
+            await save_patient(frm);
+        }
 	},
 	animal: function(frm) {
 		_set_animal_details(frm);
@@ -227,8 +235,8 @@ function _set_actions(frm) {
 	$(frm.fields_dict['actions_html'].wrapper).html(`
 		<div class="row">
 			<div class="col-sm-6">
-				<button class="btn btn-xs btn-info" id="save">Save</button>
-				<button class="btn btn-xs btn-primary" id="pay">Pay</button>
+				<button class="btn btn-xs btn-primary" id="save">Save</button>
+				<button class="btn btn-xs" style="background-color: #8bc34a" id="pay">Pay</button>
 				<button class="btn btn-xs btn-danger" id="discard">Discard</button>
 			</div>
 		</div>
@@ -329,4 +337,11 @@ function _map_buttons_to_functions(actions, args) {
 // child table utils
 function _get_child(cdt, cdn) {
 	return locals[cdt][cdn];
+}
+
+// other utils
+function _set_form_buttons_color() {
+    $('button[data-fieldname="new_activity"]').addClass('btn-primary');
+    $('button[data-fieldname="vs_save"]').addClass('btn-primary');
+    $('button[data-fieldname="save_patient"]').addClass('btn-primary');
 }
