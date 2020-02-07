@@ -103,7 +103,12 @@ fixtures = [
                     "Customer-search_fields",
                     "Vital Signs-nutrition_note-hidden",
                     "Vital Signs-bmi-hidden",
-                    "Vital Signs-height-hidden"
+                    "Vital Signs-height-hidden",
+                    "Customer-address_contacts-hidden",
+                    "Customer-address_html-hidden",
+                    "Customer-website-hidden",
+                    "Customer-column_break1-hidden",
+                    "Customer-contact_html-hidden"
                 ]
             ]
         ]
