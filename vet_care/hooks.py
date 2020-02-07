@@ -111,7 +111,13 @@ fixtures = [
                     "Customer-website-hidden",
                     "Customer-column_break1-hidden",
                     "Customer-contact_html-hidden",
-                    "Customer-is_internal_customer-hidden"
+                    "Customer-is_internal_customer-hidden",
+                    "Customer-more_info-hidden",
+                    "Customer-customer_details-hidden",
+                    "Customer-column_break_45-hidden",
+                    "Customer-market_segment-hidden",
+                    "Customer-industry-hidden",
+                    "Customer-is_frozen-hidden"
                 ]
             ]
         ]
