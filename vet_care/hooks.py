@@ -49,7 +49,9 @@ fixtures = [
                     "Customer-vc_country",
                     "Customer-vc_address_and_contacts_cb",
                     "Customer-vc_home_phone",
-                    "Customer-vc_office_phone"
+                    "Customer-vc_office_phone",
+                    "Customer-mobile_number",
+                    "Customer-mobile_number_2"
                 ]
             ]
         ]
