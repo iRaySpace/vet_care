@@ -11,6 +11,7 @@ def validate(doc, method):
     _validate_default_customer(doc)
     doc.customer = _get_default_customer(doc)
     _set_mobile_no(doc)
+    _set_customer_name(doc)
 
 
 def _set_owner_as_default_customer(doc):
@@ -38,3 +39,8 @@ def _get_default_customer(doc):
 
 def _set_mobile_no(doc):
     doc.mobile = frappe.get_value('Customer', doc.customer, 'mobile_no')
+
+
+def _set_customer_name(doc):
+    for relation in doc.vc_pet_relation:
+        relation.customer_name = frappe.get_value('Customer', relation.customer, 'customer_name')
