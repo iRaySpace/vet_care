@@ -506,7 +506,7 @@
   "in_list_view": 0,
   "in_standard_filter": 0,
   "insert_after": "represents_company",
-  "label": "Address and Contact Details",
+  "label": "Address",
   "modified": "2020-01-15 18:52:43.333254",
   "name": "Customer-vc_address_and_contacts_sb",
   "no_copy": 0,
