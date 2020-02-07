@@ -101,7 +101,9 @@ fixtures = [
                     "Patient-surrounding_factors-label",
                     "Item-is_stock_item-default",
                     "Customer-search_fields",
-                    "Vital Signs-nutrition_note-hidden"
+                    "Vital Signs-nutrition_note-hidden",
+                    "Vital Signs-bmi-hidden",
+                    "Vital Signs-height-hidden"
                 ]
             ]
         ]
