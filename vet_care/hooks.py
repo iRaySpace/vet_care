@@ -51,7 +51,8 @@ fixtures = [
                     "Customer-vc_home_phone",
                     "Customer-vc_office_phone",
                     "Customer-mobile_number",
-                    "Customer-mobile_number_2"
+                    "Customer-mobile_number_2",
+                    "Customer-vc_area"
                 ]
             ]
         ]
