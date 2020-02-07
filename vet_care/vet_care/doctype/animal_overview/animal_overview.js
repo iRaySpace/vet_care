@@ -227,8 +227,8 @@ function _set_actions(frm) {
 	$(frm.fields_dict['actions_html'].wrapper).html(`
 		<div class="row">
 			<div class="col-sm-6">
-				<button class="btn btn-xs btn-info" id="save">Save</button>
-				<button class="btn btn-xs btn-primary" id="pay">Pay</button>
+				<button class="btn btn-xs" style="background-color: #03a9f4" id="save">Save</button>
+				<button class="btn btn-xs" style="background-color: #8bc34a" id="pay">Pay</button>
 				<button class="btn btn-xs btn-danger" id="discard">Discard</button>
 			</div>
 		</div>
