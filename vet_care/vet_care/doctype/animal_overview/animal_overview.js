@@ -21,6 +21,13 @@ frappe.ui.form.on('Animal Overview', {
 		_set_form_buttons_color();
 		// _set_fields_read_only(frm, true);
 	},
+	save_patient: async function(frm) {
+	    if (frm.doc.is_new_patient) {
+            await make_patient(frm);
+        } else {
+            await save_patient(frm);
+        }
+	},
 	animal: function(frm) {
 		_set_animal_details(frm);
 		_set_clinical_history(frm);
@@ -336,4 +343,5 @@ function _get_child(cdt, cdn) {
 function _set_form_buttons_color() {
     $('button[data-fieldname="new_activity"]').addClass('btn-primary');
     $('button[data-fieldname="vs_save"]').addClass('btn-primary');
+    $('button[data-fieldname="save_patient"]').addClass('btn-primary');
 }
