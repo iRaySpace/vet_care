@@ -898,5 +898,25 @@
   "property": "hidden",
   "property_type": "Check",
   "value": "1"
+ },
+ {
+  "_assign": null,
+  "_comments": null,
+  "_liked_by": null,
+  "_user_tags": null,
+  "default_value": null,
+  "doc_type": "Customer",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "is_internal_customer",
+  "modified": "2020-02-07 20:29:27.058537",
+  "name": "Customer-is_internal_customer-hidden",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "hidden",
+  "property_type": "Check",
+  "value": "1"
  }
 ]

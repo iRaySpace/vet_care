@@ -108,7 +108,8 @@ fixtures = [
                     "Customer-address_html-hidden",
                     "Customer-website-hidden",
                     "Customer-column_break1-hidden",
-                    "Customer-contact_html-hidden"
+                    "Customer-contact_html-hidden",
+                    "Customer-is_internal_customer-hidden"
                 ]
             ]
         ]
