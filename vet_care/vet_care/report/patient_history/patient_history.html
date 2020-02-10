@@ -1,0 +1,45 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <h1>{{ filters.patient_name }}</h1>
+            <p class="lead text-muted">{{ filters.patient }}</p>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-6">
+            <p>Date of Birth: {{ filters.patient_dob }}</p>
+            <p>Color: {{ filters.color }}</p>
+            <p>Species: {{ filters.species }}</p>
+            <p>Breed: {{ filters.breed }}</p>
+        </div>
+        <div class="col-sm-6">
+            <p>Chip ID: {{ filters.chip_id }}</p>
+            <p>Neutered: {{ filters.neutered }}</p>
+            <p>Deceased: {{ filters.deceased }}</p>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Posting Date</th>
+                        <th>Activity</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in data %}
+                    <tr>
+                        <td width="15%">{{ item['posting_date'] }}</td>
+                        <td width="25%">{{ item['activity_type'] }}</td>
+                        <td>{{ item['description'] }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

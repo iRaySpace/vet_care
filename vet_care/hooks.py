@@ -117,7 +117,14 @@ fixtures = [
                     "Customer-column_break_45-hidden",
                     "Customer-market_segment-hidden",
                     "Customer-industry-hidden",
-                    "Customer-is_frozen-hidden"
+                    "Customer-is_frozen-hidden",
+                    "Customer-primary_address_and_contact_detail-hidden",
+                    "Customer-customer_primary_contact-hidden",
+                    "Customer-mobile_no-hidden",
+                    "Customer-email_id-hidden",
+                    "Customer-column_break_26-hidden",
+                    "Customer-customer_primary_address-hidden",
+                    "Customer-primary_address-hidden"
                 ]
             ]
         ]
