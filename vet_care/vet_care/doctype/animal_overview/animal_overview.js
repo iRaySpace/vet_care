@@ -292,7 +292,6 @@ function _update_child_amount(frm, cdt, cdn) {
 
 // table utils
 function _get_table_rows(records, fields) {
-
 	return records.map((record) => {
 		if (!fields)
 			fields = Object.keys(record);
@@ -322,13 +321,16 @@ function _get_table_rows(records, fields) {
 }
 
 function _get_table_header(fields) {
+    // correspondingly
+    // posting_date, name, description, price
+    const width = ['10%', '20%', '55%', '15%'];
 	const header_texts = fields.map((field) =>
 		field.split('_')
 			.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 			.join(' ')
 	);
-	const columns = header_texts.map((column) =>
-		`<th>${column}</th>`);
+	const columns = header_texts.map((column, index) =>
+		`<th width=${width[index]}>${column}</th>`);
 	return `<tr>${columns.join('\n')}</tr>`;
 }
 
