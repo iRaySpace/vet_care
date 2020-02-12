@@ -198,7 +198,7 @@ function _clear_vital_signs(frm) {
 
 async function _set_clinical_history(frm) {
 	const clinical_history = await get_clinical_history(frm.doc.animal, _filter_length);
-	const fields = ['posting_date', 'description', 'price'];
+	const fields = ['posting_date', 'name', 'description', 'price'];
 
 	const table_rows = _get_table_rows(clinical_history, fields);
 	const table_header = _get_table_header(fields);
@@ -292,6 +292,7 @@ function _update_child_amount(frm, cdt, cdn) {
 
 // table utils
 function _get_table_rows(records, fields) {
+
 	return records.map((record) => {
 		if (!fields)
 			fields = Object.keys(record);
@@ -302,6 +303,17 @@ function _get_table_rows(records, fields) {
 						<pre style="font-family: 'serif'">${record[field]}</pre>
 					</td>
 				`;
+			}
+			if (field === 'name') {
+			    const ref_type = record['ref_type'] === 'pa'
+			        ? 'Patient%20Activity'
+			        : 'Sales%20Invoice';
+			    const link = `/desk#Form/${ref_type}/${record[field]}`;
+			    return `
+			        <td>
+			            <a href=${link}>${record[field]}</a>
+			        </td>
+			    `;
 			}
 			return `<td>${record[field]}</td>`;
 		});

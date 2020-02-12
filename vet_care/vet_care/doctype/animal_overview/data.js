@@ -23,12 +23,12 @@ async function get_invoice_items(invoice) {
 }
 
 async function get_clinical_history(patient, filter_length) {
-  if (!patient) return [];
+    if (!patient) return [];
 	const { message: clinical_history } = await frappe.call({
 		method: 'vet_care.api.get_clinical_history',
 		args: { patient, filter_length },
 	});
-  return clinical_history;
+    return clinical_history;
 }
 
 async function make_patient_activity(patient, activity_items) {
