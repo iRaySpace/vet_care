@@ -21,6 +21,24 @@ frappe.ui.form.on('Animal Overview', {
 		_set_form_buttons_color();
 		// _set_fields_read_only(frm, true);
 	},
+	inpatient: async function(frm) {
+	    if (!frm.doc.animal || frm.doc.__init) return;
+	    if (frm.doc.inpatient) {
+            const values = await vet_care.utils.prompt_admission_dialog();
+            frm.doc.__new_patient_activity = true;
+            frm.doc.__reason = values.reason;
+            frm.doc.__posting_date = values.posting_date;
+            frm.doc.__posting_time = values.posting_time;
+        } else {
+            const values = await vet_care.utils.prompt_discharge_dialog();
+            frm.doc.__new_patient_activity = true;
+            frm.doc.__reason = values.reason;
+            frm.doc.__posting_date = values.posting_date;
+            frm.doc.__posting_time = values.posting_time;
+        }
+        await save_patient(frm);
+        _set_clinical_history(frm);
+	},
 	save_patient: async function(frm) {
 	    if (frm.doc.is_new_patient) {
             await make_patient(frm);
@@ -60,6 +78,7 @@ frappe.ui.form.on('Animal Overview', {
 			_clear_animal_details(frm);
 		}
 		frm.set_df_property('animal', 'read_only', frm.doc.is_new_patient);
+		frm.set_df_property('inpatient', 'hidden', frm.doc.is_new_patient);
 	},
 	vs_save: async function(frm) {
 		if (!frm.doc.animal) {
@@ -160,12 +179,17 @@ async function _set_animal_details(frm) {
 		['color', 'vc_color'],
 		['chip_id', 'vc_chip_id'],
 		['neutered', 'vc_neutered'],
+		['inpatient', 'vc_inpatient']
 	];
   if (frm.doc.animal) {
     patient = await frappe.db.get_doc('Patient', frm.doc.animal);
     frm.set_value('default_owner', patient.customer);
+    frm.doc.__init = true;
   }
-  fields.forEach((field) => frm.set_value(field[0], patient ? patient[field[1]] : ''));
+  for (const field of fields) {
+    await frm.set_value(field[0], patient ? patient[field[1]] : '');
+  }
+  frm.doc.__init = false;
 }
 
 function _clear_animal_details(frm) {

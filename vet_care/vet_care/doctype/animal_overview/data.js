@@ -96,7 +96,12 @@ async function save_patient(frm) {
 				vc_species: frm.doc.species,
 				vc_breed: frm.doc.breed,
 				vc_chip_id: frm.doc.chip_id,
-				vc_neutered: frm.doc.neutered
+				vc_neutered: frm.doc.neutered,
+				vc_inpatient: frm.doc.inpatient,
+				__new_patient_activity: frm.doc.__new_patient_activity,
+				__reason: frm.doc.__reason,
+				__posting_date: frm.doc.__posting_date,
+				__posting_time: frm.doc.__posting_time
 			},
 		},
 	});
