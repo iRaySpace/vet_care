@@ -176,6 +176,7 @@ def get_clinical_history(patient, filter_length):
 
     clinical_history_items = frappe.db.sql("""
         (SELECT 
+            si.name,
             si.posting_date,
             CONCAT(
                 ROUND(si_item.qty, 2),
@@ -183,12 +184,14 @@ def get_clinical_history(patient, filter_length):
                 si_item.item_code
             ) AS description,
             ROUND(si_item.amount, 3) AS price,
-            si_item.creation
+            si_item.creation,
+            'si' AS ref_type
         FROM `tabSales Invoice Item` si_item
         INNER JOIN `tabSales Invoice` si ON si.name = si_item.parent
         WHERE si.customer = %s AND si.docstatus = 1)
         UNION ALL
         (SELECT
+            pa.name,
             pa.posting_date,
             CONCAT(
                 UPPER(pa_item.activity_type),
@@ -196,7 +199,8 @@ def get_clinical_history(patient, filter_length):
                 pa_item.description
             ) AS description,
             '' AS price,
-            pa_item.creation
+            pa_item.creation,
+            'pa' AS ref_type
         FROM `tabPatient Activity Item` pa_item
         INNER JOIN `tabPatient Activity` pa on pa.name = pa_item.parent
         WHERE pa.patient = %s)

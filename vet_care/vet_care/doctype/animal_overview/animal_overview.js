@@ -21,6 +21,24 @@ frappe.ui.form.on('Animal Overview', {
 		_set_form_buttons_color();
 		// _set_fields_read_only(frm, true);
 	},
+	inpatient: async function(frm) {
+	    if (!frm.doc.animal || frm.doc.__init) return;
+	    if (frm.doc.inpatient) {
+            const values = await vet_care.utils.prompt_admission_dialog();
+            frm.doc.__new_patient_activity = true;
+            frm.doc.__reason = values.reason;
+            frm.doc.__posting_date = values.posting_date;
+            frm.doc.__posting_time = values.posting_time;
+        } else {
+            const values = await vet_care.utils.prompt_discharge_dialog();
+            frm.doc.__new_patient_activity = true;
+            frm.doc.__reason = values.reason;
+            frm.doc.__posting_date = values.posting_date;
+            frm.doc.__posting_time = values.posting_time;
+        }
+        await save_patient(frm);
+        _set_clinical_history(frm);
+	},
 	save_patient: async function(frm) {
 	    if (frm.doc.is_new_patient) {
             await make_patient(frm);
@@ -60,6 +78,7 @@ frappe.ui.form.on('Animal Overview', {
 			_clear_animal_details(frm);
 		}
 		frm.set_df_property('animal', 'read_only', frm.doc.is_new_patient);
+		frm.set_df_property('inpatient', 'hidden', frm.doc.is_new_patient);
 	},
 	vs_save: async function(frm) {
 		if (!frm.doc.animal) {
@@ -160,12 +179,17 @@ async function _set_animal_details(frm) {
 		['color', 'vc_color'],
 		['chip_id', 'vc_chip_id'],
 		['neutered', 'vc_neutered'],
+		['inpatient', 'vc_inpatient']
 	];
   if (frm.doc.animal) {
     patient = await frappe.db.get_doc('Patient', frm.doc.animal);
     frm.set_value('default_owner', patient.customer);
+    frm.doc.__init = true;
   }
-  fields.forEach((field) => frm.set_value(field[0], patient ? patient[field[1]] : ''));
+  for (const field of fields) {
+    await frm.set_value(field[0], patient ? patient[field[1]] : '');
+  }
+  frm.doc.__init = false;
 }
 
 function _clear_animal_details(frm) {
@@ -198,7 +222,7 @@ function _clear_vital_signs(frm) {
 
 async function _set_clinical_history(frm) {
 	const clinical_history = await get_clinical_history(frm.doc.animal, _filter_length);
-	const fields = ['posting_date', 'description', 'price'];
+	const fields = ['posting_date', 'name', 'description', 'price'];
 
 	const table_rows = _get_table_rows(clinical_history, fields);
 	const table_header = _get_table_header(fields);
@@ -303,6 +327,17 @@ function _get_table_rows(records, fields) {
 					</td>
 				`;
 			}
+			if (field === 'name') {
+			    const ref_type = record['ref_type'] === 'pa'
+			        ? 'Patient%20Activity'
+			        : 'Sales%20Invoice';
+			    const link = `/desk#Form/${ref_type}/${record[field]}`;
+			    return `
+			        <td>
+			            <a href=${link}>${record[field]}</a>
+			        </td>
+			    `;
+			}
 			return `<td>${record[field]}</td>`;
 		});
 		return `<tr>${table_data.join('\n')}</tr>`;
@@ -310,13 +345,16 @@ function _get_table_rows(records, fields) {
 }
 
 function _get_table_header(fields) {
+    // correspondingly
+    // posting_date, name, description, price
+    const width = ['10%', '20%', '55%', '15%'];
 	const header_texts = fields.map((field) =>
 		field.split('_')
 			.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 			.join(' ')
 	);
-	const columns = header_texts.map((column) =>
-		`<th>${column}</th>`);
+	const columns = header_texts.map((column, index) =>
+		`<th width=${width[index]}>${column}</th>`);
 	return `<tr>${columns.join('\n')}</tr>`;
 }
 

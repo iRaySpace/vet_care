@@ -23,12 +23,12 @@ async function get_invoice_items(invoice) {
 }
 
 async function get_clinical_history(patient, filter_length) {
-  if (!patient) return [];
+    if (!patient) return [];
 	const { message: clinical_history } = await frappe.call({
 		method: 'vet_care.api.get_clinical_history',
 		args: { patient, filter_length },
 	});
-  return clinical_history;
+    return clinical_history;
 }
 
 async function make_patient_activity(patient, activity_items) {
@@ -96,7 +96,12 @@ async function save_patient(frm) {
 				vc_species: frm.doc.species,
 				vc_breed: frm.doc.breed,
 				vc_chip_id: frm.doc.chip_id,
-				vc_neutered: frm.doc.neutered
+				vc_neutered: frm.doc.neutered,
+				vc_inpatient: frm.doc.inpatient,
+				__new_patient_activity: frm.doc.__new_patient_activity,
+				__reason: frm.doc.__reason,
+				__posting_date: frm.doc.__posting_date,
+				__posting_time: frm.doc.__posting_time
 			},
 		},
 	});

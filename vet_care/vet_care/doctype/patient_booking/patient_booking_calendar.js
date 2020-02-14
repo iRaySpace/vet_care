@@ -9,5 +9,9 @@ frappe.views.calendar['Patient Booking'] = {
     'title': 'title',
     'allDay': 'allDay',
     'eventColor': 'color'
+  },
+  options: {
+    minTime: '08:00:00',
+    maxTime: '19:00:00'
   }
 };
