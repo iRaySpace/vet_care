@@ -106,7 +106,7 @@ def get_medical_records(patient):
 
 
 @frappe.whitelist()
-def save_invoice(items, patient, customer):
+def save_invoice(items, patient, customer, existing_invoice=None):
     items = json.loads(items)
 
     pos_profile = frappe.db.get_single_value('Vetcare Settings', 'pos_profile')
@@ -114,13 +114,17 @@ def save_invoice(items, patient, customer):
     if not pos_profile:
         frappe.throw(_('Please set POS Profile under Vetcare Settings'))
 
-    sales_invoice = frappe.new_doc('Sales Invoice')
-    sales_invoice.update({
-        'patient': patient,
-        'customer': customer,
-        'due_date': today(),
-        'pos_profile': pos_profile
-    })
+    if not existing_invoice:
+        sales_invoice = frappe.new_doc('Sales Invoice')
+        sales_invoice.update({
+            'patient': patient,
+            'customer': customer,
+            'due_date': today(),
+            'pos_profile': pos_profile
+        })
+    else:
+        sales_invoice = frappe.get_doc('Sales Invoice', existing_invoice)
+        sales_invoice.items = []
 
     for item in items:
         sales_invoice.append('items', {
