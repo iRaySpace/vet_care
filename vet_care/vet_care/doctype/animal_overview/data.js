@@ -1,9 +1,10 @@
-async function save_invoice(items, patient, customer) {
-  const { message: invoice } = await frappe.call({
+async function save_invoice(items, patient, customer, existing_invoice) {
+    console.log(existing_invoice);
+    const { message: invoice } = await frappe.call({
 		method: 'vet_care.api.save_invoice',
-		args: { items, patient, customer },
+		args: { items, patient, customer, existing_invoice },
 	});
-  return invoice;
+    return invoice;
 }
 
 async function pay_invoice(invoice, payments) {

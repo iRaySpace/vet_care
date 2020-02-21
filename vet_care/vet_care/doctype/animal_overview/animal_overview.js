@@ -56,7 +56,6 @@ frappe.ui.form.on('Animal Overview', {
 		if (frm.doc.invoice) {
 			const items = await get_invoice_items(frm.doc.invoice);
 			frm.set_value('items', items);
-			frm.set_df_property('items', 'read_only', true);
 		}
 	},
   default_owner: async function(frm) {
@@ -272,7 +271,12 @@ function _set_actions(frm) {
 				frappe.throw(__('Items are required'));
 			}
 
-			const invoice = await save_invoice(frm.doc.items, frm.doc.animal, frm.doc.default_owner);
+			const invoice = await save_invoice(
+			    frm.doc.items,
+			    frm.doc.animal,
+			    frm.doc.default_owner,
+                frm.doc.invoice,
+            );
 			frappe.show_alert(`Sales Invoice ${invoice.name} saved`);
 
 			frm.set_value('items', []);
@@ -281,7 +285,12 @@ function _set_actions(frm) {
 			if (!frm.doc.invoice) {
 				frappe.throw(__('Please select invoice above'));
 			}
-
+			await save_invoice(
+			    frm.doc.items,
+			    frm.doc.animal,
+			    frm.doc.default_owner,
+                frm.doc.invoice,
+            );
 			const values = await show_payment_dialog(frm);
 			const invoice = await pay_invoice(frm.doc.invoice, values.payments);
 			frappe.show_alert(`Sales Invoice ${invoice.name} paid`);
