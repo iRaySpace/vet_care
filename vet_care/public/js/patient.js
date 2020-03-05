@@ -4,6 +4,10 @@ frappe.ui.form.on('Patient', {
             return { query: "erpnext.controllers.queries.customer_query" };
         });
     },
+    refresh: function(frm) {
+        _add_patient_overview(frm);
+        _set_dashboard(frm);
+    },
     vc_deceased: function(frm) {
         frappe.msgprint(
             'This animal information will be disabled. No further invoicing would be possible.',
@@ -27,3 +31,24 @@ frappe.ui.form.on('Patient', {
         frm.save();
     }
 });
+
+function _add_patient_overview(frm) {
+    frm.add_custom_button(__('Animal Overview'), function() {
+        frappe.route_options = {'animal': frm.doc.name};
+        frappe.set_route('Form', 'Animal Overview');
+    });
+}
+
+function _set_dashboard(frm) {
+    const appointments = frm.dashboard.data.transactions.find(({ label }) => label === __('Appointments and Patient Encounters'));
+    if (appointments && !appointments.items.includes('Patient')) {
+        appointments.items = ['Patient Booking'];
+    }
+
+    // Remove Lab Tests and Vital Signs
+    const filtered_transactions = frm.dashboard.data.transactions.filter(({ label }) => label !== __('Lab Tests and Vital Signs'));
+    frm.dashboard.data.transactions = filtered_transactions;
+    frm.dashboard.data_rendered = false;
+    frm.dashboard.transactions_area.empty();
+    frm.dashboard.refresh();
+}
