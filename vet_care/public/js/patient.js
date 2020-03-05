@@ -1,5 +1,7 @@
 frappe.ui.form.on('Patient', {
     onload: function(frm) {
+        // Remove Under Development
+        $('.sidebar-menu > p').empty();
         frm.set_query('customer', 'vc_pet_relation', function() {
             return { query: "erpnext.controllers.queries.customer_query" };
         });
