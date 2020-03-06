@@ -2,7 +2,8 @@ import frappe
 
 
 def validate(vital_signs, method):
-    vital_signs.bmi = (vital_signs.weight / (vital_signs.height * vital_signs.height))
+    pass
+    # vital_signs.bmi = (vital_signs.weight / (vital_signs.height * vital_signs.height))
 
 
 def on_submit(vital_signs, method):
@@ -29,9 +30,7 @@ def _get_description(vital_signs):
         'vc_mucous_membrane:Mucous membrane',
         'vc_capillary_refill_time:CRT',
         'vital_signs_note:Note',
-        'height:Height',
-        'weight:Weight',
-        'bmi:BMI'
+        'weight:Weight'
     ]
 
     def get_data(field):

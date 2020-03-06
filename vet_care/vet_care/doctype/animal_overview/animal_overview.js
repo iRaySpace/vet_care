@@ -89,7 +89,6 @@ frappe.ui.form.on('Animal Overview', {
 			'respiratory_rate',
 			'mucous_membrane',
 			'capillary_refill_time',
-			'vs_height:height',
 			'vs_weight:weight',
 			'notes'
 		];
@@ -212,7 +211,6 @@ function _clear_vital_signs(frm) {
 		'respiratory_rate',
 		'mucous_membrane',
 		'capillary_refill_time',
-		'vs_height',
 		'vs_weight',
 		'notes'
 	];

@@ -249,7 +249,6 @@ def make_vital_signs(patient, vital_signs):
         'respiratory_rate': vital_signs.get('respiratory_rate'),
         'vc_mucous_membrane': vital_signs.get('mucous_membrane'),
         'vc_capillary_refill_time': vital_signs.get('capillary_refill_time'),
-        'height': vital_signs.get('height'),
         'weight': vital_signs.get('weight'),
         'vital_signs_note': vital_signs.get('notes')
     })
