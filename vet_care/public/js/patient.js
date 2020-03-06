@@ -44,7 +44,7 @@ function _add_patient_overview(frm) {
 function _set_dashboard(frm) {
     const appointments = frm.dashboard.data.transactions.find(({ label }) => label === __('Appointments and Patient Encounters'));
     if (appointments && !appointments.items.includes('Patient')) {
-        appointments.items = ['Patient Booking'];
+        appointments.items = ['Patient Booking', 'Patient Activity', 'Vital Signs', 'Inpatient Record'];
     }
 
     // Remove Lab Tests and Vital Signs

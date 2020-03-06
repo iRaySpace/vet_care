@@ -14,8 +14,15 @@ from vet_care.api import get_practitioner_schedules
 
 class PatientBooking(Document):
 	def validate(self):
+		_validate_out_of_clinic(self)
 		_validate_appointment_times(self)
 		_set_names(self)
+
+
+def _validate_out_of_clinic(doc):
+	out_of_clinic = frappe.db.get_value('Healthcare Practitioner', doc.physician, 'vc_out_of_clinic')
+	if out_of_clinic:
+		frappe.throw(_('Physician is out of clinic. Please try again later.'))
 
 
 def _validate_appointment_times(doc):
