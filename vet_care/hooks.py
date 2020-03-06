@@ -155,7 +155,8 @@ doctype_js = {
     "Lab Test": "public/js/lab_test.js",
     "Patient Encounter": "public/js/patient_encounter.js",
     "Patient Appointment": "public/js/patient_appointment.js",
-    "Customer": "public/js/customer.js"
+    "Customer": "public/js/customer.js",
+    "Healthcare Practitioner": "public/js/healthcare_practitioner.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
