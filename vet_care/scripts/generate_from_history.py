@@ -32,7 +32,7 @@ def execute(filename):
 
 def _pick_or_new_patient_activity(patient_activities, patient, date):
     def filter_activity(activity):
-        return activity['patient'] == patient and activity['posting_date'] == date
+        return activity.patient == patient and activity.posting_date == date
 
     existing = list(filter(filter_activity, patient_activities))
     if existing:
