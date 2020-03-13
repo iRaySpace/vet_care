@@ -3,8 +3,9 @@ import datetime
 import frappe
 
 
-# bench execute vet_care.scripts.generate_from_history.execute --args "['./data/new_history.csv']"
+# bench execute vet_care.scripts.generate_from_history.execute --args "['./data/important_data.csv']"
 def execute(filename):
+    missing_animals = ['10576', '10450', '10196']
     patient_activities = []
     not_created = []
     with open(filename, 'r') as csvfile:
@@ -13,14 +14,15 @@ def execute(filename):
             timestamp = int(row.get('Date'))
             cirrusvet_id = row.get('AnimalID')
             description = row.get('Notes')
-            date = datetime.datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d')
-            patient = _get_patient_via_cirrusvet_id(cirrusvet_id)
-            if patient:
-                patient_activity = _pick_or_new_patient_activity(patient_activities, patient, date)
-                patient_activity.append('items', {'description': description})
-                patient_activities.append(patient_activity)
-            else:
-                not_created.append(cirrusvet_id)
+            if cirrusvet_id in missing_animals:
+                date = datetime.datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d')
+                patient = _get_patient_via_cirrusvet_id(cirrusvet_id)
+                if patient:
+                    patient_activity = _pick_or_new_patient_activity(patient_activities, patient, date)
+                    patient_activity.append('items', {'description': description})
+                    patient_activities.append(patient_activity)
+                else:
+                    not_created.append(cirrusvet_id)
         created = 0
         total = len(patient_activities)
         for patient_activity in patient_activities:
