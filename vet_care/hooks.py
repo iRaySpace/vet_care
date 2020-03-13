@@ -54,7 +54,8 @@ fixtures = [
                     "Customer-mobile_number_2",
                     "Customer-vc_area",
                     "Healthcare Practitioner-vc_color",
-                    "Patient-vc_inpatient"
+                    "Patient-vc_inpatient",
+                    "Healthcare Practitioner-vc_out_of_clinic"
                 ]
             ]
         ]

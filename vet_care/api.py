@@ -1,5 +1,6 @@
 import frappe
 import json
+from datetime import timedelta
 from frappe import _
 from frappe.utils import today, getdate, now
 from frappe.custom.doctype.custom_field.custom_field import create_custom_field
@@ -303,6 +304,7 @@ def get_practitioner_schedules(practitioner, date):
         return _get_schedule_times(practitioner_schedule, week_date)
 
     data = compose(
+        list,
         set,
         sorted,
         concat,
@@ -317,25 +319,33 @@ def get_practitioner_schedules(practitioner, date):
         )
     )
 
-    data_bookings = compose(
-        set,
-        partial(map, lambda x: x.get('appointment_time'))
+    existing_appointments = frappe.get_all(
+        'Patient Booking',
+        filters={
+            'physician': practitioner,
+            'appointment_date': date,
+            'docstatus': 1
+        },
+        fields=['appointment_time', 'appointment_minutes']
     )
 
-    existing_bookings = data_bookings(
-        frappe.get_all(
-            'Patient Booking',
-            filters={
-                'physician': practitioner,
-                'appointment_date': date,
-                'docstatus': 1
-            },
-            fields=['appointment_time']
-        )
+    def get_available_slots(taken_slots, practitioner_schedule):
+        for taken_slot in taken_slots:
+            appointment_minutes = taken_slot.get('appointment_minutes')
+            appointment_time = taken_slot.get('appointment_time')
+            appointment_time_end = appointment_time + timedelta(minutes=appointment_minutes)
+            if appointment_time <= practitioner_schedule < appointment_time_end:
+                return False
+        return True
+
+    available_slots = compose(
+        list,
+        partial(filter, partial(get_available_slots, existing_appointments))
     )
 
     return compose(
-        list, partial(map, timedelta_to_default_format), sorted)(practitioner_schedules.difference(existing_bookings))
+        list,
+        partial(map, timedelta_to_default_format), sorted)(available_slots(practitioner_schedules))
 
 
 @frappe.whitelist()
