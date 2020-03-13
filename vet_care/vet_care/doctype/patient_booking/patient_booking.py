@@ -60,7 +60,8 @@ def get_events(start, end, filters=None):
 			'title': '; '.join([
 				data.get('customer_name') or 'NA',
 				data.get('patient_name') or 'NA',
-				data.get('physician_name') or 'NA'
+				data.get('physician_name') or 'NA',
+				data.get('appointment_type') or 'NA'
 			])
 		}
 
@@ -79,6 +80,7 @@ def get_events(start, end, filters=None):
 				pb.patient_name,
 				pb.physician_name,
 				pb.physician,
+				pb.appointment_type,
 				TIMESTAMP(pb.appointment_date, pb.appointment_time) as start
 			FROM `tabPatient Booking` pb
 			WHERE (pb.appointment_date BETWEEN %(start)s AND %(end)s)
