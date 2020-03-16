@@ -22,7 +22,9 @@ function _set_dashboard(frm) {
     });
 
     // Add Patient on Orders
-    orders.items.push('Patient');
+    if (!order.items.includes('Patient')) {
+        orders.items.push('Patient');
+    }
 
     // Reload dashboard
     frm.dashboard.data_rendered = false;
