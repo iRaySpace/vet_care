@@ -22,7 +22,7 @@ function _set_dashboard(frm) {
     });
 
     // Add Patient on Orders
-    if (!order.items.includes('Patient')) {
+    if (!orders.items.includes('Patient')) {
         orders.items.push('Patient');
     }
 
