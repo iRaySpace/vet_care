@@ -37,7 +37,7 @@ def _get_data(filters):
 			`tabCustomer`.name as customer_id,
 			customer_name as customer_name,
 			vc_cpr as cpr_no,
-			mobile_number as mobile_phone,
+			`tabCustomer`.mobile_number as mobile_phone,
 			vc_office_phone as office_phone,
 			`tabPatient`.name as patient_id,
 			`tabPatient`.patient_name as animal_name
