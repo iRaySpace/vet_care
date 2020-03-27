@@ -308,7 +308,8 @@ def get_practitioner_schedules(practitioner, date):
         set,
         sorted,
         concat,
-        partial(map, partial(schedule_times, getdate(date)))
+        partial(map, partial(schedule_times, getdate(date))),
+        partial(map, lambda x: x.get('schedule')),
     )
 
     practitioner_schedules = data(
