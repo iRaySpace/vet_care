@@ -227,7 +227,8 @@ doc_events = {
         "validate": "vet_care.doc_events.contact.validate"
     },
     "Customer": {
-        "validate": "vet_care.doc_events.customer.validate"
+        "validate": "vet_care.doc_events.customer.validate",
+        "on_update": "vet_care.doc_events.customer.on_update",
     },
     "Vital Signs": {
         "validate": "vet_care.doc_events.vital_signs.validate",
