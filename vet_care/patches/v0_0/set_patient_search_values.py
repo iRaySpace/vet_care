@@ -12,7 +12,7 @@ def execute():
             {
                 "doctype": "Custom Field",
                 "dt": "Patient",
-                "label": "Search Values",
+                "label": "Phone, CPR etc.",
                 "fieldname": fieldname,
                 "fieldtype": "Small Text",
                 "insert_after": "customer",
