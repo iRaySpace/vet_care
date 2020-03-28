@@ -399,6 +399,7 @@ get_search_values = compose(
         "Customer",
         x,
         [
+            "customer_name",
             "mobile_number",
             "mobile_number_2",
             "vc_office_phone",
