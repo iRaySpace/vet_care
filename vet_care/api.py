@@ -392,19 +392,19 @@ def _get_sales_invoice_items(customer):
     )
 
 
-get_search_values = compose(
-    lambda x: ";".join(x),
-    partial(filter, None),
-    lambda x: frappe.db.get_value(
-        "Customer",
-        x,
-        [
+def get_search_values(customer):
+    fields = [
             "customer_name",
             "mobile_number",
             "mobile_number_2",
             "vc_office_phone",
             "vc_home_phone",
             "vc_cpr",
-        ],
-    ),
-)
+    ]
+    join = compose(lambda x: ";".join(x), partial(filter, None))
+    if isinstance(customer, str):
+        values = frappe.db.get_value("Customer", customer, fields)
+        return join(values)
+    if isinstance(customer, object) and customer.__class__.__name__ == "Customer":
+        values = [customer.get(x) for x in fields]
+        return join(values)

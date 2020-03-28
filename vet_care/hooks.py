@@ -229,6 +229,7 @@ doc_events = {
     },
     "Customer": {
         "validate": "vet_care.doc_events.customer.validate",
+        "before_save": "vet_care.doc_events.customer.before_save",
         "on_update": "vet_care.doc_events.customer.on_update",
     },
     "Vital Signs": {
