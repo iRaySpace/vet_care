@@ -20,6 +20,7 @@ fixtures = [
                 "in",
                 [
                     "Patient Appointment-vc_owner",
+                    "Patient-vc_search_values",
                     "Patient-vc_species",
                     "Patient-vc_deceased",
                     "Patient-vc_breed",
@@ -213,7 +214,8 @@ doctype_js = {
 
 doc_events = {
     "Patient": {
-        "validate": "vet_care.doc_events.patient.validate"
+        "validate": "vet_care.doc_events.patient.validate",
+        "before_save": "vet_care.doc_events.patient.before_save",
     },
     "Patient Appointment": {
         "validate": "vet_care.doc_events.patient_appointment.validate"
@@ -225,7 +227,8 @@ doc_events = {
         "validate": "vet_care.doc_events.contact.validate"
     },
     "Customer": {
-        "validate": "vet_care.doc_events.customer.validate"
+        "validate": "vet_care.doc_events.customer.validate",
+        "on_update": "vet_care.doc_events.customer.on_update",
     },
     "Vital Signs": {
         "validate": "vet_care.doc_events.vital_signs.validate",

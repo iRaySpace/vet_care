@@ -1,7 +1,7 @@
 import frappe
-
+import json
 from frappe import _
-from toolz import first, compose, pluck, partial
+from toolz import first, compose, pluck, partial, valfilter
 
 
 def validate(doc, method):
@@ -12,6 +12,10 @@ def validate(doc, method):
     doc.customer = _get_default_customer(doc)
     _set_mobile_no(doc)
     _set_customer_name(doc)
+
+
+def before_save(doc, method):
+    _set_search_values(doc)
 
 
 def _set_owner_as_default_customer(doc):
@@ -66,4 +70,29 @@ def _validate_patient_activity(doc):
 
         patient_activity.save()
 
-        frappe.msgprint(f'Inpatient created on Patient Activity {patient_activity.name}')
+        frappe.msgprint(
+            f"Inpatient created on Patient Activity {patient_activity.name}"
+        )
+
+
+get_search_values = compose(
+    json.dumps,
+    partial(valfilter, lambda x: x),
+    lambda x: frappe.db.get_value(
+        "Customer",
+        x,
+        [
+            "mobile_number",
+            "mobile_number_2",
+            "vc_office_phone",
+            "vc_home_phone",
+            "vc_cpr",
+        ],
+        as_dict=1,
+    ),
+)
+
+
+def _set_search_values(doc):
+    if doc.customer:
+        doc.vc_search_values = get_search_values(doc.customer)
