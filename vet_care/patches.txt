@@ -1,2 +1,3 @@
 vet_care.patches.v0_0.set_patient_search_values
 vet_care.patches.v0_0.update_patient_search_values
+vet_care.patches.v0_0.set_customer_search_values
