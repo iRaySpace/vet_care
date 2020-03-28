@@ -214,7 +214,8 @@ doctype_js = {
 
 doc_events = {
     "Patient": {
-        "validate": "vet_care.doc_events.patient.validate"
+        "validate": "vet_care.doc_events.patient.validate",
+        "before_save": "vet_care.doc_events.patient.before_save",
     },
     "Patient Appointment": {
         "validate": "vet_care.doc_events.patient_appointment.validate"
