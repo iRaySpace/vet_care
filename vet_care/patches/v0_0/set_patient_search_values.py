@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 import frappe
 from toolz import pluck
 
-from vet_care.doc_events.patient import get_search_values
+from vet_care.api import get_search_values
 
 
 def execute():
