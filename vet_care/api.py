@@ -386,4 +386,25 @@ def _get_sales_invoice_items(customer):
         FROM `tabSales Invoice Item` si_item
         INNER JOIN `tabSales Invoice` si ON si.name = si_item.parent
         WHERE si.customer = %s
-    """, (customer,), as_dict=1)
+    """,
+        (customer,),
+        as_dict=1,
+    )
+
+
+def get_search_values(customer):
+    fields = [
+            "customer_name",
+            "mobile_number",
+            "mobile_number_2",
+            "vc_office_phone",
+            "vc_home_phone",
+            "vc_cpr",
+    ]
+    join = compose(lambda x: ";".join(x), partial(filter, None))
+    if isinstance(customer, str):
+        values = frappe.db.get_value("Customer", customer, fields)
+        return join(values)
+    if isinstance(customer, object) and customer.__class__.__name__ == "Customer":
+        values = [customer.get(x) for x in fields]
+        return join(values)

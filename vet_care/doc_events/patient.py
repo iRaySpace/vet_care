@@ -1,7 +1,8 @@
 import frappe
-import json
 from frappe import _
-from toolz import first, compose, pluck, partial, valfilter
+from toolz import first, compose, pluck, partial
+
+from vet_care.api import get_search_values
 
 
 def validate(doc, method):
@@ -73,24 +74,6 @@ def _validate_patient_activity(doc):
         frappe.msgprint(
             f"Inpatient created on Patient Activity {patient_activity.name}"
         )
-
-
-get_search_values = compose(
-    json.dumps,
-    partial(valfilter, lambda x: x),
-    lambda x: frappe.db.get_value(
-        "Customer",
-        x,
-        [
-            "mobile_number",
-            "mobile_number_2",
-            "vc_office_phone",
-            "vc_home_phone",
-            "vc_cpr",
-        ],
-        as_dict=1,
-    ),
-)
 
 
 def _set_search_values(doc):
