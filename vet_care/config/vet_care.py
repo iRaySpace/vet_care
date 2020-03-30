@@ -17,6 +17,11 @@ def get_data():
                 {
                     'type': 'doctype',
                     'name': 'Patient Activity'
+                },
+                {
+                    'type': 'report',
+                    'name': 'Patient History',
+                    'is_query_report': True,
                 }
             ]
         },
