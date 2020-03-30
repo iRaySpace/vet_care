@@ -24,7 +24,7 @@ def _get_columns(filters):
 	return [
 		make_column('Posting Date', 'posting_date', 130, 'Date'),
 		make_column('Activity', 'activity_type', 80, 'Data'),
-		make_column('Description', 'description', 130, 'Data')
+		make_column('Description', 'description', 893, 'Data')
 	]
 
 
