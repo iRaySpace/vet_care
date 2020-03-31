@@ -8,6 +8,9 @@ let _filter_length = 20;
 
 frappe.ui.form.on('Animal Overview', {
 	onload: function(frm) {
+		if (frappe.route_options && frappe.route_options.animal) {
+				frm.set_value('animal', frappe.route_options.animal);
+		}
 		frm.set_query('default_owner', function() {
 			return {
 				query: "erpnext.controllers.queries.customer_query",
