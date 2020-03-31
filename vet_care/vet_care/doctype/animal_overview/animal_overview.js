@@ -8,9 +8,6 @@ let _filter_length = 20;
 
 frappe.ui.form.on('Animal Overview', {
 	onload: function(frm) {
-		if (frappe.route_options && frappe.route_options.animal) {
-				frm.set_value('animal', frappe.route_options.animal);
-		}
 		frm.set_query('default_owner', function() {
 			return {
 				query: "erpnext.controllers.queries.customer_query",
@@ -18,6 +15,10 @@ frappe.ui.form.on('Animal Overview', {
 		});
 	},
 	refresh: function(frm) {
+		if (frappe.route_options && frappe.route_options.animal) {
+			frm.set_value('animal', frappe.route_options.animal);
+			frappe.route_options = {};
+		}
 		frm.disable_save();
 		set_custom_buttons(frm);
 		_set_actions(frm);
@@ -63,7 +64,7 @@ frappe.ui.form.on('Animal Overview', {
 	},
   default_owner: async function(frm) {
 		_set_default_owner_query(frm);
-		if (frm.doc.default_owner) {
+		if (frm.doc.default_owner && !frm.doc.animal) {
 			_clear_animal_details(frm);
 			const animal = await get_first_animal_by_owner(frm.doc.default_owner);
 			if (animal) frm.set_value('animal', animal.name);
