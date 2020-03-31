@@ -20,6 +20,7 @@ fixtures = [
                 "in",
                 [
                     "Patient Appointment-vc_owner",
+                    "Patient-vc_search_values",
                     "Patient-vc_species",
                     "Patient-vc_deceased",
                     "Patient-vc_breed",
@@ -53,6 +54,7 @@ fixtures = [
                     "Customer-mobile_number",
                     "Customer-mobile_number_2",
                     "Customer-vc_area",
+                    "Customer-vc_search_values",
                     "Healthcare Practitioner-vc_color",
                     "Patient-vc_inpatient",
                     "Healthcare Practitioner-vc_out_of_clinic"
@@ -213,7 +215,8 @@ doctype_js = {
 
 doc_events = {
     "Patient": {
-        "validate": "vet_care.doc_events.patient.validate"
+        "validate": "vet_care.doc_events.patient.validate",
+        "before_save": "vet_care.doc_events.patient.before_save",
     },
     "Patient Appointment": {
         "validate": "vet_care.doc_events.patient_appointment.validate"
@@ -225,7 +228,9 @@ doc_events = {
         "validate": "vet_care.doc_events.contact.validate"
     },
     "Customer": {
-        "validate": "vet_care.doc_events.customer.validate"
+        "validate": "vet_care.doc_events.customer.validate",
+        "before_save": "vet_care.doc_events.customer.before_save",
+        "on_update": "vet_care.doc_events.customer.on_update",
     },
     "Vital Signs": {
         "validate": "vet_care.doc_events.vital_signs.validate",
