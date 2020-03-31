@@ -209,7 +209,7 @@ def get_clinical_history(patient, filter_length):
         FROM `tabPatient Activity Item` pa_item
         INNER JOIN `tabPatient Activity` pa on pa.name = pa_item.parent
         WHERE pa.patient = %s)
-        ORDER BY creation DESC
+        ORDER BY posting_date DESC
         LIMIT %s
     """, (frappe.get_value('Patient', patient, 'customer'), patient, filter_length), as_dict=True)
 
