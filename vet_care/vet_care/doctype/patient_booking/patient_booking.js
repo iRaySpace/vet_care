@@ -34,7 +34,9 @@ frappe.ui.form.on('Patient Booking', {
 	},
 	patient: async function(frm) {
 		const { message: patient } = await frappe.db.get_value('Patient', {'name': frm.doc.patient}, 'patient_name');
+		const { message: patient_customer } = await frappe.db.get_value('Patient', {'name': frm.doc.patient}, 'customer');
 		frm.set_value('patient_name', patient.patient_name);
+		frm.set_value('customer', patient_customer.customer);
 	},
 	physician: async function(frm) {
 		const { message: practitioner } = await frappe.db.get_value('Healthcare Practitioner', {'name': frm.doc.physician}, 'last_name');
