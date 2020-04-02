@@ -9,15 +9,15 @@ from toolz import pluck, partial, compose, first, concat
 from vet_care.utils import timedelta_to_default_format
 
 
-# @frappe.whitelist()
-# def get_pet_relations(pet):
-#     return compose(list, partial(pluck, 'customer'))(
-#         frappe.get_all(
-#             'Pet Relation',
-#             filters={'parent': pet},
-#             fields=['customer']
-#         )
-#     )
+@frappe.whitelist()
+def get_pet_relations(pet):
+    return compose(list, partial(pluck, 'customer'))(
+        frappe.get_all(
+            'Pet Relation',
+            filters={'parent': pet},
+            fields=['customer']
+        )
+    )
 
 
 @frappe.whitelist()
@@ -274,7 +274,7 @@ def save_to_patient(patient, data):
     patient_doc.update(data)
     patient_doc.save()
 
-# TODO:: update make_patient with customer id
+
 @frappe.whitelist()
 def make_patient(patient_data, owner):
     patient_data = json.loads(patient_data)
