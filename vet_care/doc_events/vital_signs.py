@@ -19,7 +19,6 @@ def on_submit(vital_signs, method):
         'reference_dn': vital_signs.name
     })
     patient_activity.save()
-    patient_activity.submit()
 
 
 def _get_description(vital_signs):
