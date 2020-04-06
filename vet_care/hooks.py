@@ -57,7 +57,8 @@ fixtures = [
                     "Customer-vc_search_values",
                     "Healthcare Practitioner-vc_color",
                     "Patient-vc_inpatient",
-                    "Healthcare Practitioner-vc_out_of_clinic"
+                    "Healthcare Practitioner-vc_out_of_clinic",
+                    "Customer-email_info"
                 ]
             ]
         ]
@@ -128,7 +129,11 @@ fixtures = [
                     "Customer-email_id-hidden",
                     "Customer-column_break_26-hidden",
                     "Customer-customer_primary_address-hidden",
-                    "Customer-primary_address-hidden"
+                    "Customer-primary_address-hidden",
+                    "Customer-search_fields",
+                    "Patient-sort_field",
+                    "Patient-search_fields",
+                    "Patient-quick_entry"
                 ]
             ]
         ]

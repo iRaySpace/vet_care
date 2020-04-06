@@ -209,7 +209,7 @@ def get_clinical_history(patient, filter_length):
         FROM `tabPatient Activity Item` pa_item
         INNER JOIN `tabPatient Activity` pa on pa.name = pa_item.parent
         WHERE pa.patient = %s)
-        ORDER BY creation DESC
+        ORDER BY posting_date DESC
         LIMIT %s
     """, (frappe.get_value('Patient', patient, 'customer'), patient, filter_length), as_dict=True)
 
@@ -357,6 +357,16 @@ def apply_custom_fields():
         'insert_after': 'office_phone'
     })
     return True
+
+
+@frappe.whitelist()
+def get_no_appointment_type():
+    appointment_type = frappe.db.get_single_value('Vetcare Settings', 'no_appointment_type')
+    patient = frappe.db.get_single_value('Vetcare Settings', 'no_patient')
+    return {
+        'appointment_type': appointment_type,
+        'patient': patient
+    }
 
 
 def _get_schedule_times(name, date):

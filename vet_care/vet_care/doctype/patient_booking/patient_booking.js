@@ -34,7 +34,9 @@ frappe.ui.form.on('Patient Booking', {
 	},
 	patient: async function(frm) {
 		const { message: patient } = await frappe.db.get_value('Patient', {'name': frm.doc.patient}, 'patient_name');
+		const { message: patient_customer } = await frappe.db.get_value('Patient', {'name': frm.doc.patient}, 'customer');
 		frm.set_value('patient_name', patient.patient_name);
+		frm.set_value('customer', patient_customer.customer);
 	},
 	physician: async function(frm) {
 		const { message: practitioner } = await frappe.db.get_value('Healthcare Practitioner', {'name': frm.doc.physician}, 'last_name');
@@ -48,6 +50,15 @@ frappe.ui.form.on('Patient Booking', {
 		_get_appointment_dates(frm);
 		frm.set_value('appointment_time', '00:00:00');
 		frm.set_df_property('appointment_time', 'hidden', 1);
+	},
+	appointment_type: async function(frm) {
+		if(!frm.doc.appointment_type) {
+			return;
+		}
+		const no_appointment = await get_no_appointment_type();
+		if (frm.doc.appointment_type === no_appointment.appointment_type) {
+			frm.set_value('patient', no_appointment.patient);
+		}
 	}
 });
 

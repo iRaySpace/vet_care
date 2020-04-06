@@ -84,6 +84,5 @@ def get_events(start, end, filters=None):
 				TIMESTAMP(pb.appointment_date, pb.appointment_time) as start
 			FROM `tabPatient Booking` pb
 			WHERE (pb.appointment_date BETWEEN %(start)s AND %(end)s)
-			AND pb.docstatus < 2
 		""", args, as_dict=True)
 	)
