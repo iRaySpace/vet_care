@@ -50,6 +50,15 @@ frappe.ui.form.on('Patient Booking', {
 		_get_appointment_dates(frm);
 		frm.set_value('appointment_time', '00:00:00');
 		frm.set_df_property('appointment_time', 'hidden', 1);
+	},
+	appointment_type: async function(frm) {
+		if(!frm.doc.appointment_type) {
+			return;
+		}
+		const no_appointment = await get_no_appointment_type();
+		if (frm.doc.appointment_type === no_appointment.appointment_type) {
+			frm.set_value('patient', no_appointment.patient);
+		}
 	}
 });
 
