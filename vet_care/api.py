@@ -359,6 +359,16 @@ def apply_custom_fields():
     return True
 
 
+@frappe.whitelist()
+def get_no_appointment_type():
+    appointment_type = frappe.db.get_single_value('Vetcare Settings', 'no_appointment_type')
+    patient = frappe.db.get_single_value('Vetcare Settings', 'no_patient')
+    return {
+        'appointment_type': appointment_type,
+        'patient': patient
+    }
+
+
 def _get_schedule_times(name, date):
     """
     Fetch all `from_time` from [Healthcare Schedule Time Slot]
