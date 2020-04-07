@@ -7,12 +7,12 @@ from vet_care.api import get_search_values
 
 def validate(doc, method):
     doc.disabled = doc.vc_deceased
-    _validate_patient_activity(doc)
-    _set_owner_as_default_customer(doc)
-    _validate_default_customer(doc)
-    doc.customer = _get_default_customer(doc)
+    # _validate_patient_activity(doc)
+    # _set_owner_as_default_customer(doc)
+    # _validate_default_customer(doc)
+    # doc.customer = _get_default_customer(doc)
     _set_mobile_no(doc)
-    _set_customer_name(doc)
+    # _set_customer_name(doc)
 
 
 def before_save(doc, method):
