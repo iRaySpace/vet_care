@@ -20,6 +20,7 @@ fixtures = [
                 "in",
                 [
                     "Patient Appointment-vc_owner",
+                    "Patient-vc_search_values",
                     "Patient-vc_species",
                     "Patient-vc_deceased",
                     "Patient-vc_breed",
@@ -35,7 +36,29 @@ fixtures = [
                     "Patient-vc_dtod",
                     "Patient-vc_rod",
                     "Patient-vc_nutrition",
-                    "Sales Invoice-patient_name"
+                    "Sales Invoice-patient_name",
+                    "Customer-vc_cpr",
+                    "Customer-vc_cirrusvet",
+                    "Patient-vc_cirrusvet",
+                    "Customer-vc_address_and_contacts_sb",
+                    "Customer-vc_flat_no",
+                    "Customer-vc_building_no",
+                    "Customer-vc_road_no",
+                    "Customer-vc_road_name",
+                    "Customer-vc_block_no",
+                    "Customer-vc_city",
+                    "Customer-vc_country",
+                    "Customer-vc_address_and_contacts_cb",
+                    "Customer-vc_home_phone",
+                    "Customer-vc_office_phone",
+                    "Customer-mobile_number",
+                    "Customer-mobile_number_2",
+                    "Customer-vc_area",
+                    "Customer-vc_search_values",
+                    "Healthcare Practitioner-vc_color",
+                    "Patient-vc_inpatient",
+                    "Healthcare Practitioner-vc_out_of_clinic",
+                    "Customer-email_info"
                 ]
             ]
         ]
@@ -83,7 +106,34 @@ fixtures = [
                     "Inpatient Record-expected_discharge-in_list_view",
                     "Inpatient Record-scheduled_date-in_list_view",
                     "Patient-surrounding_factors-label",
-                    "Item-is_stock_item-default"
+                    "Item-is_stock_item-default",
+                    "Customer-search_fields",
+                    "Vital Signs-nutrition_note-hidden",
+                    "Vital Signs-bmi-hidden",
+                    "Vital Signs-height-hidden",
+                    "Customer-address_contacts-hidden",
+                    "Customer-address_html-hidden",
+                    "Customer-website-hidden",
+                    "Customer-column_break1-hidden",
+                    "Customer-contact_html-hidden",
+                    "Customer-is_internal_customer-hidden",
+                    "Customer-more_info-hidden",
+                    "Customer-customer_details-hidden",
+                    "Customer-column_break_45-hidden",
+                    "Customer-market_segment-hidden",
+                    "Customer-industry-hidden",
+                    "Customer-is_frozen-hidden",
+                    "Customer-primary_address_and_contact_detail-hidden",
+                    "Customer-customer_primary_contact-hidden",
+                    "Customer-mobile_no-hidden",
+                    "Customer-email_id-hidden",
+                    "Customer-column_break_26-hidden",
+                    "Customer-customer_primary_address-hidden",
+                    "Customer-primary_address-hidden",
+                    "Customer-search_fields",
+                    "Patient-sort_field",
+                    "Patient-search_fields",
+                    "Patient-quick_entry"
                 ]
             ]
         ]
@@ -112,7 +162,9 @@ doctype_js = {
     "Vital Signs": "public/js/vital_signs.js",
     "Lab Test": "public/js/lab_test.js",
     "Patient Encounter": "public/js/patient_encounter.js",
-    "Patient Appointment": "public/js/patient_appointment.js"
+    "Patient Appointment": "public/js/patient_appointment.js",
+    "Customer": "public/js/customer.js",
+    "Healthcare Practitioner": "public/js/healthcare_practitioner.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -168,7 +220,8 @@ doctype_js = {
 
 doc_events = {
     "Patient": {
-        "validate": "vet_care.doc_events.patient.validate"
+        "validate": "vet_care.doc_events.patient.validate",
+        "before_save": "vet_care.doc_events.patient.before_save",
     },
     "Patient Appointment": {
         "validate": "vet_care.doc_events.patient_appointment.validate"
@@ -178,6 +231,15 @@ doc_events = {
     },
     "Contact": {
         "validate": "vet_care.doc_events.contact.validate"
+    },
+    "Customer": {
+        "validate": "vet_care.doc_events.customer.validate",
+        "before_save": "vet_care.doc_events.customer.before_save",
+        "on_update": "vet_care.doc_events.customer.on_update",
+    },
+    "Vital Signs": {
+        "validate": "vet_care.doc_events.vital_signs.validate",
+        "on_submit": "vet_care.doc_events.vital_signs.on_submit"
     }
 }
 
@@ -212,7 +274,7 @@ doc_events = {
 #
 override_whitelisted_methods = {
     "frappe.utils.print_format.download_pdf": "vet_care.whitelist_methods.print_format.download_pdf",
-	"erpnext.healthcare.doctype.patient_appointment.patient_appointment.get_events": "vet_care.whitelist_methods.patient_appointment.get_events"
+    "erpnext.healthcare.doctype.patient_appointment.patient_appointment.get_events": "vet_care.whitelist_methods.patient_appointment.get_events"
 }
 #
 # each overriding function accepts a `data` argument;
