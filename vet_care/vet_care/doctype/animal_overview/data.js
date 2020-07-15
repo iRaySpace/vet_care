@@ -60,6 +60,13 @@ async function get_first_animal_by_owner(owner) {
 	return animal;
 }
 
+async function get_tax_rate() {
+  const { message: tax_rate } = await frappe.call({
+      method: 'vet_care.api.get_tax_rate',
+  });
+  return tax_rate;
+}
+
 async function make_patient(frm) {
 	const { message: patient } = await frappe.call({
 		method: 'vet_care.api.make_patient',

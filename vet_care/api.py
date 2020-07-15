@@ -369,6 +369,20 @@ def get_no_appointment_type():
     }
 
 
+@frappe.whitelist()
+def get_tax_rate():
+    pos_profile = frappe.db.get_single_value('Vetcare Settings', 'pos_profile')
+    taxes_and_charges = frappe.db.get_value('POS Profile', pos_profile, 'taxes_and_charges')
+    sales_taxes_and_charges = frappe.db.get_all(
+        'Sales Taxes and Charges',
+        filters={'parent': taxes_and_charges},
+        fields=['rate']
+    )
+    if not sales_taxes_and_charges:
+        frappe.throw(_('Unable to get tax rate for {}. Please set the taxes and charges'.format(pos_profile)))
+    return sales_taxes_and_charges[0].get('rate')
+
+
 def _get_schedule_times(name, date):
     """
     Fetch all `from_time` from [Healthcare Schedule Time Slot]

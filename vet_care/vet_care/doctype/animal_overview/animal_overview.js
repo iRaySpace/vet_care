@@ -5,9 +5,11 @@
 {% include 'vet_care/vet_care/doctype/animal_overview/custom_buttons.js' %}
 
 let _filter_length = 20;
+let _tax_rate = 0;
 
 frappe.ui.form.on('Animal Overview', {
 	onload: function(frm) {
+		get_tax_rate().then((data) => _tax_rate = data);
 		frm.set_query('default_owner', function() {
 			return {
 				query: "erpnext.controllers.queries.customer_query",
@@ -131,9 +133,11 @@ frappe.ui.form.on('Animal Overview', {
 frappe.ui.form.on('Animal Overview Item', {
 	qty: function(frm, cdt, cdn) {
 		_update_child_amount(frm, cdt, cdn);
+		_update_taxes_and_charges(frm);
 	},
 	rate: function(frm, cdt, cdn) {
 		_update_child_amount(frm, cdt, cdn);
+		_update_taxes_and_charges(frm);
 	},
 	item_code: async function(frm, cdt, cdn) {
 		const child = _get_child(cdt, cdn);
@@ -323,6 +327,13 @@ function _set_actions(frm) {
 function _update_child_amount(frm, cdt, cdn) {
 	const child = _get_child(cdt, cdn);
 	frappe.model.set_value(cdt, cdn, 'amount', child.qty * child.rate);
+}
+
+function _update_taxes_and_charges(frm) {
+  const vat_amounts = frm.doc.items.map(function(item) {
+    return item.amount * (_tax_rate / 100.00);
+  });
+  frm.set_value('taxes_and_charges', vat_amounts.reduce((total, vat_amount) => total + vat_amount));
 }
 
 // table utils
