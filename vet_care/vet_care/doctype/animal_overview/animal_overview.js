@@ -281,6 +281,7 @@ function _set_actions(frm) {
 			    frm.doc.items,
 			    frm.doc.animal,
 			    frm.doc.default_owner,
+			    frm.doc.sales_person,
                 frm.doc.invoice,
             );
 			frappe.show_alert(`Sales Invoice ${invoice.name} saved`);
