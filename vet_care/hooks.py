@@ -58,7 +58,9 @@ fixtures = [
                     "Healthcare Practitioner-vc_color",
                     "Patient-vc_inpatient",
                     "Healthcare Practitioner-vc_out_of_clinic",
-                    "Customer-email_info"
+                    "Customer-email_info",
+                    "Sales Invoice-vc_sales_person",
+                    "Sales Invoice-vc_sales_person_name"
                 ]
             ]
         ]
@@ -87,7 +89,6 @@ fixtures = [
                     "Patient-phone-in_list_view",
                     "Patient-sb_relation-hidden",
                     "Patient-patient_relation-hidden",
-                    "Patient-customer-hidden",
                     "Patient-personal_and_social_history-hidden",
                     "Patient-occupation-hidden",
                     "Patient-column_break_25-hidden",
