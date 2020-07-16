@@ -59,8 +59,8 @@ fixtures = [
                     "Patient-vc_inpatient",
                     "Healthcare Practitioner-vc_out_of_clinic",
                     "Customer-email_info",
-                    "Sales Invoice-vc_sales_person",
-                    "Sales Invoice-vc_sales_person_name"
+                    "Sales Invoice-pb_sales_person",
+                    "Sales Invoice-pb_sales_person_name"
                 ]
             ]
         ]
