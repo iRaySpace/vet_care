@@ -283,3 +283,9 @@ override_whitelisted_methods = {
 # override_doctype_dashboards = {
 # 	"Task": "vet_care.task.get_dashboard_data"
 # }
+
+jenv = {
+    "methods": [
+        "calculate_age:vet_care.utils.calculate_age"
+    ]
+}
