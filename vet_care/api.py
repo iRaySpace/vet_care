@@ -178,6 +178,12 @@ def get_clinical_history(patient, filter_length):
     Clinical History returns structurally:
     ('posting_date', 'description', 'price')
     """
+    date_format = _get_date_format()
+
+    def make_data(row):
+        row['posting_date'] = row['posting_date'].strftime(date_format)
+        return row
+
     filter_length = int(filter_length)
 
     clinical_history_items = frappe.db.sql("""
@@ -214,7 +220,7 @@ def get_clinical_history(patient, filter_length):
         LIMIT %s
     """, (frappe.get_value('Patient', patient, 'customer'), patient, filter_length), as_dict=True)
 
-    return clinical_history_items
+    return list(map(make_data, clinical_history_items))
 
 
 @frappe.whitelist()
@@ -414,6 +420,19 @@ def _get_sales_invoice_items(customer):
         (customer,),
         as_dict=1,
     )
+
+
+def _get_date_format():
+    date_format = frappe.db.get_single_value('Vetcare Settings', 'date_format')
+    format_codes = {
+        'mm': '%m',
+        'dd': '%d',
+        'yy': '%y',
+        'yyyy': '%Y'
+    }
+    for key, value in format_codes.items():
+        date_format = date_format.replace(key, value)
+    return date_format
 
 
 def get_search_values(customer):
