@@ -368,7 +368,7 @@ function _get_table_rows(records, fields) {
 function _get_table_header(fields) {
     // correspondingly
     // posting_date, name, description, price
-    const width = ['10%', '20%', '55%', '15%'];
+    const width = ['10%', '10%', '55%', '15%'];
 	const header_texts = fields.map((field) =>
 		field.split('_')
 			.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
