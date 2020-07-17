@@ -263,7 +263,7 @@ def get_invoice_items(invoice):
     return frappe.get_all(
         'Sales Invoice Item',
         filters={'parent': invoice},
-        fields=['item_code', 'qty', 'rate', 'amount']
+        fields=['item_code', 'item_name', 'qty', 'rate', 'amount']
     )
 
 
