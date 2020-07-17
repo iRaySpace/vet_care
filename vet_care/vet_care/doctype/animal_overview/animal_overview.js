@@ -96,7 +96,6 @@ frappe.ui.form.on('Animal Overview', {
 			'mucous_membrane',
 			'capillary_refill_time',
 			'vs_weight:weight',
-			'notes'
 		];
 
 		const data = fields.reduce(function(dict, x) {
@@ -220,7 +219,6 @@ function _clear_vital_signs(frm) {
 		'mucous_membrane',
 		'capillary_refill_time',
 		'vs_weight',
-		'notes'
 	];
 	fields.forEach((field) => frm.set_value(field, ''));
 }
