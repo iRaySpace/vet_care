@@ -11,6 +11,7 @@ def download_pdf(doctype, name, format=None, doc=None, no_letterhead=0):
     )
     core_download_pdf(doctype, name, format, doc, no_letterhead)
 
+
 # TODO: refactor
 def get_safe_globals(func):
     def inner():

@@ -274,7 +274,6 @@ doc_events = {
 # ------------------------------
 #
 override_whitelisted_methods = {
-    "frappe.utils.print_format.download_pdf": "vet_care.whitelist_methods.print_format.download_pdf",
     "erpnext.healthcare.doctype.patient_appointment.patient_appointment.get_events": "vet_care.whitelist_methods.patient_appointment.get_events"
 }
 #
