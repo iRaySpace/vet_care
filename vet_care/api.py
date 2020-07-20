@@ -107,7 +107,7 @@ def get_medical_records(patient):
 
 
 @frappe.whitelist()
-def save_invoice(items, patient, customer, sales_person, existing_invoice=None):
+def save_invoice(items, patient, customer, sales_person=None, existing_invoice=None):
     items = json.loads(items)
 
     pos_profile = frappe.db.get_single_value('Vetcare Settings', 'pos_profile')

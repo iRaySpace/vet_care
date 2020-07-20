@@ -306,6 +306,7 @@ function _set_actions(frm) {
 			    frm.doc.items,
 			    frm.doc.animal,
 			    frm.doc.default_owner,
+			    frm.doc.sales_person,
                 frm.doc.invoice,
             );
 			const values = await show_payment_dialog(frm);
