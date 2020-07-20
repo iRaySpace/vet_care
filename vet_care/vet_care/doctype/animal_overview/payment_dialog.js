@@ -12,12 +12,6 @@ function show_payment_dialog(frm) {
 					read_only: 1,
 				},
 				{
-					fieldname: 'amount_due',
-					fieldtype: 'Currency',
-					label: __('Amount Due'),
-					read_only: 1,
-				},
-				{
 					fieldname: 'payment_cb',
 					fieldtype: 'Column Break',
 				},
@@ -32,6 +26,28 @@ function show_payment_dialog(frm) {
 					fieldname: 'patient_name',
 					fieldtype: 'Data',
 					label: __('Patient Name'),
+					read_only: 1,
+				},
+				{
+					fieldname: 'totals_sb',
+					fieldtype: 'Section Break',
+				},
+				{
+					fieldname: 'amount_due',
+					fieldtype: 'Currency',
+					label: __('Amount Due'),
+					read_only: 1,
+				},
+				{
+					fieldname: 'taxes_and_charges',
+					fieldtype: 'Currency',
+					label: __('Taxes and Charges'),
+					read_only: 1,
+				},
+				{
+					fieldname: 'total',
+					fieldtype: 'Currency',
+					label: __('Total'),
 					read_only: 1,
 				},
 				{
@@ -73,6 +89,8 @@ function show_payment_dialog(frm) {
 		dialog.set_value('patient_name', frm.doc.animal_name);
 		dialog.set_value('customer', frm.doc.default_owner);
 		dialog.set_value('amount_due', frm.doc.items.reduce((total, item) => total + item.amount, 0.00));
+		dialog.set_value('taxes_and_charges', frm.doc.taxes_and_charges);
+		dialog.set_value('total', frm.doc.total);
 		dialog.show();
 	});
 }
