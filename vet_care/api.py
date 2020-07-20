@@ -111,6 +111,7 @@ def save_invoice(items, patient, customer, sales_person=None, existing_invoice=N
     items = json.loads(items)
 
     pos_profile = frappe.db.get_single_value('Vetcare Settings', 'pos_profile')
+    taxes_and_charges = frappe.db.get_value('POS Profile', pos_profile, 'taxes_and_charges')
 
     if not pos_profile:
         frappe.throw(_('Please set POS Profile under Vetcare Settings'))
@@ -122,7 +123,8 @@ def save_invoice(items, patient, customer, sales_person=None, existing_invoice=N
             'customer': customer,
             'due_date': today(),
             'pos_profile': pos_profile,
-            'pb_sales_person': sales_person
+            'pb_sales_person': sales_person,
+            'taxes_and_charges': taxes_and_charges
         })
     else:
         sales_invoice = frappe.get_doc('Sales Invoice', existing_invoice)
