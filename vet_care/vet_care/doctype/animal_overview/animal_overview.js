@@ -8,28 +8,28 @@ let _filter_length = 20;
 let _tax_rate = 0;
 
 frappe.ui.form.on('Animal Overview', {
-	onload: function(frm) {
-		get_tax_rate().then((data) => _tax_rate = data);
-		frm.set_query('default_owner', function() {
-			return {
-				query: "erpnext.controllers.queries.customer_query",
-			};
-		});
-	},
-	refresh: function(frm) {
-		if (frappe.route_options && frappe.route_options.animal) {
-			frm.set_value('animal', frappe.route_options.animal);
-			frappe.route_options = {};
-		}
-		frm.disable_save();
-		set_custom_buttons(frm);
-		_set_actions(frm);
-		_set_form_buttons_color();
-		// _set_fields_read_only(frm, true);
-	},
-	inpatient: async function(frm) {
-	    if (!frm.doc.animal || frm.doc.__init) return;
-	    if (frm.doc.inpatient) {
+    onload: function(frm) {
+        get_tax_rate().then((data) => _tax_rate = data);
+        frm.set_query('default_owner', function() {
+            return {
+                query: "erpnext.controllers.queries.customer_query",
+            };
+        });
+    },
+    refresh: function(frm) {
+        if (frappe.route_options && frappe.route_options.animal) {
+            frm.set_value('animal', frappe.route_options.animal);
+            frappe.route_options = {};
+        }
+        frm.disable_save();
+        set_custom_buttons(frm);
+        _set_actions(frm);
+        _set_form_buttons_color();
+        // _set_fields_read_only(frm, true);
+    },
+    inpatient: async function(frm) {
+        if (!frm.doc.animal || frm.doc.__init) return;
+        if (frm.doc.inpatient) {
             const values = await vet_care.utils.prompt_admission_dialog();
             frm.doc.__new_patient_activity = true;
             frm.doc.__reason = values.reason;
@@ -44,95 +44,102 @@ frappe.ui.form.on('Animal Overview', {
         }
         await save_patient(frm);
         _set_clinical_history(frm);
-	},
-	save_patient: async function(frm) {
-	    if (frm.doc.is_new_patient) {
+    },
+    save_patient: async function(frm) {
+        if (frm.doc.is_new_patient) {
             await make_patient(frm);
         } else {
             await save_patient(frm);
         }
-	},
-	animal: function(frm) {
-		_set_animal_details(frm);
-		_set_clinical_history(frm);
-		_set_invoice_query(frm);
-		// _set_fields_read_only(frm, !frm.doc.animal);
-	},
-	invoice: async function(frm) {
-		if (frm.doc.invoice) {
-			const items = await get_invoice_items(frm.doc.invoice);
-			frm.set_value('items', items);
-			_update_taxes_and_charges(frm);
-			_update_total(frm);
-		}
-	},
-  default_owner: async function(frm) {
-		_set_default_owner_query(frm);
-		if (frm.doc.default_owner && !frm.doc.animal) {
-			_clear_animal_details(frm);
-			const animal = await get_first_animal_by_owner(frm.doc.default_owner);
-			if (animal) frm.set_value('animal', animal.name);
-			const { message: customer } = await frappe.db.get_value(
-				'Customer',
-				{ 'name': frm.doc.default_owner },
-				'customer_name'
-			);
-			if (customer) frm.set_value('owner_name', customer.customer_name);
-		}
-  },
-	is_new_patient: function(frm) {
-		if (frm.doc.is_new_patient) {
-			_clear_animal_details(frm);
-		}
-		frm.set_df_property('animal', 'read_only', frm.doc.is_new_patient);
-		frm.set_df_property('inpatient', 'hidden', frm.doc.is_new_patient);
-	},
-	vs_save: async function(frm) {
-		if (!frm.doc.animal) {
-			frappe.throw(__('Animal is required'));
-		}
-		const fields = [
-			'temperature',
-			'pulse',
-			'respiratory_rate',
-			'mucous_membrane',
-			'capillary_refill_time',
-			'vs_weight:weight',
-		];
+    },
+    animal: function(frm) {
+        _set_animal_details(frm);
+        _set_clinical_history(frm);
+        _set_invoice_query(frm);
+        // _set_fields_read_only(frm, !frm.doc.animal);
+    },
+    invoice: async function(frm) {
+        if (frm.doc.invoice) {
+            const items = await get_invoice_items(frm.doc.invoice);
+            frm.set_value('items', items);
+            _update_taxes_and_charges(frm);
+            _update_total(frm);
+        }
+    },
+    default_owner: async function(frm) {
+        _set_default_owner_query(frm);
+        if (frm.doc.default_owner && !frm.doc.animal) {
+            _clear_animal_details(frm);
+            const animal = await get_first_animal_by_owner(frm.doc.default_owner);
+            if (animal) frm.set_value('animal', animal.name);
+            const {
+                message: customer
+            } = await frappe.db.get_value(
+                'Customer', {
+                    'name': frm.doc.default_owner
+                },
+                'customer_name'
+            );
+            if (customer) frm.set_value('owner_name', customer.customer_name);
+        }
+    },
+    is_new_patient: function(frm) {
+        if (frm.doc.is_new_patient) {
+            _clear_animal_details(frm);
+        }
+        frm.set_df_property('animal', 'read_only', frm.doc.is_new_patient);
+        frm.set_df_property('inpatient', 'hidden', frm.doc.is_new_patient);
+    },
+    vs_save: async function(frm) {
+        if (!frm.doc.animal) {
+            frappe.throw(__('Animal is required'));
+        }
+        const fields = [
+            'temperature',
+            'pulse',
+            'respiratory_rate',
+            'mucous_membrane',
+            'capillary_refill_time',
+            'vs_weight:weight',
+        ];
 
-		const data = fields.reduce(function(dict, x) {
-			const words = x.split(':');
-			dict[words[words.length - 1]] = frm.doc[words[0]];
-			return dict;
-		}, {});
+        const data = fields.reduce(function(dict, x) {
+            const words = x.split(':');
+            dict[words[words.length - 1]] = frm.doc[words[0]];
+            return dict;
+        }, {});
 
-		const vital_signs = await make_vital_signs(frm.doc.animal, data);
-		frappe.show_alert(`Vital Signs ${vital_signs.name} created`);
+        const vital_signs = await make_vital_signs(frm.doc.animal, data);
+        frappe.show_alert(`Vital Signs ${vital_signs.name} created`);
 
-		_clear_vital_signs(frm);
-		_set_clinical_history(frm);
-	},
-	new_activity: async function(frm) {
-		if (!frm.doc.animal) {
-			frappe.throw(__('Animal is required.'));
-			return;
-		}
+        _clear_vital_signs(frm);
+        _set_clinical_history(frm);
+    },
+    new_activity: async function(frm) {
+        if (!frm.doc.animal) {
+            frappe.throw(__('Animal is required.'));
+            return;
+        }
 
-		const patient_activity = await make_patient_activity(
+        const patient_activity = await make_patient_activity(
             frm.doc.animal,
             frm.doc.activity_items,
             frm.doc.physician,
         );
-		frappe.show_alert(`Patient Activity ${patient_activity.name} created`);
+        frappe.show_alert(`Patient Activity ${patient_activity.name} created`);
+        frm.set_value('activity_items', []);
 
-		// clear data
-		// frm.set_value('activity_type', '');
-		// frm.set_value('description', '');
-		frm.set_value('activity_items', []);
-
-		// refresh clinical history
-		_set_clinical_history(frm);
-	},
+        // refresh clinical history
+        _set_clinical_history(frm);
+    },
+    discount_per: function(frm) {
+      const subtotal = _get_subtotal(frm);
+      const discount_amount = subtotal * (frm.doc.discount_per / 100.00);
+      frm.set_value('discount_amount', discount_amount);
+    },
+    discount_amount: function(frm) {
+      _update_total(frm);
+    },
 });
 
 frappe.ui.form.on('Animal Overview Item', {
@@ -349,10 +356,23 @@ function _update_taxes_and_charges(frm) {
 }
 
 function _update_total(frm) {
+  const subtotal = _get_subtotal(frm);
+  const total = [
+    subtotal
+    -frm.doc.discount_amount
+  ];
+  frm.set_value('total', total.reduce((grand_total, value) => grand_total + value, 0.00));
+}
+
+function _get_subtotal(frm) {
   const amounts = frm.doc.items.map(function(item) {
     return item.amount;
   });
-  frm.set_value('total', frm.doc.taxes_and_charges + amounts.reduce((total, amount) => total + amount, 0.00));
+  const total = [
+    amounts.reduce((total, amount) => total + amount, 0.00),
+    frm.doc.taxes_and_charges
+  ];
+  return total.reduce((subtotal, value) => subtotal + value, 0.00);
 }
 
 // table utils
