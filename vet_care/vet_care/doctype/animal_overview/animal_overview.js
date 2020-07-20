@@ -126,17 +126,19 @@ frappe.ui.form.on('Animal Overview', {
 
 		// refresh clinical history
 		_set_clinical_history(frm);
-	}
+	},
 });
 
 frappe.ui.form.on('Animal Overview Item', {
 	qty: function(frm, cdt, cdn) {
 		_update_child_amount(frm, cdt, cdn);
 		_update_taxes_and_charges(frm);
+		_update_total(frm);
 	},
 	rate: function(frm, cdt, cdn) {
 		_update_child_amount(frm, cdt, cdn);
 		_update_taxes_and_charges(frm);
+		_update_total(frm);
 	},
 	item_code: async function(frm, cdt, cdn) {
 		const child = _get_child(cdt, cdn);
@@ -149,6 +151,10 @@ frappe.ui.form.on('Animal Overview Item', {
 			const { message: item } = await get_item_rate(child.item_code);
 			frappe.model.set_value(cdt, cdn, 'rate', item.standard_rate);
 		}
+	},
+	items_remove: function(frm) {
+	  _update_taxes_and_charges(frm);
+      _update_total(frm);
 	},
 });
 
@@ -332,7 +338,14 @@ function _update_taxes_and_charges(frm) {
   const vat_amounts = frm.doc.items.map(function(item) {
     return item.amount * (_tax_rate / 100.00);
   });
-  frm.set_value('taxes_and_charges', vat_amounts.reduce((total, vat_amount) => total + vat_amount));
+  frm.set_value('taxes_and_charges', vat_amounts.reduce((total, vat_amount) => total + vat_amount, 0.00));
+}
+
+function _update_total(frm) {
+  const amounts = frm.doc.items.map(function(item) {
+    return item.amount;
+  });
+  frm.set_value('total', frm.doc.taxes_and_charges + amounts.reduce((total, amount) => total + amount, 0.00));
 }
 
 // table utils
