@@ -138,6 +138,7 @@ def save_invoice(items, patient, customer, sales_person=None, existing_invoice=N
         })
 
     sales_invoice.set_missing_values()
+    sales_invoice.set_taxes()
     sales_invoice.save()
 
     return sales_invoice
