@@ -55,5 +55,15 @@ def get_data():
                     'name': 'Vital Signs'
                 }
             ]
+        },
+        {
+            "label": _("Setup"),
+            "items": [
+                {
+                    'type': 'doctype',
+                    'name': 'Vetcare Settings',
+                    'description': _('Vetcare Settings')
+                }
+            ]
         }
     ]
