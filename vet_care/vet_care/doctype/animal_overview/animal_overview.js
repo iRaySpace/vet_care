@@ -62,6 +62,8 @@ frappe.ui.form.on('Animal Overview', {
 		if (frm.doc.invoice) {
 			const items = await get_invoice_items(frm.doc.invoice);
 			frm.set_value('items', items);
+			_update_taxes_and_charges(frm);
+			_update_total(frm);
 		}
 	},
   default_owner: async function(frm) {
