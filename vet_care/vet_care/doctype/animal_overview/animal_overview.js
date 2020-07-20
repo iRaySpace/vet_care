@@ -118,7 +118,11 @@ frappe.ui.form.on('Animal Overview', {
 			return;
 		}
 
-		const patient_activity = await make_patient_activity(frm.doc.animal, frm.doc.activity_items);
+		const patient_activity = await make_patient_activity(
+            frm.doc.animal,
+            frm.doc.activity_items,
+            frm.doc.physician,
+        );
 		frappe.show_alert(`Patient Activity ${patient_activity.name} created`);
 
 		// clear data

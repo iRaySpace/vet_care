@@ -224,12 +224,13 @@ def get_clinical_history(patient, filter_length):
 
 
 @frappe.whitelist()
-def make_patient_activity(patient, activity_items):
+def make_patient_activity(patient, activity_items, physician):
     activity_items = json.loads(activity_items)
 
     patient_activity = frappe.get_doc({
         'doctype': 'Patient Activity',
         'patient': patient,
+        'physician': physician,
         'posting_date': today()
     })
 
