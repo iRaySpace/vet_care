@@ -300,6 +300,7 @@ function _set_actions(frm) {
 			    frm.doc.default_owner,
 			    frm.doc.sales_person,
                 frm.doc.invoice,
+                frm.doc.discount_amount,
             );
 			frappe.show_alert(`Sales Invoice ${invoice.name} saved`);
 
@@ -315,6 +316,7 @@ function _set_actions(frm) {
 			    frm.doc.default_owner,
 			    frm.doc.sales_person,
                 frm.doc.invoice,
+                frm.doc.discount_amount,
             );
 			const values = await show_payment_dialog(frm);
 			const invoice = await pay_invoice(frm.doc.invoice, values.payments);
