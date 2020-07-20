@@ -191,9 +191,13 @@ def get_clinical_history(patient, filter_length):
             si.name,
             si.posting_date,
             CONCAT(
+                'INVOICE: ',
                 ROUND(si_item.qty, 2),
                 ' x ',
-                si_item.item_code
+                si_item.item_name,
+                ' (',
+                si_item.item_code,
+                ')'
             ) AS description,
             ROUND(si_item.amount, 3) AS price,
             si_item.creation,
