@@ -1,0 +1,18 @@
+<h1>Patient Activity</h1>
+<h2>{{ patient }}</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th width="15%">Activity</th>
+            <th width="85%">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in data %}
+            <tr>
+                <td>{{ row['activity_type'] }}</td>
+                <td>{{ row['description'] }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

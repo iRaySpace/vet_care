@@ -134,6 +134,27 @@ frappe.ui.form.on('Animal Overview', {
         // refresh clinical history
         _set_clinical_history(frm);
     },
+    // TODO: make a decorator for above
+    new_print_activity: async function(frm) {
+      if (!frm.doc.animal) {
+            frappe.throw(__('Animal is required.'));
+            return;
+        }
+
+        const patient_activity = await make_patient_activity(
+            frm.doc.animal,
+            frm.doc.activity_items,
+            frm.doc.physician,
+        );
+        frappe.show_alert(`Patient Activity ${patient_activity.name} created`);
+        print_activity(frm);
+
+        frm.activity_items = [...frm.doc.activity_items];
+        frm.set_value('activity_items', []);
+
+        // refresh clinical history
+        _set_clinical_history(frm);
+    },
     discount_per: function(frm) {
       const subtotal = _get_subtotal(frm);
       const discount_amount = subtotal * (frm.doc.discount_per / 100.00);
