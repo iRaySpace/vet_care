@@ -1,6 +1,8 @@
 // Copyright (c) 2020, 9T9IT and contributors
 // For license information, please see license.txt
+
 {% include 'vet_care/vet_care/doctype/animal_overview/data.js' %}
+{% include 'vet_care/vet_care/doctype/animal_overview/print.js' %}
 {% include 'vet_care/vet_care/doctype/animal_overview/payment_dialog.js' %}
 {% include 'vet_care/vet_care/doctype/animal_overview/custom_buttons.js' %}
 
@@ -140,6 +142,9 @@ frappe.ui.form.on('Animal Overview', {
     discount_amount: function(frm) {
       _update_total(frm);
     },
+    print_history: function(frm) {
+      print_history(frm);
+    },
 });
 
 frappe.ui.form.on('Animal Overview Item', {
@@ -244,6 +249,8 @@ function _clear_vital_signs(frm) {
 
 async function _set_clinical_history(frm) {
 	const clinical_history = await get_clinical_history(frm.doc.animal, _filter_length);
+	frm.clinical_history = clinical_history;
+
 	const fields = ['posting_date', 'name', 'description', 'price'];
 
 	const table_rows = _get_table_rows(clinical_history, fields);

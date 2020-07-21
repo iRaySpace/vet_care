@@ -1,0 +1,22 @@
+<h1>Clinical History</h1>
+<h2>{{ patient_name }}</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th width="10%">Posting Date</th>
+            <th width="10%">Name</th>
+            <th width="55%">Description</th>
+            <th width="15%">Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in data %}
+            <tr>
+                <td>{{ row['posting_date'] }}</td>
+                <td>{{ row['name'] }}</td>
+                <td>{{ row['description'] }}</td>
+                <td>{{ format_currency(row['price']) }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
