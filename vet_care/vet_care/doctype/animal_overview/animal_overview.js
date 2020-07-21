@@ -310,6 +310,7 @@ function _set_actions(frm) {
 			if (!frm.doc.invoice) {
 				frappe.throw(__('Please select invoice above'));
 			}
+
 			await save_invoice(
 			    frm.doc.items,
 			    frm.doc.animal,
@@ -318,9 +319,18 @@ function _set_actions(frm) {
                 frm.doc.invoice,
                 frm.doc.discount_amount,
             );
+
 			const values = await show_payment_dialog(frm);
+			if (!values.payments) {
+			  frappe.throw(__('No payments found. Please put payment details.'));
+			}
+
 			const invoice = await pay_invoice(frm.doc.invoice, values.payments);
 			frappe.show_alert(`Sales Invoice ${invoice.name} paid`);
+
+            if (values.__print) {
+              _print_doc('Sales Invoice', invoice.name, 'Standard', 0);
+            }
 
 			frm.set_value('invoice', '');
 			frm.set_value('items', []);
@@ -445,4 +455,21 @@ function _set_form_buttons_color() {
     $('button[data-fieldname="new_activity"]').addClass('btn-primary');
     $('button[data-fieldname="vs_save"]').addClass('btn-primary');
     $('button[data-fieldname="save_patient"]').addClass('btn-primary');
+}
+
+
+function _print_doc(doctype, docname, print_format, no_letterhead) {
+  // from /frappe/public/js/frappe/form/print.js
+  const w = window.open(
+    frappe.urllib.get_full_url(
+      `/printview?doctype=${encodeURIComponent(doctype)}&name=${encodeURIComponent(
+        docname
+      )}&trigger_print=1&format=${encodeURIComponent(print_format)}&no_letterhead=${
+        no_letterhead ? '1' : '0'
+      }&_lang=en`
+    )
+  );
+  if (!w) {
+    frappe.msgprint(__('Please enable pop-ups'));
+  }
 }

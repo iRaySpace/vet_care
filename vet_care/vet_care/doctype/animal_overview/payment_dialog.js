@@ -79,10 +79,18 @@ function show_payment_dialog(frm) {
 			],
 		});
 
-		dialog.set_primary_action('Submit & Pay', function() {
+		dialog.set_primary_action('Pay & Print', function() {
 			dialog.hide();
-			resolve(dialog.get_values());
+			resolve({
+			  ...dialog.get_values(),
+			  __print: true
+			});
 		});
+
+        _add_button(dialog, 'Pay', function() {
+            dialog.hide();
+            resolve(dialog.get_values());
+        });
 
 		// Initialize dialog
 		dialog.set_value('patient', frm.doc.animal);
@@ -93,4 +101,14 @@ function show_payment_dialog(frm) {
 		dialog.set_value('total', frm.doc.total);
 		dialog.show();
 	});
+}
+
+
+function _add_button(dialog, label, click) {
+  const $primary_btn = dialog.get_primary_btn();
+  const $button = $(`
+    <button type="button" class="btn btn-default btn-sm">${label}</button>
+  `);
+  $button.insertBefore($primary_btn);
+  $button.on('click', click);
 }
