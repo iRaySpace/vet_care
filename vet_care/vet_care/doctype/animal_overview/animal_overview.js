@@ -126,7 +126,7 @@ frappe.ui.form.on('Animal Overview', {
         const patient_activity = await make_patient_activity(
             frm.doc.animal,
             frm.doc.activity_items,
-            frm.doc.physician,
+            frm.doc.sales_person,
         );
         frappe.show_alert(`Patient Activity ${patient_activity.name} created`);
         frm.set_value('activity_items', []);
