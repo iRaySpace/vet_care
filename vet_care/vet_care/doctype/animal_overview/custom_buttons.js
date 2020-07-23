@@ -3,7 +3,15 @@ function set_custom_buttons(frm) {
 		{
 			label: __('Book Appointment'),
 			onclick: function() {
-				frappe.set_route('List', 'Patient Booking', 'Calendar');
+				frappe.set_route(
+                  'List',
+                  'Patient Booking',
+                  'Calendar',
+                  {
+                    customer: frm.doc.default_owner,
+                    patient: frm.doc.animal,
+                  }
+                );
 			},
 		},
 	];
