@@ -200,6 +200,7 @@ def get_clinical_history(patient, filter_length):
         (SELECT 
             si.name,
             si.posting_date,
+            si.pb_sales_person as sales_person,
             CONCAT(
                 'INVOICE: ',
                 ROUND(si_item.qty, 2),
@@ -219,6 +220,7 @@ def get_clinical_history(patient, filter_length):
         (SELECT
             pa.name,
             pa.posting_date,
+            pa.sales_person,
             CONCAT(
                 UPPER(pa_item.activity_type),
                 ': ',
@@ -233,6 +235,8 @@ def get_clinical_history(patient, filter_length):
         ORDER BY posting_date DESC
         LIMIT %s
     """, (frappe.get_value('Patient', patient, 'customer'), patient, filter_length), as_dict=True)
+
+    _apply_sales_person(clinical_history_items)
 
     return list(map(make_data, clinical_history_items))
 
@@ -448,6 +452,18 @@ def _get_date_format():
     for key, value in format_codes.items():
         date_format = date_format.replace(key, value)
     return date_format
+
+
+def _apply_sales_person(history):
+    sales_person_by_doc = {}
+    for row in history:
+        sales_person = row.get('sales_person')
+        sales_person_name = sales_person_by_doc.get(sales_person)
+        if sales_person and sales_person not in sales_person_by_doc:
+            sales_person_name = frappe.get_value('Employee', sales_person, 'employee_name')
+            sales_person_by_doc[sales_person] = sales_person_name
+        if sales_person_name:
+            row['description'] = row['description'] + f'\nSales Person: {sales_person_name} ({sales_person})'
 
 
 def get_search_values(customer):
