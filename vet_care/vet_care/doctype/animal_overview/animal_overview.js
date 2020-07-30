@@ -12,6 +12,7 @@ let _tax_rate = 0;
 frappe.ui.form.on('Animal Overview', {
     onload: function(frm) {
         get_tax_rate().then((data) => _tax_rate = data);
+        get_skip_calendar().then((skip_calendar) => frm.__skip_calendar = skip_calendar);
         frm.set_query('default_owner', function() {
             return {
                 query: "erpnext.controllers.queries.customer_query",

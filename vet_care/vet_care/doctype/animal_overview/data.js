@@ -6,6 +6,7 @@ async function save_invoice(items, patient, customer, sales_person, existing_inv
     return invoice;
 }
 
+
 async function pay_invoice(invoice, payments) {
 	const { message: sales_invoice } = await frappe.call({
 		method: 'vet_care.api.pay_invoice',
@@ -14,6 +15,7 @@ async function pay_invoice(invoice, payments) {
 	return sales_invoice;
 }
 
+
 async function get_invoice_items(invoice) {
 	const { message: items } = await frappe.call({
 		method: 'vet_care.api.get_invoice_items',
@@ -21,6 +23,7 @@ async function get_invoice_items(invoice) {
 	});
 	return items;
 }
+
 
 async function get_clinical_history(patient, filter_length) {
     if (!patient) return [];
@@ -31,6 +34,7 @@ async function get_clinical_history(patient, filter_length) {
     return clinical_history;
 }
 
+
 async function make_patient_activity(patient, activity_items, sales_person) {
   const { message: patient_activity } = await frappe.call({
     method: 'vet_care.api.make_patient_activity',
@@ -38,6 +42,7 @@ async function make_patient_activity(patient, activity_items, sales_person) {
   });
   return patient_activity;
 }
+
 
 async function make_vital_signs(patient, data) {
 	const { message: vital_signs } = await frappe.call({
@@ -47,9 +52,11 @@ async function make_vital_signs(patient, data) {
 	return vital_signs;
 }
 
+
 function get_item_rate(name) {
 	return frappe.db.get_value('Item', { name }, 'standard_rate');
 }
+
 
 async function get_first_animal_by_owner(owner) {
 	const { message: animal } = await frappe.call({
@@ -59,12 +66,20 @@ async function get_first_animal_by_owner(owner) {
 	return animal;
 }
 
+
 async function get_tax_rate() {
   const { message: tax_rate } = await frappe.call({
       method: 'vet_care.api.get_tax_rate',
   });
   return tax_rate;
 }
+
+
+async function get_skip_calendar() {
+  const skip_calendar = await frappe.db.get_single_value('Vetcare Settings', 'skip_calendar');
+  return skip_calendar;
+}
+
 
 async function make_patient(frm) {
 	const { message: patient } = await frappe.call({
@@ -88,6 +103,7 @@ async function make_patient(frm) {
 	frm.set_value('is_new_patient', false);
 	frappe.msgprint('Successfully added to the Patient list', 'New Patient');
 }
+
 
 async function save_patient(frm) {
 	await frappe.call({
