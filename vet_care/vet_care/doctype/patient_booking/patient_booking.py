@@ -5,6 +5,7 @@
 from __future__ import unicode_literals
 import frappe
 import datetime
+import json
 from frappe import _
 from frappe.utils import get_datetime
 from frappe.model.document import Document
@@ -65,24 +66,32 @@ def get_events(start, end, filters=None):
 			])
 		}
 
-	args = {
-		'start': start,
-		'end': end
-	}
-
 	return compose(
 		partial(map, get_data)
 	)(
-		frappe.db.sql("""
-			SELECT
-				pb.name,
-				pb.customer_name,
-				pb.patient_name,
-				pb.physician_name,
-				pb.physician,
-				pb.appointment_type,
-				TIMESTAMP(pb.appointment_date, pb.appointment_time) as start
-			FROM `tabPatient Booking` pb
-			WHERE (pb.appointment_date BETWEEN %(start)s AND %(end)s)
-		""", args, as_dict=True)
+		frappe.get_all(
+			'Patient Booking',
+			fields=[
+				'name',
+				'customer_name',
+				'patient_name',
+				'physician_name',
+				'physician',
+				'appointment_type',
+				'TIMESTAMP(appointment_date, appointment_time) as start'
+			],
+			filters=[
+				*_get_clauses(filters),
+				['appointment_date', 'Between', [start, end]]
+			]
+		)
 	)
+
+
+def _get_clauses(filters):
+	def make_data(filter):
+		filter.pop(0)
+		filter.pop()
+		return filter
+	filters = json.loads(filters)
+	return list(map(make_data, filters))
