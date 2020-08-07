@@ -53,8 +53,20 @@ async function make_vital_signs(patient, data) {
 }
 
 
-function get_item_rate(name) {
-	return frappe.db.get_value('Item', { name }, 'standard_rate');
+async function get_item_rate(name, selling_price_list) {
+    const { message: item_rate } = await frappe.call({
+        method: 'vet_care.api.get_item_rate',
+        args: { item_code: name, selling_price_list },
+    });
+	return item_rate;
+}
+
+
+async function get_selling_price_list() {
+    const { message: selling_price_list } = await frappe.call({
+        method: 'vet_care.api.get_selling_price_list',
+    });
+    return selling_price_list;
 }
 
 

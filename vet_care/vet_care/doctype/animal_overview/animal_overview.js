@@ -13,6 +13,7 @@ frappe.ui.form.on('Animal Overview', {
     onload: function(frm) {
         get_tax_rate().then((data) => _tax_rate = data);
         get_skip_calendar().then((skip_calendar) => frm.__skip_calendar = skip_calendar);
+        get_selling_price_list().then((selling_price_list) => frm.__selling_price_list = selling_price_list);
         frm.set_query('default_owner', function() {
             return {
                 query: "erpnext.controllers.queries.customer_query",
@@ -182,14 +183,12 @@ frappe.ui.form.on('Animal Overview Item', {
 	},
 	item_code: async function(frm, cdt, cdn) {
 		const child = _get_child(cdt, cdn);
-
 		if (!child.qty) {
 			frappe.model.set_value(cdt, cdn, 'qty', 1.0);
 		}
-
 		if (!child.rate) {
-			const { message: item } = await get_item_rate(child.item_code);
-			frappe.model.set_value(cdt, cdn, 'rate', item.standard_rate);
+			const item_rate = await get_item_rate(child.item_code, frm.__selling_price_list);
+			frappe.model.set_value(cdt, cdn, 'rate', item_rate);
 		}
 	},
 	items_remove: function(frm) {
