@@ -177,7 +177,6 @@ def pay_invoice(invoice, payments):
     return invoice
 
 
-# TODO: clinical history include only submitted Sales Invoice
 @frappe.whitelist()
 def get_clinical_history(patient, filter_length):
     """
@@ -406,6 +405,11 @@ def get_tax_rate():
     if not sales_taxes_and_charges:
         frappe.throw(_('Unable to get tax rate for {}. Please set the taxes and charges'.format(pos_profile)))
     return sales_taxes_and_charges[0].get('rate')
+
+
+@frappe.whitelist()
+def get_item_rate(selling_price_list):
+    print(selling_price_list)
 
 
 def _get_schedule_times(name, date):
