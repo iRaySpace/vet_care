@@ -1,6 +1,14 @@
 function set_custom_buttons(frm) {
 	const custom_buttons = [
 		{
+		    label: __('Refresh'),
+		    onclick: () => _refresh(frm),
+		},
+		{
+		    label: __('View Calendar'),
+		    onclick: () => _view_calendar(frm),
+		},
+		{
 			label: __('Book Appointment'),
 			onclick: () => _create_patient_booking(frm),
 		},
@@ -30,4 +38,21 @@ function _create_patient_booking(frm) {
             frappe.set_route('Form', 'Patient Booking', doc.name);
         });
     }
+}
+
+
+function _view_calendar(frm) {
+    frappe.set_route(
+        'List',
+        'Patient Booking',
+        'Calendar'
+    );
+}
+
+
+function _refresh(frm) {
+    _clear_animal_details(frm);
+    _clear_vital_signs(frm);
+    frm.set_value('default_owner', null);
+    frm.set_value('owner_name', null);
 }

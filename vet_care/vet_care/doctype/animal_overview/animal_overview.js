@@ -242,6 +242,7 @@ async function _set_animal_details(frm) {
   frm.doc.__init = false;
 }
 
+// TODO: move out to other js
 function _clear_animal_details(frm) {
 	const fields = [
 		'animal',
@@ -256,6 +257,7 @@ function _clear_animal_details(frm) {
 	fields.forEach((field) => frm.set_value(field, ''));
 }
 
+// TODO: move to utils
 function _clear_vital_signs(frm) {
 	const fields = [
 		'temperature',
