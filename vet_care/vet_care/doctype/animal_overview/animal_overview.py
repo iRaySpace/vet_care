@@ -18,6 +18,8 @@ class AnimalOverview(Document):
 def _set_attach_to_animal(animal_overview):
 	if not animal_overview.animal and animal_overview.attach:
 		frappe.throw(_('Please set animal field'))
+	if not animal_overview.attach:
+		return
 	file = compose(
 		first,
 		partial(pluck, 'name'),
