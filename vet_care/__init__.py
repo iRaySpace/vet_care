@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 import frappe
 
-__version__ = '0.6.6'
+__version__ = '0.6.7'
 
 
 def _get_jenv():
