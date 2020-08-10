@@ -90,8 +90,8 @@ def get_events(start, end, filters=None):
 
 def _get_clauses(filters):
 	def make_data(filter):
-		filter.pop(0)
-		filter.pop()
+		if len(filter) > 4:
+			filter.pop()
 		return filter
 	filters = json.loads(filters)
 	return list(map(make_data, filters))
