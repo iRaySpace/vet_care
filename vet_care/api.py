@@ -214,7 +214,7 @@ def get_clinical_history(patient, filter_length):
             'si' AS ref_type
         FROM `tabSales Invoice Item` si_item
         INNER JOIN `tabSales Invoice` si ON si.name = si_item.parent
-        WHERE si.customer = %s AND si.docstatus = 1)
+        WHERE si.patient = %s AND si.docstatus = 1)
         UNION ALL
         (SELECT
             pa.name,
@@ -233,7 +233,7 @@ def get_clinical_history(patient, filter_length):
         WHERE pa.patient = %s)
         ORDER BY posting_date DESC
         LIMIT %s
-    """, (frappe.get_value('Patient', patient, 'customer'), patient, filter_length), as_dict=True)
+    """, (patient, patient, filter_length), as_dict=True)
 
     _apply_sales_person(clinical_history_items)
 
