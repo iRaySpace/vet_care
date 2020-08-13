@@ -29,7 +29,7 @@ frappe.ui.form.on('Animal Overview', {
         set_custom_buttons(frm);
         _set_actions(frm);
         _set_form_buttons_color();
-        // _set_fields_read_only(frm, true);
+        _set_attach_read_only(frm);
     },
     inpatient: async function(frm) {
         if (!frm.doc.animal || frm.doc.__init) return;
@@ -60,7 +60,7 @@ frappe.ui.form.on('Animal Overview', {
         _set_animal_details(frm);
         _set_clinical_history(frm);
         _set_invoice_query(frm);
-        // _set_fields_read_only(frm, !frm.doc.animal);
+        _set_attach_read_only(frm);
     },
     invoice: async function(frm) {
         if (frm.doc.invoice) {
@@ -241,6 +241,12 @@ async function _set_animal_details(frm) {
   }
   frm.doc.__init = false;
 }
+
+
+function _set_attach_read_only(frm) {
+  frm.set_df_property('attach', 'read_only', frm.doc.animal ? 0 : 1);
+}
+
 
 // TODO: move out to other js
 function _clear_animal_details(frm) {
