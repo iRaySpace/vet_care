@@ -61,5 +61,7 @@ function _refresh(frm) {
     _clear_vital_signs(frm);
     frm.set_value('default_owner', null);
     frm.set_value('owner_name', null);
+    frm.set_value('sales_person', null);
+    frm.set_value('sales_person_name', null);
     frm.save();
 }
