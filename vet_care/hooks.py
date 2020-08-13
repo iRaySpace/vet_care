@@ -60,7 +60,8 @@ fixtures = [
                     "Healthcare Practitioner-vc_out_of_clinic",
                     "Customer-email_info",
                     "Sales Invoice-pb_sales_person",
-                    "Sales Invoice-pb_sales_person_name"
+                    "Sales Invoice-pb_sales_person_name",
+                    "Customer-vc_zip_code"
                 ]
             ]
         ]
