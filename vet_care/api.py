@@ -119,8 +119,7 @@ def save_invoice(items, patient, customer, **kwargs):
     if not pos_profile:
         frappe.throw(_('Please set POS Profile under Vetcare Settings'))
 
-    enable_pb = frappe.db.get_single_value('Vetcare Settings', 'enable_pb')
-    sales_person_field = 'pb_sales_employee' if enable_pb else 'pb_sales_person'
+    sales_person_field = _get_sales_person_field()
 
     if not existing_invoice:
         sales_invoice = frappe.new_doc('Sales Invoice')
@@ -198,45 +197,53 @@ def get_clinical_history(patient, filter_length):
 
     filter_length = int(filter_length)
 
-    clinical_history_items = frappe.db.sql("""
-        (SELECT 
-            si.name,
-            si.posting_date,
-            si.pb_sales_person as sales_person,
-            CONCAT(
-                'INVOICE: ',
-                ROUND(si_item.qty, 2),
-                ' x ',
-                si_item.item_name,
-                ' (',
-                si_item.item_code,
-                ')'
-            ) AS description,
-            ROUND(si_item.amount, 3) AS price,
-            si_item.creation,
-            'si' AS ref_type
-        FROM `tabSales Invoice Item` si_item
-        INNER JOIN `tabSales Invoice` si ON si.name = si_item.parent
-        WHERE si.patient = %s AND si.docstatus = 1)
-        UNION ALL
-        (SELECT
-            pa.name,
-            pa.posting_date,
-            pa.sales_person,
-            CONCAT(
-                UPPER(pa_item.activity_type),
-                ': ',
-                pa_item.description
-            ) AS description,
-            '' AS price,
-            pa_item.creation,
-            'pa' AS ref_type
-        FROM `tabPatient Activity Item` pa_item
-        INNER JOIN `tabPatient Activity` pa on pa.name = pa_item.parent
-        WHERE pa.patient = %s)
-        ORDER BY posting_date DESC
-        LIMIT %s
-    """, (patient, patient, filter_length), as_dict=True)
+    sales_person_field = _get_sales_person_field()
+
+    clinical_history_items = frappe.db.sql(
+        """
+            (SELECT 
+                si.name,
+                si.posting_date,
+                si.{sales_person_field} as sales_person,
+                CONCAT(
+                    'INVOICE: ',
+                    ROUND(si_item.qty, 2),
+                    ' x ',
+                    si_item.item_name,
+                    ' (',
+                    si_item.item_code,
+                    ')'
+                ) AS description,
+                ROUND(si_item.amount, 3) AS price,
+                si_item.creation,
+                'si' AS ref_type
+            FROM `tabSales Invoice Item` si_item
+            INNER JOIN `tabSales Invoice` si ON si.name = si_item.parent
+            WHERE si.patient = %s AND si.docstatus = 1)
+            UNION ALL
+            (SELECT
+                pa.name,
+                pa.posting_date,
+                pa.sales_person,
+                CONCAT(
+                    UPPER(pa_item.activity_type),
+                    ': ',
+                    pa_item.description
+                ) AS description,
+                '' AS price,
+                pa_item.creation,
+                'pa' AS ref_type
+            FROM `tabPatient Activity Item` pa_item
+            INNER JOIN `tabPatient Activity` pa on pa.name = pa_item.parent
+            WHERE pa.patient = %s)
+            ORDER BY posting_date DESC
+            LIMIT %s
+        """.format(
+            sales_person_field=sales_person_field
+        ),
+        (patient, patient, filter_length),
+        as_dict=True
+    )
 
     _apply_sales_person(clinical_history_items)
 
@@ -481,6 +488,11 @@ def _get_date_format():
     for key, value in format_codes.items():
         date_format = date_format.replace(key, value)
     return date_format
+
+
+def _get_sales_person_field():
+    enable_pb = frappe.db.get_single_value('Vetcare Settings', 'enable_pb')
+    return 'pb_sales_employee' if enable_pb else 'pb_sales_person'
 
 
 def _apply_sales_person(history):
