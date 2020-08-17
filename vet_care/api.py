@@ -119,6 +119,9 @@ def save_invoice(items, patient, customer, **kwargs):
     if not pos_profile:
         frappe.throw(_('Please set POS Profile under Vetcare Settings'))
 
+    enable_pb = frappe.db.get_single_value('Vetcare Settings', 'enable_pb')
+    sales_person_field = 'pb_sales_employee' if enable_pb else 'pb_sales_person'
+
     if not existing_invoice:
         sales_invoice = frappe.new_doc('Sales Invoice')
         sales_invoice.update({
@@ -126,8 +129,8 @@ def save_invoice(items, patient, customer, **kwargs):
             'customer': customer,
             'due_date': today(),
             'pos_profile': pos_profile,
-            'pb_sales_person': sales_person,
-            'taxes_and_charges': taxes_and_charges
+            'taxes_and_charges': taxes_and_charges,
+            sales_person_field: sales_person
         })
     else:
         sales_invoice = frappe.get_doc('Sales Invoice', existing_invoice)
