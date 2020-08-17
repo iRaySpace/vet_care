@@ -1,4 +1,5 @@
 import math
+import frappe
 from frappe.utils.data import today, date_diff
 
 
@@ -23,3 +24,13 @@ def format_timedelta(timedelta, strformat):
 
 def timedelta_to_default_format(timedelta):
     return format_timedelta(timedelta, '{hours:02}:{minutes:02}')
+
+
+def check_pos_bahrain(throw_error=False):
+    pos_bahrain = frappe.get_all(
+        'Module Def',
+        filters={'name': 'Pos Bahrain'}
+    )
+    if throw_error and not pos_bahrain:
+        frappe.throw(_('Please install POS Bahrain app'))
+    return len(pos_bahrain) > 0
