@@ -132,6 +132,7 @@ frappe.ui.form.on('Animal Overview', {
         );
         frappe.show_alert(`Patient Activity ${patient_activity.name} created`);
         frm.set_value('activity_items', []);
+        frm.save();
 
         // refresh clinical history
         _set_clinical_history(frm);
