@@ -431,9 +431,13 @@ function _get_table_rows(records, fields) {
 			fields = Object.keys(record);
 		const table_data = fields.map((field) => {
 			if (field === 'description') {
+			    const attach = record['attach']
+			        ? `<a href=${record['attach']} class="btn btn-default btn-xs">See attached</a>`
+			        : '';
 				return `
 					<td>
 						<pre style="font-family: 'serif'">${record[field]}</pre>
+						${attach}
 					</td>
 				`;
 			}
