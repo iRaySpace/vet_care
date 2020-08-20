@@ -76,15 +76,6 @@ frappe.ui.form.on('Animal Overview', {
             _clear_animal_details(frm);
             const animal = await get_first_animal_by_owner(frm.doc.default_owner);
             if (animal) frm.set_value('animal', animal.name);
-            const {
-                message: customer
-            } = await frappe.db.get_value(
-                'Customer', {
-                    'name': frm.doc.default_owner
-                },
-                'customer_name'
-            );
-            if (customer) frm.set_value('owner_name', customer.customer_name);
         }
     },
     is_new_patient: function(frm) {
