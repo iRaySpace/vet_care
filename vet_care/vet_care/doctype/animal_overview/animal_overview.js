@@ -22,7 +22,7 @@ frappe.ui.form.on('Animal Overview', {
         get_show_zip_code().then((show_zip_code) => {
             // read only fields can't be set through set_df_property
             if (!show_zip_code) {
-                $('div[title="zip_code"').hide();
+                $('div[title="zip_code"]').hide();
             }
         });
     },
