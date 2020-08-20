@@ -93,6 +93,12 @@ async function get_skip_calendar() {
 }
 
 
+async function get_show_zip_code() {
+  const show_zip_code = await frappe.db.get_single_value('Vetcare Settings', 'show_zip_code');
+  return show_zip_code;
+}
+
+
 async function make_patient(frm) {
 	const { message: patient } = await frappe.call({
 		method: 'vet_care.api.make_patient',
