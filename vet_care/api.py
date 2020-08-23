@@ -265,9 +265,9 @@ def make_patient_activity(patient, activity_items, sales_person=None):
 
     for activity_item in activity_items:
         patient_activity.append('items', {
-            'activity_type': activity_item['activity_type'],
-            'description': activity_item['description'],
-            'attach': activity_item['attach']
+            'activity_type': activity_item.get('activity_type'),
+            'description': activity_item.get('description'),
+            'attach': activity_item.get('attach')
         })
 
     patient_activity.save()
