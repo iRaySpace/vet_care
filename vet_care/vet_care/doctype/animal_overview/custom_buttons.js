@@ -57,11 +57,22 @@ function _view_calendar(frm) {
 
 
 function _refresh(frm) {
-    _clear_animal_details(frm);
-    _clear_vital_signs(frm);
-    frm.set_value('default_owner', null);
-    frm.set_value('owner_name', null);
-    frm.set_value('sales_person', null);
-    frm.set_value('sales_person_name', null);
+    const fields = Object.keys(frm.doc);
+    const core_fields = [
+        'name',
+        'owner',
+        'creation',
+        'modified',
+        'modified_by',
+        'idx',
+        'docstatus',
+        '__last_sync_on',
+        'doctype',
+    ];
+    for (const field of fields) {
+        if (core_fields.indexOf(field) === -1) {
+            frm.set_value(field, null);
+        }
+    }
     frm.save();
 }
