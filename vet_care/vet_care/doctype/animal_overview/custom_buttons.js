@@ -68,6 +68,7 @@ function _refresh(frm) {
         'docstatus',
         '__last_sync_on',
         'doctype',
+        '__unsaved',
     ];
     for (const field of fields) {
         if (core_fields.indexOf(field) === -1) {
