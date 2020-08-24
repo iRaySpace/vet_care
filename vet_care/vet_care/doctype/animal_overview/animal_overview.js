@@ -429,7 +429,7 @@ function _get_table_rows(records, fields) {
 		const table_data = fields.map((field) => {
 			if (field === 'description') {
 			    const attach = record['attach']
-			        ? `<a href=${record['attach']} class="btn btn-default btn-xs">See attached</a>`
+			        ? `<a href=${record['attach']} class="btn btn-default btn-xs" target="_blank">See attached</a>`
 			        : '';
 				return `
 					<td>
