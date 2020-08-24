@@ -16,12 +16,13 @@ frappe.ui.form.on('Patient Booking', {
 			set_custom_buttons(frm);
 		}
 		_set_new_frm(frm);
+		_set_zip_code(frm);
 		$(frm.fields_dict['appointment_time_html'].wrapper).html(`
-      <div class="row">
-        <div class="col-sm-12 schedules">
-        </div>
-      </div>
-    `);
+            <div class="row">
+              <div class="col-sm-12 schedules">
+              </div>
+            </div>
+        `);
 	},
 	customer: async function(frm) {
 		const { message: customer } = await frappe.db.get_value('Customer', {'name': frm.doc.customer}, 'customer_name');
@@ -107,4 +108,10 @@ function _set_schedules_html(schedules) {
 			</button>
 		`);
 	});
+}
+
+
+async function _set_zip_code(frm) {
+    const { message: customer } = await frappe.db.get_value('Customer', frm.doc.customer, 'vc_zip_code');
+    frm.fields_dict.zip_code.set_input(customer.vc_zip_code);
 }
