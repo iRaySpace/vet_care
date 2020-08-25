@@ -12,6 +12,6 @@ frappe.views.calendar['Patient Booking'] = {
   },
   options: {
     minTime: '08:00:00',
-    maxTime: '19:00:00'
+    maxTime: '23:00:00'
   }
 };
