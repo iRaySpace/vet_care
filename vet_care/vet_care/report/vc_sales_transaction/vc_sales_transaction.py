@@ -38,10 +38,11 @@ def _get_columns(filters):
 
 
 def _get_clauses(filters):
-	clauses = [
+	clauses = list(filter(lambda x: x, [
 		'si.docstatus = 1',
-		'si.posting_date BETWEEN %(from_date)s AND %(to_date)s'
-	]
+		'si.posting_date BETWEEN %(from_date)s AND %(to_date)s',
+		'sii.cost_center = %(cost_center)s' if filters.get('cost_center') else None,
+	]))
 	return 'WHERE {}'.format(' AND '.join(clauses))
 
 

@@ -18,5 +18,11 @@ frappe.query_reports["VC Sales Transaction"] = {
             "default": frappe.datetime.get_today(),
             "reqd": 1
         },
+        {
+            "fieldname": "cost_center",
+            "label": __("Cost Center"),
+            "fieldtype": "Link",
+            "options": "Cost Center"
+        },
 	]
 }
