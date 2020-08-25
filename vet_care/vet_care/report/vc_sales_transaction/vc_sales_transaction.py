@@ -29,6 +29,8 @@ def _get_columns(filters):
 		make_column('Description', 'description', 130),
 		make_column('Total VAT', 'total_vat', 130, 'Currency'),
 		make_column('Cost Center', 'cost_center', 130, 'Link', 'Cost Center'),
+		make_column('Sales Person', 'sales_person', 130, 'Link', 'Employee'),
+		make_column('Sales Person', 'sales_person_name', 130, 'Data'),
 		make_column('Customer', 'customer', 130, 'Link', 'Customer'),
 		make_column('Customer Name', 'customer_name', 130, 'Data'),
 		make_column('Patient', 'patient', 130, 'Link', 'Patient'),
@@ -44,6 +46,21 @@ def _get_clauses(filters):
 		'sii.cost_center = %(cost_center)s' if filters.get('cost_center') else None,
 	]))
 	return 'WHERE {}'.format(' AND '.join(clauses))
+
+
+def _get_sales_person_fields():
+	enable_pb = frappe.db.get_single_value('Vetcare Settings', 'enable_pb')
+	if enable_pb:
+		fields = [
+			'si.pb_sales_employee as sales_person',
+			'si.pb_sales_employee_name as sales_person_name'
+		]
+	else:
+		fields = [
+			'si.pb_sales_person as sales_person',
+			'si.pb_sales_person_name as sales_person_name'
+		]
+	return ', '.join(fields)
 
 
 def _get_data(filters):
@@ -65,12 +82,19 @@ def _get_data(filters):
 			si.customer,
 			si.customer_name,
 			si.patient,
-			si.patient_name
+			si.patient_name,
+			{sales_person_fields}
 		FROM `tabSales Invoice Item` sii
 		INNER JOIN `tabSales Invoice` si ON si.name = sii.parent
 		INNER JOIN `tabItem` i ON i.name = sii.item_code
 		{clauses}
-	""".format(clauses=_get_clauses(filters)), filters, as_dict=1)
+	""".format(
+		clauses=_get_clauses(filters),
+		sales_person_fields=_get_sales_person_fields()
+	),
+		filters,
+		as_dict=1
+	)
 	cached_taxes_and_charges = {}
 	species = _get_species(list(set(map(lambda x: x['patient'], data))))
 	return list(map(make_data, data))
