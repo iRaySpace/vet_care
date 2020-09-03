@@ -317,12 +317,8 @@ def make_patient(patient_data, owner):
     patient_data = json.loads(patient_data)
 
     patient_doc = frappe.new_doc('Patient')
+    patient_doc.customer = owner
     patient_doc.update(patient_data)
-    patient_doc.append('vc_pet_relation', {
-        'default': 1,
-        'relation': 'Owner',
-        'customer': owner
-    })
     patient_doc.save()
 
     return patient_doc
