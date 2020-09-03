@@ -7,6 +7,7 @@ from vet_care.api import get_search_values
 
 def validate(doc, method):
     _validate_cpr_as_numeric(doc)
+    _set_core_mobile_no(doc)
 
 
 def before_save(doc, method):
@@ -21,6 +22,10 @@ def _validate_cpr_as_numeric(doc):
     cpr = doc.vc_cpr
     if cpr and not cpr.isnumeric():
         frappe.throw(_("CPR should be numeric"))
+
+
+def _set_core_mobile_no(doc):
+    doc.mobile_no = doc.mobile_number
 
 
 def _set_customer_search_values(doc):
