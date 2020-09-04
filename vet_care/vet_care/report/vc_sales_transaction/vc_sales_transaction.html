@@ -1,0 +1,50 @@
+<style>
+  .text-bold { font-weight: bold; }
+</style>
+
+<main class="container">
+  <div class="row">
+    <div class="text-bold text-center">Sales Transaction</div>
+    <div class="text-center">{{ filters.from_date }} - {{ filters.to_date }}</div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th width="5%">Invoice</th>
+            <th width="5%">Date</th>
+            <th width="5%">Item</th>
+            <th width="5%">Category</th>
+            <th width="10%">Description</th>
+            <th width="10%">VAT</th>
+            <th width="10%">Branch</th>
+            <th width="15%">Vet</th>
+            <th width="10%">Customer</th>
+            <th width="10%">Customer Name</th>
+            <th width="10%">Animal</th>
+            <th width="5%">Species</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in data %}
+            <tr>
+              <td>{{ row['invoice_no'] }}</td>
+              <td>{{ row['invoice_date'] }}</td>
+              <td>{{ row['item'] }}</td>
+              <td>{{ row['item_group'] }}</td>
+              <td>{{ row['description'] }}</td>
+              <td>{{ fmt_money(row['total_vat']) }}</td>
+              <td>{{ row['cost_center'] }}</td>
+              <td>{{ row['sales_person_name'] }}</td>
+              <td>{{ row['customer'] }}</td>
+              <td>{{ row['customer_name'] }}</td>
+              <td>{{ row['patient_name'] }}</td>
+              <td>{{ row['species'] }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
