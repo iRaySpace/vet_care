@@ -4,16 +4,16 @@
 from __future__ import unicode_literals
 import frappe
 from frappe import _
-from toolz.curried import compose, groupby, valmap, first
+from toolz.curried import compose, groupby, valmap, first, reduce, unique, pluck, count, partial
 
 
 def execute(filters=None):
 	columns, data = _get_columns(filters), _get_data(filters)
-	return columns, data
+	return columns, _append_summary(data)
 
 
 def _get_columns(filters):
-	def make_column(label, fieldname, width, fieldtype='Data', options=''):
+	def make_column(label, fieldname, width, fieldtype='Data', options='', hidden=False):
 		return {
 			'label': _(label),
 			'fieldname': fieldname,
@@ -51,12 +51,12 @@ def _get_sales_person_fields():
 	enable_pb = frappe.db.get_single_value('Vetcare Settings', 'enable_pb')
 	if enable_pb:
 		fields = [
-			# 'si.pb_sales_employee as sales_person',
+			'si.pb_sales_employee as sales_person',
 			'si.pb_sales_employee_name as sales_person_name'
 		]
 	else:
 		fields = [
-			# 'si.pb_sales_person as sales_person',
+			'si.pb_sales_person as sales_person',
 			'si.pb_sales_person_name as sales_person_name'
 		]
 	return ', '.join(fields)
@@ -99,6 +99,42 @@ def _get_data(filters):
 	return list(map(make_data, data))
 
 
+def _append_summary(data):
+	def make_data(val):
+		clients = compose(
+			count,
+			unique,
+			pluck('customer'),
+			lambda: val
+		)
+		animals = compose(
+			valmap(count),
+			groupby('species'),
+			lambda: val
+		)
+		return {
+			'total_val': reduce(lambda total, x: total + x.get('total_vat'), val, 0.00),
+			'animals': _get_dict_to_csv(animals()),
+			'clients': clients()
+		}
+	sales_persons = compose(
+		valmap(make_data),
+		groupby('sales_person_name'),
+		lambda: data
+	)()
+
+	data.append({'invoice_no': "'-'"})  # for report html (break loop)
+	for k, v in sales_persons.items():
+		sales_person = k or 'Not specified'
+		data.append({'invoice_no': f"'{sales_person}'"})
+		data.append({'invoice_no': f"'Total Value: {v.get('total_val')}'"})
+		data.append({'invoice_no': f"'Clients: {v.get('clients')}'"})
+		data.append({'invoice_no': f"'{v.get('animals')}'"})
+		data.append({})
+
+	return data
+
+
 def _get_rate(template, cache=None):
 	if cache and template in cache:
 		return cache[template]
@@ -134,3 +170,13 @@ def _get_species(patients):
 		)
 	)
 	return species()
+
+
+def _get_dict_to_csv(data, sep=', ', columns=None):
+	csv = []
+	for k, v in data.items():
+		column_name = k or "Others"
+		if columns and k in columns:
+			column_name = columns[k]
+		csv.append(f'{column_name}={v}')
+	return sep.join(csv)
