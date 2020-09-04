@@ -29,7 +29,6 @@ def _get_columns(filters):
 		make_column('Description', 'description', 130),
 		make_column('Total VAT', 'total_vat', 130, 'Currency'),
 		make_column('Cost Center', 'cost_center', 130, 'Link', 'Cost Center'),
-		make_column('Sales Person', 'sales_person', 130, 'Link', 'Employee'),
 		make_column('Sales Person', 'sales_person_name', 130, 'Data'),
 		make_column('Customer', 'customer', 130, 'Link', 'Customer'),
 		make_column('Customer Name', 'customer_name', 130, 'Data'),
@@ -52,12 +51,12 @@ def _get_sales_person_fields():
 	enable_pb = frappe.db.get_single_value('Vetcare Settings', 'enable_pb')
 	if enable_pb:
 		fields = [
-			'si.pb_sales_employee as sales_person',
+			# 'si.pb_sales_employee as sales_person',
 			'si.pb_sales_employee_name as sales_person_name'
 		]
 	else:
 		fields = [
-			'si.pb_sales_person as sales_person',
+			# 'si.pb_sales_person as sales_person',
 			'si.pb_sales_person_name as sales_person_name'
 		]
 	return ', '.join(fields)
