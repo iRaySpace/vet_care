@@ -4,6 +4,7 @@
 from __future__ import unicode_literals
 import frappe
 from frappe import _
+from frappe.utils import fmt_money
 from toolz.curried import compose, groupby, valmap, first, reduce, unique, pluck, count, partial
 
 
@@ -126,10 +127,10 @@ def _append_summary(data):
 	data.append({'invoice_no': "'-'"})  # for report html (break loop)
 	for k, v in sales_persons.items():
 		sales_person = k or 'Not specified'
-		data.append({'invoice_no': f"'{sales_person}'"})
-		data.append({'invoice_no': f"'Total Value: {v.get('total_val')}'"})
-		data.append({'invoice_no': f"'Clients: {v.get('clients')}'"})
-		data.append({'invoice_no': f"'{v.get('animals')}'"})
+		data.append({'invoice_no': "'Sales Person'", 'item': f"'{sales_person}'"})
+		data.append({'invoice_no': "'Total Amt'", 'item': f"'{fmt_money(v.get('total_val'))}'"})
+		data.append({'invoice_no': "'Clients'", 'item': f"'{v.get('clients')}'"})
+		data.append({'invoice_no': "'Animals'", 'item': f"'{v.get('animals')}'"})
 		data.append({})
 
 	return data

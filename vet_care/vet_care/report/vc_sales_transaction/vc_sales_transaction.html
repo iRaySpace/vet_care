@@ -1,5 +1,6 @@
 <style>
   .text-bold { font-weight: bold; }
+  .mb-s { margin-bottom: 15px; }
 </style>
 
 <main class="container">
@@ -27,7 +28,11 @@
           </tr>
         </thead>
         <tbody>
+          {% let i = 0 %}
           {% for row in data %}
+            {% if row['invoice_no'] == "'-'" %}
+              {% break %}
+            {% endif %}
             <tr>
               <td>{{ row['invoice_no'] }}</td>
               <td>{{ row['invoice_date'] }}</td>
@@ -42,9 +47,25 @@
               <td>{{ row['patient_name'] }}</td>
               <td>{{ row['species'] }}</td>
             </tr>
+            {% i = i + 1 %}
           {% endfor %}
         </tbody>
       </table>
+      {% for (let x = i + 1; x < data.length; x++) { %}
+        {% if data[x]['item'] %}
+          {% let item = data[x]['item'].replace(/'/g, '') %}
+          {% let invoice_no = data[x]['invoice_no'].replace(/'/g, '') %}
+          {% if invoice_no == 'Sales Person' %}
+            <div class="text-bold">{{ item }}</div>
+          {% else %}
+            {% if invoice_no == 'Animals' %}
+              <div class="mb-s"><em>{{ invoice_no }}</em>: {{ item }}</div>
+            {% else %}
+              <div><em>{{ invoice_no }}</em>: {{ item }}</div>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      {% } %}
     </div>
   </div>
 </main>
