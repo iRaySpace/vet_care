@@ -19,6 +19,12 @@ frappe.query_reports["VC Sales Transaction"] = {
             "reqd": 1
         },
         {
+            "fieldname": "item_group",
+            "label": __("Item Group"),
+            "fieldtype": "Link",
+            "options": "Item Group"
+        },
+        {
             "fieldname": "cost_center",
             "label": __("Cost Center"),
             "fieldtype": "Link",

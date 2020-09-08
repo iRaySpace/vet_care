@@ -44,6 +44,7 @@ def _get_clauses(filters):
 		'si.docstatus = 1',
 		'si.posting_date BETWEEN %(from_date)s AND %(to_date)s',
 		'sii.cost_center = %(cost_center)s' if filters.get('cost_center') else None,
+		'i.item_group = %(item_group)s' if filters.get('item_group') else None
 	]))
 	return 'WHERE {}'.format(' AND '.join(clauses))
 
