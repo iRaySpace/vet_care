@@ -242,7 +242,8 @@ async function _set_animal_details(frm) {
 
 
 function _set_attach_read_only(frm) {
-  frm.set_df_property('attach', 'read_only', frm.doc.animal ? 0 : 1);
+  frm.set_df_property('attach', 'read_only', 1);
+//  frm.set_df_property('attach', 'read_only', frm.doc.animal ? 0 : 1);
 }
 
 
