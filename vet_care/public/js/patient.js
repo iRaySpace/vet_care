@@ -7,6 +7,7 @@ frappe.ui.form.on('Patient', {
         });
     },
     refresh: function(frm) {
+        _set_customer_for_new(frm);
         _add_patient_overview(frm);
         _set_dashboard(frm);
     },
@@ -42,6 +43,9 @@ function _add_patient_overview(frm) {
 }
 
 function _set_dashboard(frm) {
+    if (!frm.dashboard.data) {
+        return;
+    }
     const appointments = frm.dashboard.data.transactions.find(({ label }) => label === __('Appointments and Patient Encounters'));
     if (appointments && !appointments.items.includes('Patient')) {
         appointments.items = ['Patient Booking', 'Patient Activity', 'Vital Signs', 'Inpatient Record'];
@@ -53,4 +57,14 @@ function _set_dashboard(frm) {
     frm.dashboard.data_rendered = false;
     frm.dashboard.transactions_area.empty();
     frm.dashboard.refresh();
+}
+
+
+function _set_customer_for_new(frm) {
+    if (frappe.__custom_options) {
+        for (const key in frappe.__custom_options) {
+            frm.set_value(key, frappe.__custom_options[key]);
+        }
+    }
+    console.log(frappe.__route_options);
 }

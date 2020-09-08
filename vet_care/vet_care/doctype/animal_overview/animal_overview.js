@@ -83,6 +83,8 @@ frappe.ui.form.on('Animal Overview', {
             const animal = await get_first_animal_by_owner(frm.doc.default_owner);
             if (animal) frm.set_value('animal', animal.name);
         }
+        // for navigating to Patient; because route options won't work
+        frappe.__custom_options = {'customer': frm.doc.default_owner};
     },
     is_new_patient: function(frm) {
         if (frm.doc.is_new_patient) {
