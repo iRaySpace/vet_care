@@ -12,6 +12,10 @@ frappe.views.calendar['Patient Booking'] = {
   },
   options: {
     minTime: '08:00:00',
-    maxTime: '23:00:00'
+    maxTime: '23:00:00',
+    slotDuration: '00:15:00',
+    slotLabelInterval: 15,
+    slotLabelFormat: 'h(:mm)a',
+    slotMinutes: 15,
   }
 };
