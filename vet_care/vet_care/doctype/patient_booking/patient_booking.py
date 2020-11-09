@@ -52,11 +52,12 @@ def get_events(start, end, filters=None):
 		return frappe.get_value('Healthcare Practitioner', practitioner, 'vc_color')
 
 	def get_data(data):
+		appointment_minutes = data.get('appointment_minutes') or 30.0
 		return {
 			'allDay': 0,
 			'name': data.get('name'),
 			'start': data.get('start'),
-			'end': data.get('start') + datetime.timedelta(minutes=30.0),
+			'end': data.get('start') + datetime.timedelta(minutes=appointment_minutes),
 			'color': get_color_data(data.get('physician')) or '#EFEFEF',
 			'title': '; '.join([
 				data.get('customer_name') or 'NA',
@@ -78,6 +79,7 @@ def get_events(start, end, filters=None):
 				'physician_name',
 				'physician',
 				'appointment_type',
+				'appointment_minutes',
 				'TIMESTAMP(appointment_date, appointment_time) as start'
 			],
 			filters=[
