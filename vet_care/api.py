@@ -129,6 +129,7 @@ def save_invoice(items, patient, customer, **kwargs):
             'due_date': today(),
             'pos_profile': pos_profile,
             'taxes_and_charges': taxes_and_charges,
+            'is_pos': 1,
             sales_person_field: sales_person
         })
     else:
