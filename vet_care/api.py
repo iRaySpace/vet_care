@@ -11,28 +11,28 @@ from vet_care.utils import timedelta_to_default_format
 
 @frappe.whitelist()
 def get_pet_relations(pet):
-    return compose(list, partial(pluck, 'customer'))(
-        frappe.get_all(
-            'Pet Relation',
-            filters={'parent': pet},
-            fields=['customer']
-        )
+    return compose(list, partial(pluck, "customer"))(
+        frappe.get_all("Pet Relation", filters={"parent": pet}, fields=["customer"])
     )
 
 
 @frappe.whitelist()
 def apply_core_overrides():
-    frappe.db.sql("""
+    frappe.db.sql(
+        """
         UPDATE `tabDocField` 
         SET set_only_once = 0
         WHERE parent = 'Patient'
         AND fieldname = 'customer'
-    """)
-    frappe.db.sql("""
+    """
+    )
+    frappe.db.sql(
+        """
         UPDATE `tabDocType`
         SET autoname = 'VS-.#####'
         WHERE name = 'Vital Signs'
-    """)
+    """
+    )
     frappe.db.commit()
 
     return True
@@ -40,26 +40,27 @@ def apply_core_overrides():
 
 @frappe.whitelist()
 def make_invoice(dt, dn):
-    sales_invoice = frappe.new_doc('Sales Invoice')
+    sales_invoice = frappe.new_doc("Sales Invoice")
 
-    template = frappe.get_value('Lab Test', dn, 'template')
-    rate = frappe.get_value('Lab Test Template', template, 'lab_test_rate')
+    template = frappe.get_value("Lab Test", dn, "template")
+    rate = frappe.get_value("Lab Test Template", template, "lab_test_rate")
 
-    sales_invoice.append('items', {
-        'item_code': template,
-        'qty': 1,
-        'rate': rate,
-        'reference_dt': dt,
-        'reference_dn': dn
-    })
+    sales_invoice.append(
+        "items",
+        {
+            "item_code": template,
+            "qty": 1,
+            "rate": rate,
+            "reference_dt": dt,
+            "reference_dn": dn,
+        },
+    )
 
-    patient = frappe.get_value('Lab Test', dn, 'patient')
-    customer = frappe.get_value('Patient', patient, 'customer')
-    sales_invoice.update({
-        'patient': patient,
-        'customer': customer,
-        'due_date': today()
-    })
+    patient = frappe.get_value("Lab Test", dn, "patient")
+    customer = frappe.get_value("Patient", patient, "customer")
+    sales_invoice.update(
+        {"patient": patient, "customer": customer, "due_date": today()}
+    )
 
     sales_invoice.set_missing_values()
 
@@ -68,28 +69,33 @@ def make_invoice(dt, dn):
 
 @frappe.whitelist()
 def make_invoice_for_encounter(dt, dn):
-    sales_invoice = frappe.new_doc('Sales Invoice')
+    sales_invoice = frappe.new_doc("Sales Invoice")
 
-    practitioner = frappe.get_value('Patient Encounter', dn, 'practitioner')
-    op_consulting_charge_item = frappe.get_value('Healthcare Practitioner', practitioner, 'op_consulting_charge_item')
-    op_consulting_charge = frappe.db.get_value('Healthcare Practitioner', practitioner, 'op_consulting_charge')
+    practitioner = frappe.get_value("Patient Encounter", dn, "practitioner")
+    op_consulting_charge_item = frappe.get_value(
+        "Healthcare Practitioner", practitioner, "op_consulting_charge_item"
+    )
+    op_consulting_charge = frappe.db.get_value(
+        "Healthcare Practitioner", practitioner, "op_consulting_charge"
+    )
 
-    sales_invoice.append('items', {
-        'item_code': op_consulting_charge_item,
-        'qty': 1,
-        'rate': op_consulting_charge,
-        'reference_dt': dt,
-        'reference_dn': dn
-    })
+    sales_invoice.append(
+        "items",
+        {
+            "item_code": op_consulting_charge_item,
+            "qty": 1,
+            "rate": op_consulting_charge,
+            "reference_dt": dt,
+            "reference_dn": dn,
+        },
+    )
 
-    patient = frappe.get_value('Patient Encounter', dn, 'patient')
-    customer = frappe.get_value('Patient', patient, 'customer')
+    patient = frappe.get_value("Patient Encounter", dn, "patient")
+    customer = frappe.get_value("Patient", patient, "customer")
 
-    sales_invoice.update({
-        'patient': patient,
-        'customer': customer,
-        'due_date': today()
-    })
+    sales_invoice.update(
+        {"patient": patient, "customer": customer, "due_date": today()}
+    )
 
     sales_invoice.set_missing_values()
 
@@ -100,51 +106,58 @@ def make_invoice_for_encounter(dt, dn):
 @frappe.whitelist()
 def get_medical_records(patient):
     return frappe.get_all(
-        'Patient Medical Record',
-        filters={'patient': patient},
-        fields=['reference_doctype', 'reference_name', 'communication_date']
+        "Patient Medical Record",
+        filters={"patient": patient},
+        fields=["reference_doctype", "reference_name", "communication_date"],
     )
 
 
 @frappe.whitelist()
 def save_invoice(items, patient, customer, **kwargs):
     items = json.loads(items)
-    sales_person = kwargs.get('sales_person')
-    existing_invoice = kwargs.get('existing_invoice')
-    discount_amount = kwargs.get('discount_amount')
+    sales_person = kwargs.get("sales_person")
+    existing_invoice = kwargs.get("existing_invoice")
+    discount_amount = kwargs.get("discount_amount")
 
-    pos_profile = frappe.db.get_single_value('Vetcare Settings', 'pos_profile')
-    taxes_and_charges = frappe.db.get_value('POS Profile', pos_profile, 'taxes_and_charges')
+    pos_profile = frappe.db.get_single_value("Vetcare Settings", "pos_profile")
+    taxes_and_charges = frappe.db.get_value(
+        "POS Profile", pos_profile, "taxes_and_charges"
+    )
 
     if not pos_profile:
-        frappe.throw(_('Please set POS Profile under Vetcare Settings'))
+        frappe.throw(_("Please set POS Profile under Vetcare Settings"))
 
     sales_person_field = _get_sales_person_field()
 
     if not existing_invoice:
-        sales_invoice = frappe.new_doc('Sales Invoice')
-        sales_invoice.update({
-            'patient': patient,
-            'customer': customer,
-            'due_date': today(),
-            'pos_profile': pos_profile,
-            'taxes_and_charges': taxes_and_charges,
-            'is_pos': 1,
-            sales_person_field: sales_person
-        })
+        sales_invoice = frappe.new_doc("Sales Invoice")
+        sales_invoice.update(
+            {
+                "patient": patient,
+                "customer": customer,
+                "due_date": today(),
+                "pos_profile": pos_profile,
+                "taxes_and_charges": taxes_and_charges,
+                "is_pos": 1,
+                sales_person_field: sales_person,
+            }
+        )
     else:
-        sales_invoice = frappe.get_doc('Sales Invoice', existing_invoice)
+        sales_invoice = frappe.get_doc("Sales Invoice", existing_invoice)
         sales_invoice.items = []
 
     for item in items:
-        sales_invoice.append('items', {
-            'item_code': item.get('item_code'),
-            'qty': item.get('qty'),
-            'rate': item.get('rate')
-        })
+        sales_invoice.append(
+            "items",
+            {
+                "item_code": item.get("item_code"),
+                "qty": item.get("qty"),
+                "rate": item.get("rate"),
+            },
+        )
 
     if discount_amount:
-        sales_invoice.apply_discount_on = 'Grand Total'
+        sales_invoice.apply_discount_on = "Grand Total"
         sales_invoice.discount_amount = float(discount_amount)
 
     sales_invoice.set_missing_values()
@@ -157,22 +170,22 @@ def save_invoice(items, patient, customer, **kwargs):
 @frappe.whitelist()
 def pay_invoice(invoice, payments):
     def get_mode_of_payment(company, mop):
-        data = get_bank_cash_account(mop.get('mode_of_payment'), company)
+        data = get_bank_cash_account(mop.get("mode_of_payment"), company)
         return {
-            'mode_of_payment': mop.get('mode_of_payment'),
-            'amount': mop.get('amount'),
-            'account': data.get('account'),
+            "mode_of_payment": mop.get("mode_of_payment"),
+            "amount": mop.get("amount"),
+            "account": data.get("account"),
         }
 
     payments = json.loads(payments)
 
-    invoice = frappe.get_doc('Sales Invoice', invoice)
-    invoice.update({'is_pos': 1})
+    invoice = frappe.get_doc("Sales Invoice", invoice)
+    invoice.update({"is_pos": 1})
 
     get_mop_data = partial(get_mode_of_payment, invoice.company)
     payments = list(map(get_mop_data, payments))
     for payment in payments:
-        invoice.append('payments', payment)
+        invoice.append("payments", payment)
 
     invoice.save()
     invoice.submit()
@@ -193,7 +206,7 @@ def get_clinical_history(patient, filter_length):
     date_format = _get_date_format()
 
     def make_data(row):
-        row['posting_date'] = row['posting_date'].strftime(date_format)
+        row["posting_date"] = row["posting_date"].strftime(date_format)
         return row
 
     filter_length = int(filter_length)
@@ -245,7 +258,7 @@ def get_clinical_history(patient, filter_length):
             sales_person_field=sales_person_field
         ),
         (patient, patient, filter_length),
-        as_dict=True
+        as_dict=True,
     )
 
     _apply_sales_person(clinical_history_items)
@@ -257,19 +270,24 @@ def get_clinical_history(patient, filter_length):
 def make_patient_activity(patient, activity_items, sales_person=None):
     activity_items = json.loads(activity_items)
 
-    patient_activity = frappe.get_doc({
-        'doctype': 'Patient Activity',
-        'patient': patient,
-        'sales_person': sales_person,
-        'posting_date': today()
-    })
+    patient_activity = frappe.get_doc(
+        {
+            "doctype": "Patient Activity",
+            "patient": patient,
+            "sales_person": sales_person,
+            "posting_date": today(),
+        }
+    )
 
     for activity_item in activity_items:
-        patient_activity.append('items', {
-            'activity_type': activity_item.get('activity_type'),
-            'description': activity_item.get('description'),
-            'attach': activity_item.get('attach')
-        })
+        patient_activity.append(
+            "items",
+            {
+                "activity_type": activity_item.get("activity_type"),
+                "description": activity_item.get("description"),
+                "attach": activity_item.get("attach"),
+            },
+        )
 
     patient_activity.save()
 
@@ -279,18 +297,20 @@ def make_patient_activity(patient, activity_items, sales_person=None):
 @frappe.whitelist()
 def make_vital_signs(patient, vital_signs):
     vital_signs = json.loads(vital_signs)
-    vital_signs_doc = frappe.get_doc({
-        'doctype': 'Vital Signs',
-        'patient': patient,
-        'signs_date': today(),
-        'signs_time': now(),
-        'temperature': vital_signs.get('temperature'),
-        'pulse': vital_signs.get('pulse'),
-        'respiratory_rate': vital_signs.get('respiratory_rate'),
-        'vc_mucous_membrane': vital_signs.get('mucous_membrane'),
-        'vc_capillary_refill_time': vital_signs.get('capillary_refill_time'),
-        'weight': vital_signs.get('weight')
-    })
+    vital_signs_doc = frappe.get_doc(
+        {
+            "doctype": "Vital Signs",
+            "patient": patient,
+            "signs_date": today(),
+            "signs_time": now(),
+            "temperature": vital_signs.get("temperature"),
+            "pulse": vital_signs.get("pulse"),
+            "respiratory_rate": vital_signs.get("respiratory_rate"),
+            "vc_mucous_membrane": vital_signs.get("mucous_membrane"),
+            "vc_capillary_refill_time": vital_signs.get("capillary_refill_time"),
+            "weight": vital_signs.get("weight"),
+        }
+    )
     vital_signs_doc.save()
     vital_signs_doc.submit()
     return vital_signs_doc
@@ -299,16 +319,16 @@ def make_vital_signs(patient, vital_signs):
 @frappe.whitelist()
 def get_invoice_items(invoice):
     return frappe.get_all(
-        'Sales Invoice Item',
-        filters={'parent': invoice},
-        fields=['item_code', 'item_name', 'qty', 'rate', 'amount']
+        "Sales Invoice Item",
+        filters={"parent": invoice},
+        fields=["item_code", "item_name", "qty", "rate", "amount"],
     )
 
 
 @frappe.whitelist()
 def save_to_patient(patient, data):
     data = json.loads(data)
-    patient_doc = frappe.get_doc('Patient', patient)
+    patient_doc = frappe.get_doc("Patient", patient)
     patient_doc.update(data)
     patient_doc.save()
 
@@ -317,7 +337,7 @@ def save_to_patient(patient, data):
 def make_patient(patient_data, owner):
     patient_data = json.loads(patient_data)
 
-    patient_doc = frappe.new_doc('Patient')
+    patient_doc = frappe.new_doc("Patient")
     patient_doc.customer = owner
     patient_doc.update(patient_data)
     patient_doc.save()
@@ -327,7 +347,7 @@ def make_patient(patient_data, owner):
 
 @frappe.whitelist()
 def get_first_animal_by_owner(owner):
-    data = frappe.get_all('Patient', filters={'customer': owner})
+    data = frappe.get_all("Patient", filters={"customer": owner})
     return first(data) if data else None
 
 
@@ -343,103 +363,105 @@ def get_practitioner_schedules(practitioner, date):
         sorted,
         concat,
         partial(map, partial(schedule_times, getdate(date))),
-        partial(map, lambda x: x.get('schedule')),
+        partial(map, lambda x: x.get("schedule")),
     )
 
     practitioner_schedules = data(
         frappe.get_all(
-            'Practitioner Service Unit Schedule',
-            filters={'parent': practitioner},
-            fields=['schedule']
+            "Practitioner Service Unit Schedule",
+            filters={"parent": practitioner},
+            fields=["schedule"],
         )
     )
 
     existing_appointments = frappe.get_all(
-        'Patient Booking',
-        filters={
-            'physician': practitioner,
-            'appointment_date': date,
-            'docstatus': 1
-        },
-        fields=['appointment_time', 'appointment_minutes']
+        "Patient Booking",
+        filters={"physician": practitioner, "appointment_date": date, "docstatus": 1},
+        fields=["appointment_time", "appointment_minutes"],
     )
 
     def get_available_slots(taken_slots, practitioner_schedule):
         for taken_slot in taken_slots:
-            appointment_minutes = taken_slot.get('appointment_minutes')
-            appointment_time = taken_slot.get('appointment_time')
-            appointment_time_end = appointment_time + timedelta(minutes=appointment_minutes)
+            appointment_minutes = taken_slot.get("appointment_minutes")
+            appointment_time = taken_slot.get("appointment_time")
+            appointment_time_end = appointment_time + timedelta(
+                minutes=appointment_minutes
+            )
             if appointment_time <= practitioner_schedule < appointment_time_end:
                 return False
         return True
 
     available_slots = compose(
-        list,
-        partial(filter, partial(get_available_slots, existing_appointments))
+        list, partial(filter, partial(get_available_slots, existing_appointments))
     )
 
-    return compose(
-        list,
-        partial(map, timedelta_to_default_format), sorted)(available_slots(practitioner_schedules))
+    return compose(list, partial(map, timedelta_to_default_format), sorted)(
+        available_slots(practitioner_schedules)
+    )
 
 
 @frappe.whitelist()
 def apply_custom_fields():
-    create_custom_field('Healthcare Practitioner', {
-        'fieldname': 'vc_color',
-        'label': 'Color',
-        'insert_after': 'office_phone'
-    })
+    create_custom_field(
+        "Healthcare Practitioner",
+        {"fieldname": "vc_color", "label": "Color", "insert_after": "office_phone"},
+    )
     return True
 
 
 @frappe.whitelist()
 def get_no_appointment_type():
-    appointment_type = frappe.db.get_single_value('Vetcare Settings', 'no_appointment_type')
-    patient = frappe.db.get_single_value('Vetcare Settings', 'no_patient')
-    return {
-        'appointment_type': appointment_type,
-        'patient': patient
-    }
+    appointment_type = frappe.db.get_single_value(
+        "Vetcare Settings", "no_appointment_type"
+    )
+    patient = frappe.db.get_single_value("Vetcare Settings", "no_patient")
+    return {"appointment_type": appointment_type, "patient": patient}
 
 
 @frappe.whitelist()
 def get_tax_rate():
-    pos_profile = frappe.db.get_single_value('Vetcare Settings', 'pos_profile')
-    taxes_and_charges = frappe.db.get_value('POS Profile', pos_profile, 'taxes_and_charges')
+    pos_profile = frappe.db.get_single_value("Vetcare Settings", "pos_profile")
+    taxes_and_charges = frappe.db.get_value(
+        "POS Profile", pos_profile, "taxes_and_charges"
+    )
     sales_taxes_and_charges = frappe.db.get_all(
-        'Sales Taxes and Charges',
-        filters={'parent': taxes_and_charges},
-        fields=['rate']
+        "Sales Taxes and Charges",
+        filters={"parent": taxes_and_charges},
+        fields=["rate"],
     )
     if not sales_taxes_and_charges:
-        frappe.throw(_('Unable to get tax rate for {}. Please set the taxes and charges'.format(pos_profile)))
-    return sales_taxes_and_charges[0].get('rate')
+        frappe.throw(
+            _(
+                "Unable to get tax rate for {}. Please set the taxes and charges".format(
+                    pos_profile
+                )
+            )
+        )
+    return sales_taxes_and_charges[0].get("rate")
 
 
 @frappe.whitelist()
 def get_selling_price_list():
-    pos_profile = frappe.db.get_single_value('Vetcare Settings', 'pos_profile')
-    selling_price_list = frappe.db.get_value('POS Profile', pos_profile, 'selling_price_list')
+    pos_profile = frappe.db.get_single_value("Vetcare Settings", "pos_profile")
+    selling_price_list = frappe.db.get_value(
+        "POS Profile", pos_profile, "selling_price_list"
+    )
     if not selling_price_list:
-        frappe.throw(_('Please set selling price list'))
+        frappe.throw(_("Please set selling price list"))
     return selling_price_list
 
 
 @frappe.whitelist()
 def get_item_rate(item_code, selling_price_list):
-    return compose(
-        first,
-        partial(pluck, 'price_list_rate')
-    )(
+    return compose(first, partial(pluck, "price_list_rate"))(
         frappe.get_all(
-            'Item Price',
+            "Item Price",
             filters={
-                'item_code': item_code,
-                'price_list': selling_price_list,
-                'selling': 1
+                "item_code": item_code,
+                "price_list": selling_price_list,
+                "selling": 1,
             },
-            fields=['price_list_rate']
+            fields=["price_list_rate"],
         )
     )
 
@@ -451,18 +473,27 @@ def _get_schedule_times(name, date):
     :param date: [datetime.date]
     :return:
     """
-    mapped_day = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    mapped_day = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+    ]
     time_slots = frappe.get_all(
-        'Healthcare Schedule Time Slot',
-        filters={'parent': name, 'day': mapped_day[date.weekday()]},
-        fields=['from_time']
+        "Healthcare Schedule Time Slot",
+        filters={"parent": name, "day": mapped_day[date.weekday()]},
+        fields=["from_time"],
     )
-    return list(map(lambda x: x.get('from_time'), time_slots))
+    return list(map(lambda x: x.get("from_time"), time_slots))
 
 
 # TODO: include also with Patient
 def _get_sales_invoice_items(customer):
-    return frappe.db.sql("""
+    return frappe.db.sql(
+        """
         SELECT 
             si.posting_date,
             si_item.item_code,
@@ -478,43 +509,43 @@ def _get_sales_invoice_items(customer):
 
 
 def _get_date_format():
-    date_format = frappe.db.get_single_value('Vetcare Settings', 'date_format')
-    format_codes = {
-        'mm': '%m',
-        'dd': '%d',
-        'yy': '%y',
-        'yyyy': '%Y'
-    }
+    date_format = frappe.db.get_single_value("Vetcare Settings", "date_format")
+    format_codes = {"mm": "%m", "dd": "%d", "yy": "%y", "yyyy": "%Y"}
     for key, value in format_codes.items():
         date_format = date_format.replace(key, value)
     return date_format
 
 
 def _get_sales_person_field():
-    enable_pb = frappe.db.get_single_value('Vetcare Settings', 'enable_pb')
-    return 'pb_sales_employee' if enable_pb else 'pb_sales_person'
+    enable_pb = frappe.db.get_single_value("Vetcare Settings", "enable_pb")
+    return "pb_sales_employee" if enable_pb else "pb_sales_person"
 
 
 def _apply_sales_person(history):
     sales_person_by_doc = {}
     for row in history:
-        sales_person = row.get('sales_person')
+        sales_person = row.get("sales_person")
         sales_person_name = sales_person_by_doc.get(sales_person)
         if sales_person and sales_person not in sales_person_by_doc:
-            sales_person_name = frappe.get_value('Employee', sales_person, 'employee_name')
+            sales_person_name = frappe.get_value(
+                "Employee", sales_person, "employee_name"
+            )
             sales_person_by_doc[sales_person] = sales_person_name
         if sales_person_name:
-            row['description'] = row['description'] + f'\nSales Person: {sales_person_name} ({sales_person})'
+            row["description"] = (
+                row["description"]
+                + f"\nSales Person: {sales_person_name} ({sales_person})"
+            )
 
 
 def get_search_values(customer):
     fields = [
-            "customer_name",
-            "mobile_number",
-            "mobile_number_2",
-            "vc_office_phone",
-            "vc_home_phone",
-            "vc_cpr",
+        "customer_name",
+        "mobile_number",
+        "mobile_number_2",
+        "vc_office_phone",
+        "vc_home_phone",
+        "vc_cpr",
     ]
     join = compose(lambda x: ";".join(x), partial(filter, None))
     if isinstance(customer, str):
